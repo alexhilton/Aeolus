@@ -12,10 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AeolusScreen(modifier: Modifier = Modifier) {
+fun AeolusScreen(
+    modifier: Modifier = Modifier,
+    viewModel: WeatherViewModel
+) {
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -26,7 +30,7 @@ fun AeolusScreen(modifier: Modifier = Modifier) {
                 ),
                 title = {
                     Text(
-                        text = "Beijing",
+                        text = viewModel.location,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -55,10 +59,4 @@ fun Weather24Hours(modifier: Modifier = Modifier) {
 @Composable
 fun Weather15Days(modifier: Modifier = Modifier) {
     Text(text = "Show weather in 15 days. \n Scroll horizontally.")
-}
-
-@Preview
-@Composable
-fun AeolusScreenPreview() {
-    AeolusScreen()
 }
