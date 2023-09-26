@@ -80,7 +80,8 @@ fun WeatherDetails(
             ) {
                 WindInfo(
                     modifier = Modifier.weight(1f),
-                    dir = weatherDetail.windDir,
+                    wind = weatherDetail.windDir,
+                    dir = weatherDetail.windDegree,
                     scale = weatherDetail.windScale,
                     speed = weatherDetail.windSpeed
                 )
@@ -116,6 +117,7 @@ fun SimpleInfo(
 @Composable
 fun WindInfo(
     modifier: Modifier,
+    wind: String,
     dir: String,
     scale: String,
     speed: String
@@ -123,7 +125,7 @@ fun WindInfo(
     Column(
         modifier = modifier
     ) {
-        ItemDescription(dir, "D")
+        ItemDescription(wind, dir)
         ItemDescription("风力", "${scale}级")
         ItemDescription("风速", "${speed}km/h")
     }
