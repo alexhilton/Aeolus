@@ -11,7 +11,7 @@ import net.toughcoder.aeolus.ui.theme.AeolusTheme
 @Composable
 fun AeolusApp(modifier: Modifier = Modifier) {
     AeolusScreen(
-        modifier.padding(6.dp),
+        modifier,
         viewModel()
     )
 }

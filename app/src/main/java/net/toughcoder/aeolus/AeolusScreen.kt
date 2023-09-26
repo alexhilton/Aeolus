@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -47,7 +50,11 @@ fun AeolusScreen(
             )
         }
     ) {
-        Column(modifier = modifier.padding(it)) {
+        Column(
+            modifier = modifier
+                .padding(horizontal = 8.dp, vertical = it.calculateTopPadding() + 8.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
             WeatherDetails(modifier, viewModel.weatherDetail)
             Weather24Hours(modifier)
             Weather15Days(modifier)
@@ -67,7 +74,9 @@ fun WeatherDetails(
         shadowElevation = 6.dp
     ) {
         Column(
-            modifier = modifier.fillMaxWidth().padding(8.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SimpleInfo(weatherDetail.text, weatherDetail.temp)
