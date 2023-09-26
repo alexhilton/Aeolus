@@ -3,7 +3,9 @@ package net.toughcoder.aeolus
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -65,37 +67,31 @@ fun WeatherDetails(
         shadowElevation = 6.dp
     ) {
         Column(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth().padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(32.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                bigLabel(weatherDetail.text)
-                bigLabel("${weatherDetail.temp}度")
-            }
+            SimpleInfo(weatherDetail.text, weatherDetail.temp)
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 8.dp).weight(1.0f)
-                ) {
-                    ItemDescription(weatherDetail.windDir, "D")
-                    ItemDescription("风力", "${weatherDetail.windScale}级")
-                    ItemDescription("风速", "${weatherDetail.windSpeed}km/h")
-                }
+                WindInfo(
+                    modifier = Modifier.weight(1f),
+                    dir = weatherDetail.windDir,
+                    scale = weatherDetail.windScale,
+                    speed = weatherDetail.windSpeed
+                )
 
-                Column(
-                    modifier = Modifier.padding(horizontal = 8.dp).weight(1.0f)
-                ) {
-                    ItemDescription("体感温度","${weatherDetail.feelsLike}度")
-                    ItemDescription("相对温度", "${weatherDetail.humidity}%")
-                    ItemDescription("大气压强", "${weatherDetail.pressure}hPa")
-                    ItemDescription("能见度", "${weatherDetail.visibility}km")
-                }
+                OtherInfo(
+                    modifier = Modifier.weight(1f),
+                    feelsLike = weatherDetail.feelsLike,
+                    humidity = weatherDetail.humidity,
+                    pressure = weatherDetail.pressure,
+                    visibility = weatherDetail.visibility
+                )
             }
 
             Text(text = "Shows now weather details. \n Scroll vertically")
@@ -104,7 +100,55 @@ fun WeatherDetails(
 }
 
 @Composable
-fun bigLabel(
+fun SimpleInfo(
+    weather: String,
+    temp: String
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(32.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        BigLabel(weather)
+        BigLabel("${temp}度")
+    }
+}
+
+@Composable
+fun WindInfo(
+    modifier: Modifier,
+    dir: String,
+    scale: String,
+    speed: String
+) {
+    Column(
+        modifier = modifier
+    ) {
+        ItemDescription(dir, "D")
+        ItemDescription("风力", "${scale}级")
+        ItemDescription("风速", "${speed}km/h")
+    }
+}
+
+@Composable
+fun OtherInfo(
+    modifier: Modifier,
+    feelsLike: String,
+    humidity: String,
+    pressure: String,
+    visibility: String
+) {
+    Column(
+        modifier = modifier
+    ) {
+        ItemDescription("体感温度","${feelsLike}度")
+        ItemDescription("相对温度", "${humidity}%")
+        ItemDescription("大气压强", "${pressure}hPa")
+        ItemDescription("能见度", "${visibility}km")
+    }
+}
+
+@Composable
+fun BigLabel(
     text: String,
     modifier: Modifier = Modifier
 ) {
