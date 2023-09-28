@@ -107,8 +107,6 @@ fun WeatherDetails(
                     visibility = weatherDetail.visibility
                 )
             }
-
-            Text(text = "Shows now weather details. \n Scroll vertically")
         }
     }
 }
