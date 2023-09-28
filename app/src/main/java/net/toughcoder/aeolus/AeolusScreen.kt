@@ -1,6 +1,5 @@
 package net.toughcoder.aeolus
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -239,7 +238,7 @@ fun Weather15Days(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun detailPreview() {
+fun DetailPreview() {
     WeatherDetails(
         Modifier.fillMaxWidth(),
         weatherDetail = fakeWeatherDetail()
