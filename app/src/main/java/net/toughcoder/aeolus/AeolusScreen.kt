@@ -83,7 +83,7 @@ fun WeatherDetails(
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SimpleInfo(weatherDetail.text, weatherDetail.temp)
+            SimpleInfo(weatherDetail.text, weatherDetail.icon, weatherDetail.temp)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -116,6 +116,7 @@ fun WeatherDetails(
 @Composable
 fun SimpleInfo(
     weather: String,
+    icon: String,
     temp: String
 ) {
     Column(
@@ -123,7 +124,7 @@ fun SimpleInfo(
     ) {
         Image(
             modifier = Modifier.size(128.dp).padding(16.dp),
-            painter = painterResource(R.drawable.ic_101),
+            painter = painterResource(ICONS[icon]!!),
             contentScale = ContentScale.Fit,
             contentDescription = ""
         )
