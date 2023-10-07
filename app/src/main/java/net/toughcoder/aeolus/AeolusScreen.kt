@@ -22,6 +22,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -120,7 +121,9 @@ fun SimpleInfo(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            modifier = Modifier.size(128.dp).padding(16.dp),
+            modifier = Modifier
+                .size(128.dp)
+                .padding(16.dp),
             painter = painterResource(ICONS[icon]!!),
             contentScale = ContentScale.Fit,
             contentDescription = ""
@@ -147,7 +150,19 @@ fun WindInfo(
     Column(
         modifier = modifier
     ) {
-        ItemDescription(wind, dir)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TitleLabel(wind)
+            Image(
+                modifier = Modifier.size(48.dp).rotate(dir.toFloat() + 90f),
+                painter = painterResource(R.drawable.ic_arrow_right),
+                contentScale = ContentScale.Fit,
+                contentDescription = null
+            )
+        }
         ItemDescription("风力", "${scale}级")
         ItemDescription("风速", "${speed}km/h")
     }
@@ -191,10 +206,11 @@ fun ItemDescription(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         TitleLabel(title)
-        ValueLabel(value, Modifier.fillMaxWidth())
+        ValueLabel(value)
     }
 }
 
