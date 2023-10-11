@@ -96,6 +96,7 @@ fun WeatherDetails(
                     modifier = Modifier.weight(1f),
                     wind = uiState.windDir,
                     dir = uiState.windDegree,
+                    iconDir = uiState.iconDir,
                     scale = uiState.windScale,
                     speed = uiState.windSpeed
                 )
@@ -145,6 +146,7 @@ fun WindInfo(
     modifier: Modifier,
     wind: String,
     dir: Float,
+    @DrawableRes iconDir: Int,
     scale: String,
     speed: String
 ) {
@@ -158,8 +160,8 @@ fun WindInfo(
         ) {
             TitleLabel(wind)
             Image(
-                modifier = Modifier.size(48.dp).rotate(dir),
-                painter = painterResource(R.drawable.ic_arrow_right),
+                modifier = Modifier.size(32.dp).rotate(dir),
+                painter = painterResource(iconDir),
                 contentScale = ContentScale.Fit,
                 contentDescription = null
             )
