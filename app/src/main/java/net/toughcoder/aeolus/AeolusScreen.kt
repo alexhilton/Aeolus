@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -114,7 +115,7 @@ fun WeatherDetails(
 @Composable
 fun SimpleInfo(
     weather: String,
-    icon: String,
+    @DrawableRes icon: Int,
     temp: String
 ) {
     Column(
@@ -124,7 +125,7 @@ fun SimpleInfo(
             modifier = Modifier
                 .size(128.dp)
                 .padding(16.dp),
-            painter = painterResource(ICONS[icon]!!),
+            painter = painterResource(icon),
             contentScale = ContentScale.Fit,
             contentDescription = ""
         )
@@ -143,7 +144,7 @@ fun SimpleInfo(
 fun WindInfo(
     modifier: Modifier,
     wind: String,
-    dir: String,
+    dir: Float,
     scale: String,
     speed: String
 ) {
@@ -157,7 +158,7 @@ fun WindInfo(
         ) {
             TitleLabel(wind)
             Image(
-                modifier = Modifier.size(48.dp).rotate(dir.toFloat() + 90f),
+                modifier = Modifier.size(48.dp).rotate(dir),
                 painter = painterResource(R.drawable.ic_arrow_right),
                 contentScale = ContentScale.Fit,
                 contentDescription = null

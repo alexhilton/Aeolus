@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,7 +42,7 @@ data class WeatherDetail(
     val feelsLike: String,
     val icon: String,
     val text: String,
-    val windDegree: String,
+    val wind360: String,
     val windDir: String,
     val windScale: String,
     val windSpeed: String,
@@ -55,9 +56,9 @@ data class WeatherDetail(
             city = location,
             temp = temp,
             feelsLike = feelsLike,
-            icon = icon,
+            icon = ICONS[icon]!!,
             text = text,
-            windDegree = windDegree,
+            windDegree = (wind360.toFloat() + 90f) % 360f,
             windDir = windDir,
             windScale = windScale,
             windSpeed = windSpeed,
@@ -71,9 +72,9 @@ data class NowUiState(
     val city: String,
     val temp: String,
     val feelsLike: String,
-    val icon: String,
+    @DrawableRes val icon: Int,
     val text: String,
-    val windDegree: String,
+    val windDegree: Float,
     val windDir: String,
     val windScale: String,
     val windSpeed: String,
