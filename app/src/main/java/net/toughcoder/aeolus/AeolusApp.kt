@@ -3,8 +3,10 @@ package net.toughcoder.aeolus
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import net.toughcoder.aeolus.ui.theme.AeolusTheme
 
@@ -16,10 +18,10 @@ fun AeolusApp(modifier: Modifier = Modifier) {
             modifier = modifier,
             color = MaterialTheme.colorScheme.background
         ) {
-            AeolusScreen(
-                modifier,
-                viewModel()
-            )
+            val viewModel: WeatherViewModel = viewModel()
+            val uiState: NowUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            AeolusScreen(modifier, uiState)
         }
     }
 }

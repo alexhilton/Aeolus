@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun AeolusScreen(
     modifier: Modifier = Modifier,
-    viewModel: WeatherViewModel
+    uiState: NowUiState
 ) {
     Scaffold(
         modifier = modifier,
@@ -46,7 +46,7 @@ fun AeolusScreen(
                 ),
                 title = {
                     Text(
-                        text = viewModel.location,
+                        text = uiState.city,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -59,7 +59,7 @@ fun AeolusScreen(
                 .padding(horizontal = 8.dp, vertical = it.calculateTopPadding() + 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            WeatherDetails(modifier, viewModel.weatherDetail)
+            WeatherDetails(modifier, uiState)
             Weather24Hours(modifier)
             Weather15Days(modifier)
         }
@@ -69,7 +69,7 @@ fun AeolusScreen(
 @Composable
 fun WeatherDetails(
     modifier: Modifier = Modifier,
-    weatherDetail: WeatherDetail
+    uiState: NowUiState
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -83,7 +83,7 @@ fun WeatherDetails(
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SimpleInfo(weatherDetail.text, weatherDetail.icon, weatherDetail.temp)
+            SimpleInfo(uiState.text, uiState.icon, uiState.temp)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -93,18 +93,18 @@ fun WeatherDetails(
             ) {
                 WindInfo(
                     modifier = Modifier.weight(1f),
-                    wind = weatherDetail.windDir,
-                    dir = weatherDetail.windDegree,
-                    scale = weatherDetail.windScale,
-                    speed = weatherDetail.windSpeed
+                    wind = uiState.windDir,
+                    dir = uiState.windDegree,
+                    scale = uiState.windScale,
+                    speed = uiState.windSpeed
                 )
 
                 OtherInfo(
                     modifier = Modifier.weight(1f),
-                    feelsLike = weatherDetail.feelsLike,
-                    humidity = weatherDetail.humidity,
-                    pressure = weatherDetail.pressure,
-                    visibility = weatherDetail.visibility
+                    feelsLike = uiState.feelsLike,
+                    humidity = uiState.humidity,
+                    pressure = uiState.pressure,
+                    visibility = uiState.visibility
                 )
             }
         }
@@ -257,6 +257,6 @@ fun Weather15Days(modifier: Modifier = Modifier) {
 fun DetailPreview() {
     WeatherDetails(
         Modifier.fillMaxWidth(),
-        weatherDetail = fakeWeatherDetail()
+        uiState = fakeWeatherDetail().toUiState("Beijing")
     )
 }
