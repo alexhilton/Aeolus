@@ -54,8 +54,8 @@ data class WeatherDetail(
     fun toUiState(location: String) =
         NowUiState(
             city = location,
-            temp = "$temp ${unit().temp}",
-            feelsLike = "$feelsLike ${unit().temp}",
+            temp = "$temp${unit().temp}",
+            feelsLike = "$feelsLike${unit().temp}",
             icon = ICONS[icon]!!,
             text = text,
             windDegree = (wind360.toFloat() + 90f) % 360f,

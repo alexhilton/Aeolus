@@ -10,7 +10,7 @@ sealed class Unit(
 )
 
 class MetricUnit : Unit(
-    "度",
+    "\u2103",
     "km",
     "km/h",
     "hPa",
