@@ -134,7 +134,7 @@ fun SimpleInfo(
             verticalAlignment = Alignment.CenterVertically
         ) {
             BigLabel(weather)
-            BigLabel("${temp}度")
+            BigLabel(temp)
         }
     }
 
@@ -164,8 +164,8 @@ fun WindInfo(
                 contentDescription = null
             )
         }
-        ItemDescription("风力", "${scale}级")
-        ItemDescription("风速", "${speed}km/h")
+        ItemDescription("风力", scale)
+        ItemDescription("风速", speed)
     }
 }
 
@@ -180,10 +180,10 @@ fun OtherInfo(
     Column(
         modifier = modifier
     ) {
-        ItemDescription("体感温度","${feelsLike}度")
-        ItemDescription("相对温度", "${humidity}%")
-        ItemDescription("大气压强", "${pressure}hPa")
-        ItemDescription("能见度", "${visibility}km")
+        ItemDescription("体感温度", feelsLike)
+        ItemDescription("相对温度", humidity)
+        ItemDescription("大气压强", pressure)
+        ItemDescription("能见度", visibility)
     }
 }
 

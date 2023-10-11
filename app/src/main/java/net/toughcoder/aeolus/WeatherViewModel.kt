@@ -54,17 +54,17 @@ data class WeatherDetail(
     fun toUiState(location: String) =
         NowUiState(
             city = location,
-            temp = temp,
-            feelsLike = feelsLike,
+            temp = "$temp ${unit().temp}",
+            feelsLike = "$feelsLike ${unit().temp}",
             icon = ICONS[icon]!!,
             text = text,
             windDegree = (wind360.toFloat() + 90f) % 360f,
             windDir = windDir,
-            windScale = windScale,
-            windSpeed = windSpeed,
-            humidity = humidity,
-            pressure = pressure,
-            visibility = visibility
+            windScale = "$windScale ${unit().scale}",
+            windSpeed = "$windSpeed ${unit().speed}",
+            humidity = "$humidity ${unit().percent}",
+            pressure = "$pressure ${unit().pressure}",
+            visibility = "$visibility ${unit().length}"
         )
 }
 
