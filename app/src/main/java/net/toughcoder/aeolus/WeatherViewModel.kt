@@ -41,7 +41,7 @@ fun fakeWeatherDetail() = WeatherDetail(
     (Random.nextFloat() * 70f).toString(),
     "101",
     "多云",
-    "123",
+    Random.nextInt(360).toString(),
     "东南风",
     Random.nextInt(12).toString(),
     Random.nextInt(100).toString(),
@@ -77,8 +77,8 @@ data class WeatherDetail(
         NowUiState.WeatherNowUiState(
             isLoading = loading,
             city = location,
-            temp = "$temp${unit().temp}",
-            feelsLike = "$feelsLike${unit().temp}",
+            temp = "${formatTemp(temp)}${unit().temp}",
+            feelsLike = "${formatTemp(feelsLike)}${unit().temp}",
             icon = ICONS[icon]!!,
             text = text,
             windDegree = (wind360.toFloat() + 180f) % 360f,
@@ -90,6 +90,11 @@ data class WeatherDetail(
             pressure = "$pressure ${unit().pressure}",
             visibility = "$visibility ${unit().length}"
         )
+
+    private fun formatTemp(temp: String): String {
+        val t = temp.toFloat()
+        return "%.1f".format(t)
+    }
 }
 
 sealed interface NowUiState {
