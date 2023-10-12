@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun WeatherScreen(
-    uiState: NowUiState,
+    uiState: NowUiState.WeatherNowUiState,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -42,7 +42,7 @@ fun WeatherScreen(
 @Composable
 fun WeatherDetails(
     modifier: Modifier = Modifier,
-    uiState: NowUiState
+    uiState: NowUiState.WeatherNowUiState
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -229,6 +229,6 @@ fun Weather15Days(modifier: Modifier = Modifier) {
 fun DetailPreview() {
     WeatherDetails(
         Modifier.fillMaxWidth(),
-        uiState = fakeWeatherDetail().toUiState("Beijing")
+        uiState = fakeWeatherDetail().toUiState("Beijing", false) as NowUiState.WeatherNowUiState
     )
 }

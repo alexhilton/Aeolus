@@ -19,9 +19,9 @@ fun AeolusApp(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.background
         ) {
             val viewModel: WeatherViewModel = viewModel()
-            val uiState: NowUiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            AeolusScreen(modifier, uiState)
+            AeolusScreen(modifier, uiState!!, viewModel::refresh)
         }
     }
 }
