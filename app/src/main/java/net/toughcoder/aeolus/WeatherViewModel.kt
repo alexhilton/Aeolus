@@ -60,7 +60,7 @@ data class ViewModelState(
 }
 
 data class WeatherDetail(
-    val temp: String,
+    val nowTemp: String,
     val feelsLike: String,
     val icon: String,
     val text: String,
@@ -74,22 +74,24 @@ data class WeatherDetail(
     val cloud: String,
 ) {
     fun toUiState(location: String, loading: Boolean): NowUiState =
-        NowUiState.WeatherNowUiState(
-            isLoading = loading,
-            city = location,
-            temp = "${formatTemp(temp)}${unit().temp}",
-            feelsLike = "${formatTemp(feelsLike)}${unit().temp}",
-            icon = ICONS[icon]!!,
-            text = text,
-            windDegree = (wind360.toFloat() + 180f) % 360f,
-            iconDir = R.drawable.ic_nav,
-            windDir = windDir,
-            windScale = "$windScale ${unit().scale}",
-            windSpeed = "$windSpeed ${unit().speed}",
-            humidity = "$humidity ${unit().percent}",
-            pressure = "$pressure ${unit().pressure}",
-            visibility = "$visibility ${unit().length}"
-        )
+        with(unit()) {
+            return NowUiState.WeatherNowUiState(
+                isLoading = loading,
+                city = location,
+                temp = "${formatTemp(nowTemp)}$temp",
+                feelsLike = "${formatTemp(feelsLike)}$temp",
+                icon = ICONS[icon]!!,
+                text = text,
+                windDegree = (wind360.toFloat() + 180f) % 360f,
+                iconDir = R.drawable.ic_nav,
+                windDir = windDir,
+                windScale = "$windScale $scale",
+                windSpeed = "$windSpeed $speed",
+                humidity = "$humidity $percent",
+                pressure = "$pressure $pressure",
+                visibility = "$visibility $length"
+            )
+        }
 
     private fun formatTemp(temp: String): String {
         val t = temp.toFloat()
