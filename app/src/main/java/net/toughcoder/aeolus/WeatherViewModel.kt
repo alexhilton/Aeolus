@@ -69,7 +69,7 @@ data class WeatherDetail(
     val windScale: String,
     val windSpeed: String,
     val humidity: String,
-    val pressure: String,
+    val airPressure: String,
     val visibility: String,
     val cloud: String,
 ) {
@@ -88,7 +88,7 @@ data class WeatherDetail(
                 windScale = "$windScale $scale",
                 windSpeed = "$windSpeed $speed",
                 humidity = "$humidity $percent",
-                pressure = "$pressure $pressure",
+                pressure = "$airPressure $pressure",
                 visibility = "$visibility $length"
             )
         }
