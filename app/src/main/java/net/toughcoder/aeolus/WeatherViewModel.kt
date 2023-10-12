@@ -1,5 +1,7 @@
 package net.toughcoder.aeolus
 
+import android.os.SystemClock
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,11 +28,21 @@ class WeatherViewModel : ViewModel() {
         )
 
     fun refresh() {
+        if (viewModelState.value.weatherData != null) {
+            val now = SystemClock.uptimeMillis()
+            if (now - viewModelState.value.weatherData!!.updateTime < 60 * 1000L) {
+                viewModelState.update {
+                    it.copy(error = "Weather data is already up-to-date!")
+                }
+                return
+            }
+        }
+
         viewModelState.update { it.copy(loading = true) }
         viewModelScope.launch {
             delay(3000)
             viewModelState.update {
-                it.copy(loading = false, weatherData = fakeWeatherDetail())
+                it.copy(loading = false, weatherData = fakeWeatherDetail(), error = "")
             }
         }
     }
@@ -49,14 +61,16 @@ fun fakeWeatherDetail() = WeatherDetail(
     Random.nextInt(10000).toString(),
     Random.nextInt(400).toString(),
     "10",
+    updateTime = SystemClock.uptimeMillis()
 )
 
 data class ViewModelState(
     var loading: Boolean = false,
     var city: String,
-    var weatherData: WeatherDetail?
+    var weatherData: WeatherDetail?,
+    var error: String = ""
 ) {
-    fun toUiState() = weatherData?.toUiState(city, loading)
+    fun toUiState() = weatherData?.toUiState(city, loading, error)
 }
 
 data class WeatherDetail(
@@ -72,8 +86,9 @@ data class WeatherDetail(
     val airPressure: String,
     val visibility: String,
     val cloud: String,
+    val updateTime: Long
 ) {
-    fun toUiState(location: String, loading: Boolean): NowUiState =
+    fun toUiState(location: String, loading: Boolean, error: String = ""): NowUiState =
         with(unit()) {
             return NowUiState.WeatherNowUiState(
                 isLoading = loading,
@@ -89,7 +104,8 @@ data class WeatherDetail(
                 windSpeed = "$windSpeed $speed",
                 humidity = "$humidity $percent",
                 pressure = "$airPressure $pressure",
-                visibility = "$visibility $length"
+                visibility = "$visibility $length",
+                errorMessage = error
             )
         }
 
@@ -101,6 +117,9 @@ data class WeatherDetail(
 
 sealed interface NowUiState {
     val isLoading: Boolean
+
+    val errorMessage: String
+    fun isEmpty(): Boolean
 
     data class WeatherNowUiState(
         val city: String,
@@ -117,5 +136,10 @@ sealed interface NowUiState {
         val pressure: String,
         val visibility: String,
         override val isLoading: Boolean,
-    ) : NowUiState
+        override val errorMessage: String
+    ) : NowUiState {
+        override fun isEmpty(): Boolean {
+            return city.isNotEmpty() && temp.isNotEmpty() && text.isNotEmpty()
+        }
+    }
 }
