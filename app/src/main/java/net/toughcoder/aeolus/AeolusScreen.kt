@@ -30,7 +30,6 @@ fun AeolusScreen(
     onRefresh: () -> kotlin.Unit
 ) {
     val weatherState = uiState as NowUiState.WeatherNowUiState
-    val refreshing by remember { mutableStateOf(weatherState.isLoading) }
 
     Scaffold(
         modifier = modifier,
@@ -50,19 +49,23 @@ fun AeolusScreen(
             )
         }
     ) {
-        val state = rememberPullRefreshState(refreshing, onRefresh)
+        val state = rememberPullRefreshState(uiState.isLoading, onRefresh)
         Box(Modifier.pullRefresh(state)) {
             WeatherScreen(
                 uiState = weatherState,
                 modifier = modifier
-                    .padding(horizontal = 8.dp, vertical = it.calculateTopPadding() + 8.dp)
+                    .padding(
+                        horizontal = 8.dp,
+                        vertical = it.calculateTopPadding() + if (uiState.isLoading) 40.dp else 8.dp
+                    )
             )
 
             PullRefreshIndicator(
-                refreshing = refreshing,
+                refreshing = uiState.isLoading,
                 state = state,
                 modifier = Modifier.align(Alignment.TopCenter),
                 contentColor = colorResource(R.color.teal_700),
+                scale = true
             )
         }
     }
