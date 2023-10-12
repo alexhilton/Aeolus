@@ -47,19 +47,16 @@ fun WeatherDetails(
     uiState: NowUiState
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.secondaryContainer,
         shadowElevation = 6.dp
     ) {
         Column(
-            modifier = modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SimpleInfo(uiState.text, uiState.icon, uiState.temp)
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.padding(horizontal = 8.dp),
@@ -93,12 +90,13 @@ fun SimpleInfo(
     temp: String
 ) {
     Column(
+        modifier = Modifier.padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             modifier = Modifier
                 .size(128.dp)
-                .padding(16.dp),
+                .padding(8.dp),
             painter = painterResource(icon),
             contentScale = ContentScale.Fit,
             contentDescription = ""

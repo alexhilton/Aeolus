@@ -41,7 +41,7 @@ fun AeolusScreen(
         WeatherScreen(
             uiState = uiState,
             modifier = modifier
-                .padding(horizontal = 8.dp, vertical = it.calculateTopPadding() - 24.dp)
+                .padding(horizontal = 8.dp, vertical = it.calculateTopPadding() + 8.dp)
         )
     }
 }
