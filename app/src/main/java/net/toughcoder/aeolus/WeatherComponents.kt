@@ -31,7 +31,6 @@ fun WeatherScreen(
 ) {
     Column(
         modifier = modifier
-            .verticalScroll(rememberScrollState())
     ) {
         WeatherDetails(modifier, uiState)
         Weather24Hours(modifier)

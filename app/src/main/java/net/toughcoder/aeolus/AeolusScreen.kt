@@ -1,7 +1,11 @@
 package net.toughcoder.aeolus
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -27,6 +31,7 @@ fun AeolusScreen(
     onRefresh: () -> kotlin.Unit
 ) {
     val weatherState = uiState as NowUiState.WeatherNowUiState
+    val state = rememberPullRefreshState(uiState.isLoading, onRefresh)
 
     Scaffold(
         modifier = modifier,
@@ -46,8 +51,11 @@ fun AeolusScreen(
             )
         }
     ) {
-        val state = rememberPullRefreshState(uiState.isLoading, onRefresh)
-        Box(Modifier.pullRefresh(state)) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .pullRefresh(state)
+                .verticalScroll(rememberScrollState())) {
             WeatherScreen(
                 uiState = weatherState,
                 modifier = modifier
@@ -56,13 +64,11 @@ fun AeolusScreen(
                         vertical = it.calculateTopPadding() + if (uiState.isLoading) 40.dp else 8.dp
                     )
             )
-
             PullRefreshIndicator(
                 refreshing = uiState.isLoading,
                 state = state,
                 modifier = Modifier.align(Alignment.TopCenter),
                 contentColor = colorResource(R.color.teal_700),
-                scale = true
             )
         }
     }
