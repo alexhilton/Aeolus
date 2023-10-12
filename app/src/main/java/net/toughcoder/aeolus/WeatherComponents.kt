@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -191,7 +189,8 @@ fun TitleLabel(
     modifier: Modifier = Modifier
 ) {
     Text(
-        modifier = modifier.paddingFromBaseline(top = 24.dp, bottom = 8.dp),
+        modifier = modifier
+            .paddingFromBaseline(top = 24.dp, bottom = 8.dp),
         text = text,
         color = MaterialTheme.colorScheme.secondary,
         style=  MaterialTheme.typography.titleMedium
@@ -226,8 +225,10 @@ fun Weather15Days(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun DetailPreview() {
+    val state = fakeWeatherDetail()
+        .toUiState("Nanjing", false)
     WeatherDetails(
         Modifier.fillMaxWidth(),
-        uiState = fakeWeatherDetail().toUiState("Beijing", false) as NowUiState.WeatherNowUiState
+        uiState = state as NowUiState.WeatherNowUiState
     )
 }

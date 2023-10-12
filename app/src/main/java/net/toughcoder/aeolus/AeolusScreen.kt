@@ -1,6 +1,5 @@
 package net.toughcoder.aeolus
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -52,10 +51,10 @@ fun AeolusScreen(
         }
     ) {
         Box(
-            Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
                 .pullRefresh(state)
-                .verticalScroll(rememberScrollState())) {
+                .verticalScroll(rememberScrollState())
+        ) {
             WeatherScreen(
                 uiState = weatherState,
                 modifier = modifier
