@@ -1,7 +1,6 @@
 package net.toughcoder.aeolus
 
 import android.os.SystemClock
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,7 +15,11 @@ import kotlin.random.Random
 
 class WeatherViewModel : ViewModel() {
     private val viewModelState = MutableStateFlow(
-        ViewModelState(false, "Beijing", fakeWeatherDetail())
+        ViewModelState(
+            city = "Nanjing",
+            loading = false,
+            error = "Network error, please try again later!"
+        )
     )
 
     val uiState = viewModelState
@@ -67,10 +70,15 @@ fun fakeWeatherDetail() = WeatherDetail(
 data class ViewModelState(
     var loading: Boolean = false,
     var city: String,
-    var weatherData: WeatherDetail?,
+    var weatherData: WeatherDetail? = null,
     var error: String = ""
 ) {
-    fun toUiState() = weatherData?.toUiState(city, loading, error)
+    fun toUiState() =
+        weatherData?.toUiState(city, loading, error) ?: NowUiState.NoWeatherUiState(
+            city,
+            false,
+            error
+        )
 }
 
 data class WeatherDetail(
@@ -116,13 +124,15 @@ data class WeatherDetail(
 }
 
 sealed interface NowUiState {
+    val city: String
+
     val isLoading: Boolean
 
     val errorMessage: String
+
     fun isEmpty(): Boolean
 
     data class WeatherNowUiState(
-        val city: String,
         val temp: String,
         val feelsLike: String,
         @DrawableRes val icon: Int,
@@ -135,11 +145,20 @@ sealed interface NowUiState {
         val humidity: String,
         val pressure: String,
         val visibility: String,
+        override val city: String,
         override val isLoading: Boolean,
         override val errorMessage: String
     ) : NowUiState {
         override fun isEmpty(): Boolean {
             return city.isNotEmpty() && temp.isNotEmpty() && text.isNotEmpty()
         }
+    }
+
+    data class NoWeatherUiState(
+        override val city: String,
+        override val isLoading: Boolean,
+        override val errorMessage: String
+    ) : NowUiState {
+        override fun isEmpty() = true
     }
 }

@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -39,7 +40,6 @@ fun AeolusScreen(
     uiState: NowUiState,
     onRefresh: () -> kotlin.Unit
 ) {
-    val weatherState = uiState as NowUiState.WeatherNowUiState
     val state = rememberPullRefreshState(uiState.isLoading, onRefresh)
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -53,7 +53,7 @@ fun AeolusScreen(
                 ),
                 title = {
                     Text(
-                        text = weatherState.city,
+                        text = uiState.city,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -70,14 +70,25 @@ fun AeolusScreen(
                 .pullRefresh(state)
                 .verticalScroll(rememberScrollState())
         ) {
-            WeatherScreen(
-                uiState = weatherState,
-                modifier = modifier
-                    .padding(
-                        horizontal = 8.dp,
-                        vertical = it.calculateTopPadding() + if (uiState.isLoading) 40.dp else 8.dp
-                    )
-            )
+            Log.d("Screen", "ui state $uiState")
+            if (uiState.isEmpty()) {
+                EmptyScreen(
+                    modifier = Modifier.align(Alignment.Center),
+                    message = uiState.errorMessage
+                )
+            } else {
+                val weatherState = uiState as NowUiState.WeatherNowUiState
+                WeatherScreen(
+                    uiState = weatherState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center)
+                        .padding(
+                            horizontal = 8.dp,
+                            vertical = it.calculateTopPadding() + if (uiState.isLoading) 40.dp else 8.dp
+                        )
+                )
+            }
             PullRefreshIndicator(
                 refreshing = uiState.isLoading,
                 state = state,
@@ -85,7 +96,7 @@ fun AeolusScreen(
                 contentColor = colorResource(R.color.teal_700),
             )
 
-            if (uiState.errorMessage.isNotEmpty()) {
+            if (!uiState.isEmpty() && !uiState.isLoading && uiState.errorMessage.isNotEmpty()) {
                 val message = remember(uiState) { uiState.errorMessage }
                 LaunchedEffect(key1 = message, key2 = snackbarHostState) {
                     snackbarHostState.showSnackbar(uiState.errorMessage)
@@ -93,6 +104,19 @@ fun AeolusScreen(
             }
         }
     }
+}
+
+@Composable
+fun EmptyScreen(
+    modifier: Modifier = Modifier,
+    message: String
+) {
+    Text(
+        modifier = modifier.padding(16.dp),
+        text = message,
+        style = MaterialTheme.typography.headlineLarge,
+        color = MaterialTheme.colorScheme.primary
+    )
 }
 
 @Composable
@@ -109,4 +133,15 @@ fun AeolusSnackbarHost(
             .widthIn(max = 550.dp),
         snackbar = { Snackbar(it) }
     )
+}
+
+@Preview
+@Composable
+fun EmptyScreenPreview() {
+    Box(Modifier.fillMaxSize()) {
+        EmptyScreen(
+            modifier = Modifier.align(Alignment.Center),
+            message = "The quick brown fox jumps over the lazy dog!"
+        )
+    }
 }
