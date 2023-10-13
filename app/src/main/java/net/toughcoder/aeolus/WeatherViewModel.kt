@@ -51,8 +51,13 @@ class WeatherViewModel : ViewModel() {
         viewModelState.update { it.copy(loading = true) }
         viewModelScope.launch {
             delay(3000)
+            val hasError = Random.nextInt(15) % 4 == 0
             viewModelState.update {
-                it.copy(loading = false, weatherData = fakeWeatherDetail(), error = "")
+                if (hasError) {
+                    it.copy(loading = false, error = "Something is wrong, please try again later!")
+                } else {
+                    it.copy(loading = false, weatherData = fakeWeatherDetail(), error = "")
+                }
             }
         }
     }
