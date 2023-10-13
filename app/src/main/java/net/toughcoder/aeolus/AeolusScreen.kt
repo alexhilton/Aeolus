@@ -1,5 +1,9 @@
 package net.toughcoder.aeolus
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,9 +27,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -74,14 +81,21 @@ fun AeolusScreen(
                     message = uiState.errorMessage
                 )
             } else {
-                WeatherScreen(
-                    uiState = uiState as NowUiState.WeatherNowUiState,
-                    modifier = Modifier
-                        .padding(
-                            horizontal = 8.dp,
-                            vertical = it.calculateTopPadding() + if (uiState.isLoading) 40.dp else 8.dp
-                        )
-                )
+                val visible by remember { mutableStateOf(true) }
+                AnimatedVisibility(
+                    visible = visible,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    WeatherScreen(
+                        uiState = uiState as NowUiState.WeatherNowUiState,
+                        modifier = Modifier
+                            .padding(
+                                horizontal = 8.dp,
+                                vertical = it.calculateTopPadding() + if (uiState.isLoading) 40.dp else 8.dp
+                            )
+                    )
+                }
             }
 
             PullRefreshIndicator(
