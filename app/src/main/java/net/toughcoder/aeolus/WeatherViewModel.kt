@@ -150,7 +150,7 @@ sealed interface NowUiState {
         override val errorMessage: String
     ) : NowUiState {
         override fun isEmpty(): Boolean {
-            return city.isNotEmpty() && temp.isNotEmpty() && text.isNotEmpty()
+            return city.isEmpty() && temp.isEmpty() && text.isEmpty()
         }
     }
 

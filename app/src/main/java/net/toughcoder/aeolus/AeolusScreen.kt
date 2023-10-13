@@ -1,6 +1,5 @@
 package net.toughcoder.aeolus
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,7 +15,6 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -70,25 +68,22 @@ fun AeolusScreen(
                 .pullRefresh(state)
                 .verticalScroll(rememberScrollState())
         ) {
-            Log.d("Screen", "ui state $uiState")
             if (uiState.isEmpty()) {
                 EmptyScreen(
                     modifier = Modifier.align(Alignment.Center),
                     message = uiState.errorMessage
                 )
             } else {
-                val weatherState = uiState as NowUiState.WeatherNowUiState
                 WeatherScreen(
-                    uiState = weatherState,
+                    uiState = uiState as NowUiState.WeatherNowUiState,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .align(Alignment.Center)
                         .padding(
                             horizontal = 8.dp,
                             vertical = it.calculateTopPadding() + if (uiState.isLoading) 40.dp else 8.dp
                         )
                 )
             }
+
             PullRefreshIndicator(
                 refreshing = uiState.isLoading,
                 state = state,
