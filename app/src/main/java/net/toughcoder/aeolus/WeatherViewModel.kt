@@ -30,6 +30,13 @@ class WeatherViewModel : ViewModel() {
             viewModelState.value.toUiState()
         )
 
+    init {
+        viewModelScope.launch {
+            delay(1000)
+            refresh()
+        }
+    }
+
     fun refresh() {
         viewModelState.value.weatherData?.let { weatherDetail ->
             val now = SystemClock.uptimeMillis()
