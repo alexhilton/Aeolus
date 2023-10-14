@@ -30,10 +30,6 @@ class WeatherViewModel : ViewModel() {
             viewModelState.value.toUiState()
         )
 
-    init {
-        refresh()
-    }
-
     fun refresh() {
         viewModelState.update { it.copy(loading = true) }
         viewModelState.value.weatherData?.let { weatherDetail ->

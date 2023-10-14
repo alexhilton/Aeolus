@@ -21,7 +21,7 @@ fun AeolusApp(modifier: Modifier = Modifier) {
             val viewModel: WeatherViewModel = viewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            AeolusScreen(modifier, uiState!!, viewModel::refresh)
+            AeolusScreen(modifier, uiState, viewModel::refresh)
         }
     }
 }
