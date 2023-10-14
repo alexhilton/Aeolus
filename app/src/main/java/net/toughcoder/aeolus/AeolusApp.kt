@@ -3,6 +3,7 @@ package net.toughcoder.aeolus
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,6 +21,10 @@ fun AeolusApp(modifier: Modifier = Modifier) {
         ) {
             val viewModel: WeatherViewModel = viewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            LaunchedEffect(key1 = Unit) {
+                viewModel.refresh()
+            }
 
             AeolusScreen(modifier, uiState, viewModel::refresh)
         }

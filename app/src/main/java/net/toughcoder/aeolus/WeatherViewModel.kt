@@ -17,8 +17,8 @@ class WeatherViewModel : ViewModel() {
     private val viewModelState = MutableStateFlow(
         ViewModelState(
             city = "Nanjing",
-            loading = false,
-            error = "Nothing to show, pull to refresh!"
+            loading = true,
+            error = "Loading weather data, please wait!"
         )
     )
 
