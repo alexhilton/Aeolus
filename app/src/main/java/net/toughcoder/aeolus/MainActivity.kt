@@ -18,8 +18,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-//            AeolusApp(Modifier.fillMaxWidth())
-            PullRefresh()
+            AeolusApp(Modifier.fillMaxWidth())
+//            PullRefresh()
         }
     }
 }

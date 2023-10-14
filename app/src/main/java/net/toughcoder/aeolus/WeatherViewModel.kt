@@ -40,7 +40,7 @@ class WeatherViewModel : ViewModel() {
     fun refresh() {
         viewModelState.value.weatherData?.let { weatherDetail ->
             val now = SystemClock.uptimeMillis()
-            if (now - weatherDetail.updateTime < 60 * 1000L) {
+            if (now - weatherDetail.updateTime < 20 * 1000L) {
                 viewModelState.update {
                     it.copy(error = "Weather data is already up-to-date!")
                 }

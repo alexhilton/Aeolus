@@ -74,6 +74,7 @@ fun AeolusScreen(
                 .fillMaxSize()
                 .pullRefresh(state)
                 .verticalScroll(rememberScrollState())
+                .padding(vertical = it.calculateTopPadding())
         ) {
             if (uiState.isEmpty()) {
                 EmptyScreen(
@@ -90,10 +91,7 @@ fun AeolusScreen(
                     WeatherScreen(
                         uiState = uiState as NowUiState.WeatherNowUiState,
                         modifier = Modifier
-                            .padding(
-                                horizontal = 8.dp,
-                                vertical = it.calculateTopPadding() + if (uiState.isLoading) 40.dp else 8.dp
-                            )
+                            .padding(8.dp)
                     )
                 }
             }
@@ -101,8 +99,10 @@ fun AeolusScreen(
             PullRefreshIndicator(
                 refreshing = uiState.isLoading,
                 state = state,
-                modifier = Modifier.align(Alignment.TopCenter),
+                modifier = Modifier
+                    .align(Alignment.TopCenter),
                 contentColor = colorResource(R.color.teal_700),
+                scale = true
             )
 
             if (!uiState.isEmpty() && !uiState.isLoading && uiState.errorMessage.isNotEmpty()) {
