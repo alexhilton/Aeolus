@@ -18,7 +18,7 @@ class WeatherViewModel : ViewModel() {
         ViewModelState(
             city = "Nanjing",
             loading = false,
-            error = "Network error, please try again later!"
+            error = "Nothing to show, pull to refresh!"
         )
     )
 
@@ -31,24 +31,21 @@ class WeatherViewModel : ViewModel() {
         )
 
     init {
-        viewModelScope.launch {
-            delay(1000)
-            refresh()
-        }
+        refresh()
     }
 
     fun refresh() {
+        viewModelState.update { it.copy(loading = true) }
         viewModelState.value.weatherData?.let { weatherDetail ->
             val now = SystemClock.uptimeMillis()
             if (now - weatherDetail.updateTime < 20 * 1000L) {
                 viewModelState.update {
-                    it.copy(error = "Weather data is already up-to-date!")
+                    it.copy(loading = false, error = "Weather data is already up-to-date!")
                 }
                 return
             }
         }
 
-        viewModelState.update { it.copy(loading = true) }
         viewModelScope.launch {
             delay(3000)
             val hasError = Random.nextInt(15) % 4 == 0
