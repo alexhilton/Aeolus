@@ -41,10 +41,10 @@ import androidx.compose.ui.unit.dp
 fun AeolusScreen(
     modifier: Modifier = Modifier,
     uiState: NowUiState,
-    onRefresh: () -> kotlin.Unit
+    onRefresh: () -> kotlin.Unit,
 ) {
-    val state = rememberPullRefreshState(uiState.isLoading, onRefresh)
     val snackbarHostState = remember { SnackbarHostState() }
+    val state = rememberPullRefreshState(uiState.isLoading, onRefresh)
 
     Scaffold(
         modifier = modifier,
@@ -102,12 +102,12 @@ fun AeolusScreen(
                 contentColor = colorResource(R.color.teal_700),
                 scale = true
             )
+        }
 
-            if (!uiState.isEmpty() && !uiState.isLoading && uiState.errorMessage.isNotEmpty()) {
-                val message = remember(uiState) { uiState.errorMessage }
-                LaunchedEffect(key1 = message, key2 = snackbarHostState) {
-                    snackbarHostState.showSnackbar(uiState.errorMessage)
-                }
+        if (!uiState.isEmpty() && !uiState.isLoading && uiState.errorMessage.isNotEmpty()) {
+            val message = remember(uiState) { uiState.errorMessage }
+            LaunchedEffect(key1 = message, key2 = snackbarHostState) {
+                snackbarHostState.showSnackbar(uiState.errorMessage)
             }
         }
     }

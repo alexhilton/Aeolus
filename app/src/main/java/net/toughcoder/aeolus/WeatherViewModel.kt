@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus
 
 import android.os.SystemClock
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,10 +15,13 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class WeatherViewModel : ViewModel() {
+    companion object {
+        const val LOG_TAG = "WeatherViewModel"
+    }
     private val viewModelState = MutableStateFlow(
         ViewModelState(
             city = "Nanjing",
-            loading = true,
+            loading = false,
             error = "Loading weather data, please wait!"
         )
     )
@@ -32,6 +36,7 @@ class WeatherViewModel : ViewModel() {
 
     fun refresh() {
         viewModelState.update { it.copy(loading = true) }
+        Log.d(LOG_TAG, "refresh loading loading you should see loading")
         viewModelState.value.weatherData?.let { weatherDetail ->
             val now = SystemClock.uptimeMillis()
             if (now - weatherDetail.updateTime < 20 * 1000L) {
@@ -53,6 +58,7 @@ class WeatherViewModel : ViewModel() {
                 }
             }
         }
+        Log.d(LOG_TAG, "refreshing is done.")
     }
 }
 
