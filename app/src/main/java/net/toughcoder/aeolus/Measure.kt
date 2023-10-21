@@ -1,6 +1,6 @@
 package net.toughcoder.aeolus
 
-sealed class Unit(
+sealed class Measure(
     val temp: String,
     val length: String,
     val speed: String,
@@ -9,7 +9,7 @@ sealed class Unit(
     val percent: String
 )
 
-class MetricUnit : Unit(
+class Metric : Measure(
     "\u2103",
     "km",
     "km/h",
@@ -18,4 +18,4 @@ class MetricUnit : Unit(
     "%"
 )
 
-fun unit(): Unit = MetricUnit()
+fun unit(): Measure = Metric()
