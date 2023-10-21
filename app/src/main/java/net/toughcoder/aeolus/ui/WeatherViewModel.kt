@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.R
-import net.toughcoder.aeolus.unit
+import net.toughcoder.aeolus.data.unit
 import kotlin.random.Random
 
 class WeatherViewModel : ViewModel() {
