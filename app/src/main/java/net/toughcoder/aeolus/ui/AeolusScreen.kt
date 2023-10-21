@@ -42,7 +42,7 @@ import net.toughcoder.aeolus.R
 fun AeolusScreen(
     modifier: Modifier = Modifier,
     uiState: NowUiState,
-    onRefresh: () -> kotlin.Unit,
+    onRefresh: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val state = rememberPullRefreshState(uiState.isLoading, onRefresh)
