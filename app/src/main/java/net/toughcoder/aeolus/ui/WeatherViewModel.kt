@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.R
+import net.toughcoder.aeolus.data.LocationRepository
+import net.toughcoder.aeolus.data.WeatherLocation
 import net.toughcoder.aeolus.data.unit
 import kotlin.random.Random
 
@@ -20,9 +22,12 @@ class WeatherViewModel : ViewModel() {
     companion object {
         const val LOG_TAG = "WeatherViewModel"
     }
+
+    private val locationRepo: LocationRepository = LocationRepository()
+
     private val viewModelState = MutableStateFlow(
         ViewModelState(
-            city = "Nanjing",
+            city = locationRepo.getLocation(),
             loading = false,
             error = "Loading weather data, please wait!"
         )
@@ -82,13 +87,13 @@ fun fakeWeatherDetail() = WeatherDetail(
 
 data class ViewModelState(
     var loading: Boolean = false,
-    var city: String,
+    var city: WeatherLocation,
     var weatherData: WeatherDetail? = null,
     var error: String = ""
 ) {
     fun toUiState() =
-        weatherData?.toUiState(city, loading, error) ?: NowUiState.NoWeatherUiState(
-            city,
+        weatherData?.toUiState(city.name, loading, error) ?: NowUiState.NoWeatherUiState(
+            city.name,
             false,
             error
         )
