@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.data.LocationRepository
 import net.toughcoder.aeolus.data.WeatherLocation
+import net.toughcoder.aeolus.data.WeatherNow
+import net.toughcoder.aeolus.data.WeatherNowRepository
 import net.toughcoder.aeolus.data.unit
 import kotlin.random.Random
 
@@ -24,6 +26,8 @@ class WeatherViewModel : ViewModel() {
     }
 
     private val locationRepo: LocationRepository = LocationRepository()
+
+    private val weatherNowRepo: WeatherNowRepository = WeatherNowRepository()
 
     private val viewModelState = MutableStateFlow(
         ViewModelState(
@@ -61,7 +65,7 @@ class WeatherViewModel : ViewModel() {
                 if (hasError) {
                     it.copy(loading = false, error = "Something is wrong, please try again later!")
                 } else {
-                    it.copy(loading = false, weatherData = fakeWeatherDetail(), error = "")
+                    it.copy(loading = false, weatherData = weatherNowRepo.getWeatherNow(locationRepo.getLocation()), error = "")
                 }
             }
         }
@@ -69,68 +73,36 @@ class WeatherViewModel : ViewModel() {
     }
 }
 
-fun fakeWeatherDetail() = WeatherDetail(
-    (Random.nextFloat() * 40f).toString(),
-    (Random.nextFloat() * 70f).toString(),
-    "101",
-    "多云",
-    Random.nextInt(360).toString(),
-    "东南风",
-    Random.nextInt(12).toString(),
-    Random.nextInt(100).toString(),
-    Random.nextInt(100).toString(),
-    Random.nextInt(10000).toString(),
-    Random.nextInt(400).toString(),
-    "10",
-    updateTime = SystemClock.uptimeMillis()
-)
-
 data class ViewModelState(
     var loading: Boolean = false,
     var city: WeatherLocation,
-    var weatherData: WeatherDetail? = null,
+    var weatherData: WeatherNow? = null,
     var error: String = ""
 ) {
     fun toUiState() =
-        weatherData?.toUiState(city.name, loading, error) ?: NowUiState.NoWeatherUiState(
+        weatherData?.let { convert(it) } ?: NowUiState.NoWeatherUiState(
             city.name,
             false,
             error
         )
-}
 
-data class WeatherDetail(
-    val nowTemp: String,
-    val feelsLike: String,
-    val icon: String,
-    val text: String,
-    val wind360: String,
-    val windDir: String,
-    val windScale: String,
-    val windSpeed: String,
-    val humidity: String,
-    val airPressure: String,
-    val visibility: String,
-    val cloud: String,
-    val updateTime: Long
-) {
-    fun toUiState(location: String, loading: Boolean, error: String = ""): NowUiState =
+    private fun convert(data: WeatherNow): NowUiState =
         with(unit()) {
             return NowUiState.WeatherNowUiState(
                 isLoading = loading,
-                city = location,
-                temp = "${formatTemp(nowTemp)}$temp",
-                feelsLike = "${formatTemp(feelsLike)}$temp",
-                icon = ICONS[icon]!!,
-                text = text,
-                windDegree = (wind360.toFloat() + 180f) % 360f,
+                city = city.name,
+                temp = "${formatTemp(data.nowTemp)}$temp",
+                feelsLike = "${formatTemp(data.feelsLike)}$temp",
+                icon = ICONS[data.icon]!!,
+                text = data.text,
+                windDegree = (data.wind360.toFloat() + 180f) % 360f,
                 iconDir = R.drawable.ic_nav,
-                windDir = windDir,
-                windScale = "$windScale $scale",
-                windSpeed = "$windSpeed $speed",
-                humidity = "$humidity $percent",
-                pressure = "$airPressure $pressure",
-                visibility = "$visibility $length",
+                windDir = data.windDir,
+                windScale = "${data.windScale} $scale",
+                windSpeed = "${data.windSpeed} $speed",
+                humidity = "${data.humidity} $percent",
+                pressure = "${data.airPressure} $pressure",
+                visibility = "${data.visibility} $length",
                 errorMessage = error
             )
         }

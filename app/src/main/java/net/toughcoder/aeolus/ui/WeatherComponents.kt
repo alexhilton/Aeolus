@@ -21,6 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import net.toughcoder.aeolus.R
+import net.toughcoder.aeolus.data.fakeNow
 
 @Composable
 fun WeatherScreen(
@@ -225,10 +227,25 @@ fun Weather15Days(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun DetailPreview() {
-    val state = fakeWeatherDetail()
-        .toUiState("Nanjing", false)
+    val state = NowUiState.WeatherNowUiState(
+        temp = "25 \u2103",
+        feelsLike = "28 \u2103",
+        icon = R.drawable.ic_101,
+        text = "Cloudy",
+        windDegree = 128f,
+        iconDir = R.drawable.ic_nav,
+        windDir = "SW",
+        windScale = "12 级",
+        windSpeed = "3 km/h",
+        humidity = "78 %",
+        pressure = "1024 pa",
+        visibility = "124 km",
+        city = "Nanjing",
+        isLoading = false,
+        errorMessage = ""
+    )
     WeatherDetails(
         Modifier.fillMaxWidth(),
-        uiState = state as NowUiState.WeatherNowUiState
+        uiState = state
     )
 }
