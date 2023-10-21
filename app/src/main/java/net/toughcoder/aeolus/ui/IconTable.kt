@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus
+package net.toughcoder.aeolus.ui
 
 import net.toughcoder.aeolus.R
 

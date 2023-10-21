@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus
+package net.toughcoder.aeolus.ui
 
 import android.os.SystemClock
 import android.util.Log
@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.toughcoder.aeolus.R
+import net.toughcoder.aeolus.unit
 import kotlin.random.Random
 
 class WeatherViewModel : ViewModel() {
