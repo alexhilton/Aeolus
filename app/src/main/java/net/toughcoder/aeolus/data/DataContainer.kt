@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.data
 
 import android.content.Context
+import net.toughcoder.aeolus.data.weather.FakeWeatherNowDatasource
 import net.toughcoder.aeolus.data.weather.WeatherNowRepository
 
 interface DataContainer {
@@ -14,6 +15,6 @@ class DataContainerImpl(private val context: Context) : DataContainer {
     }
 
     override val weatherNowRepository: WeatherNowRepository by lazy {
-        WeatherNowRepository()
+        WeatherNowRepository(FakeWeatherNowDatasource())
     }
 }
