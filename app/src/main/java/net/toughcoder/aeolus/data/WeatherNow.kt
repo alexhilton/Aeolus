@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.data
 
 data class WeatherNow(
+    val successful: Boolean,
     val nowTemp: String,
     val feelsLike: String,
     val icon: String,

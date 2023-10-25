@@ -7,11 +7,18 @@ import kotlin.random.Random
 class WeatherNowRepository {
     suspend fun getWeatherNow(location: WeatherLocation): WeatherNow {
         delay(((Random.nextFloat() + 0.1f) * 3000f).toLong())
-        return fakeNow()
+        val hasError = Random.nextInt(15) % 4 == 0
+        val data = fakeNow()
+        return if (hasError) {
+            data.copy(successful = false, updateTime = -1)
+        } else {
+            data
+        }
     }
 }
 
 fun fakeNow() = WeatherNow(
+    successful = true,
     (Random.nextFloat() * 40f).toString(),
     (Random.nextFloat() * 70f).toString(),
     "101",

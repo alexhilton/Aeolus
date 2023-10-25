@@ -58,10 +58,10 @@ class WeatherViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            val hasError = Random.nextInt(15) % 4 == 0
             viewModelState.update {
                 val loc = locationRepo.getLocation()
-                if (hasError) {
+                val weatherData = weatherNowRepo.getWeatherNow(loc)
+                if (!weatherData.successful) {
                     it.copy(loading = false, city = loc, error = "Something is wrong, please try again later!")
                 } else {
                     it.copy(
