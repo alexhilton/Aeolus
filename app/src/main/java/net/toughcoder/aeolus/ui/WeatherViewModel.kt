@@ -5,8 +5,12 @@ import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -27,6 +31,9 @@ class WeatherViewModel : ViewModel() {
 
     private val weatherNowRepo: WeatherNowRepository = WeatherNowRepository()
 
+    private val locationState = MutableStateFlow(WeatherLocation())
+    private val weatherNowState = MutableStateFlow(WeatherNow())
+
     private val viewModelState = MutableStateFlow(
         ViewModelState(
             loading = true,
@@ -43,7 +50,10 @@ class WeatherViewModel : ViewModel() {
         )
 
     fun refresh() {
+        // Step #1: Mark as loading
         viewModelState.update { it.copy(loading = true) }
+
+        // Step #2: Quit earlier if not need to update
         Log.d(LOG_TAG, "refresh loading loading you should see loading")
         viewModelState.value.weatherData?.let { weatherDetail ->
             val now = SystemClock.uptimeMillis()
@@ -55,34 +65,50 @@ class WeatherViewModel : ViewModel() {
             }
         }
 
+        // Step #3: Get latest location, then load new weather data based on the location
         viewModelScope.launch {
+            val loc = locationRepo.getLocation()
+            if (loc.successful()) {
+                locationState.update { loc }
+                val weatherNow = async { loadWeatherNow(loc) }
+                weatherNow.await()
+            }
+        }
+
+        // Step #4: Combine the location and data and transform into view model state to refresh UI.
+        combine(locationState, weatherNowState) { location, weatherNow ->
             viewModelState.update {
-                val loc = locationRepo.getLocation()
-                if (!loc.successful()) {
+                if (!location.successful()) {
                     it.copy(
                         loading = false,
                         error = "Failed to get location, please try again later"
                     )
                 } else {
-                    val weatherData = weatherNowRepo.getWeatherNow(loc)
-                    if (!weatherData.successful) {
+                    if (!weatherNow.successful) {
                         it.copy(
                             loading = false,
-                            city = loc,
+                            city = location,
                             error = "Something is wrong, please try again later!"
                         )
                     } else {
                         it.copy(
                             loading = false,
-                            city = loc,
-                            weatherData = weatherNowRepo.getWeatherNow(loc),
+                            city = location,
+                            weatherData = weatherNow,
                             error = ""
                         )
                     }
                 }
             }
-        }
+        }.launchIn(viewModelScope)
         Log.d(LOG_TAG, "refreshing is done.")
+    }
+
+    private suspend fun loadWeatherNow(loc: WeatherLocation) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val data = weatherNowRepo.getWeatherNow(loc)
+            weatherNowState.update { data }
+        }
     }
 }
 
