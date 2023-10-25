@@ -1,7 +1,8 @@
-package net.toughcoder.aeolus.data
+package net.toughcoder.aeolus.data.weather
 
 import android.os.SystemClock
 import kotlinx.coroutines.delay
+import net.toughcoder.aeolus.data.WeatherLocation
 import kotlin.random.Random
 
 class WeatherNowRepository {

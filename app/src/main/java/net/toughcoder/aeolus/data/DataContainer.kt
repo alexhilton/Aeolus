@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.data
 
 import android.content.Context
+import net.toughcoder.aeolus.data.weather.WeatherNowRepository
 
 interface DataContainer {
     val locationRepository: LocationRepository

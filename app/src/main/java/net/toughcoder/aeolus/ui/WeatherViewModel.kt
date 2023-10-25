@@ -19,8 +19,8 @@ import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.data.LocationRepository
 import net.toughcoder.aeolus.data.WeatherLocation
-import net.toughcoder.aeolus.data.WeatherNow
-import net.toughcoder.aeolus.data.WeatherNowRepository
+import net.toughcoder.aeolus.data.weather.WeatherNow
+import net.toughcoder.aeolus.data.weather.WeatherNowRepository
 import net.toughcoder.aeolus.data.unit
 
 class WeatherViewModel(

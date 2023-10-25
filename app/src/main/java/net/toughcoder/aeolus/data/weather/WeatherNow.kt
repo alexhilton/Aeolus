@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data
+package net.toughcoder.aeolus.data.weather
 
 data class WeatherNow(
     val successful: Boolean = false,
