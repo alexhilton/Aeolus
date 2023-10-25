@@ -33,7 +33,7 @@ class WeatherViewModel(
             locationRepo: LocationRepository,
             weatherNowRepo: WeatherNowRepository
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_AST")
+            @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return WeatherViewModel(locationRepo, weatherNowRepo) as T
             }
