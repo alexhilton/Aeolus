@@ -1,10 +1,12 @@
 package net.toughcoder.aeolus.data
 
 import android.os.SystemClock
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 class WeatherNowRepository {
-    fun getWeatherNow(location: WeatherLocation): WeatherNow {
+    suspend fun getWeatherNow(location: WeatherLocation): WeatherNow {
+        delay(((Random.nextFloat() + 0.1f) * 3000f).toLong())
         return fakeNow()
     }
 }

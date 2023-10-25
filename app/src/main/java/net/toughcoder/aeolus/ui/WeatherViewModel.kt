@@ -31,8 +31,7 @@ class WeatherViewModel : ViewModel() {
 
     private val viewModelState = MutableStateFlow(
         ViewModelState(
-            city = locationRepo.getLocation(),
-            loading = false,
+            loading = true,
             error = "Loading weather data, please wait!"
         )
     )
@@ -59,13 +58,18 @@ class WeatherViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            delay(3000)
             val hasError = Random.nextInt(15) % 4 == 0
             viewModelState.update {
+                val loc = locationRepo.getLocation()
                 if (hasError) {
-                    it.copy(loading = false, error = "Something is wrong, please try again later!")
+                    it.copy(loading = false, city = loc, error = "Something is wrong, please try again later!")
                 } else {
-                    it.copy(loading = false, weatherData = weatherNowRepo.getWeatherNow(locationRepo.getLocation()), error = "")
+                    it.copy(
+                        loading = false,
+                        city = loc,
+                        weatherData = weatherNowRepo.getWeatherNow(loc),
+                        error = ""
+                    )
                 }
             }
         }
@@ -75,13 +79,13 @@ class WeatherViewModel : ViewModel() {
 
 data class ViewModelState(
     var loading: Boolean = false,
-    var city: WeatherLocation,
+    var city: WeatherLocation? = null,
     var weatherData: WeatherNow? = null,
     var error: String = ""
 ) {
     fun toUiState() =
         weatherData?.let { convert(it) } ?: NowUiState.NoWeatherUiState(
-            city.name,
+            city?.name ?: "",
             false,
             error
         )
@@ -90,7 +94,7 @@ data class ViewModelState(
         with(unit()) {
             return NowUiState.WeatherNowUiState(
                 isLoading = loading,
-                city = city.name,
+                city = city?.name ?: "",
                 temp = "${formatTemp(data.nowTemp)}$temp",
                 feelsLike = "${formatTemp(data.feelsLike)}$temp",
                 icon = ICONS[data.icon]!!,
