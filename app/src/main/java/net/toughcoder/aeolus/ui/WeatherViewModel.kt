@@ -4,6 +4,7 @@ import android.os.SystemClock
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -22,14 +23,22 @@ import net.toughcoder.aeolus.data.WeatherNow
 import net.toughcoder.aeolus.data.WeatherNowRepository
 import net.toughcoder.aeolus.data.unit
 
-class WeatherViewModel : ViewModel() {
+class WeatherViewModel(
+    private val locationRepo: LocationRepository,
+    private val weatherNowRepo: WeatherNowRepository
+) : ViewModel() {
     companion object {
         const val LOG_TAG = "WeatherViewModel"
+        fun provideFactory(
+            locationRepo: LocationRepository,
+            weatherNowRepo: WeatherNowRepository
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_AST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return WeatherViewModel(locationRepo, weatherNowRepo) as T
+            }
+        }
     }
-
-    private val locationRepo: LocationRepository = LocationRepository()
-
-    private val weatherNowRepo: WeatherNowRepository = WeatherNowRepository()
 
     private val locationState = MutableStateFlow(WeatherLocation())
     private val weatherNowState = MutableStateFlow(WeatherNow())

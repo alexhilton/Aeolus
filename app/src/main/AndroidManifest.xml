@@ -8,6 +8,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_dw"
         android:label="@string/app_name"
+        android:name=".AeolusAndroidApp"
         android:roundIcon="@mipmap/dw"
         android:supportsRtl="true"
         android:theme="@style/Theme.Aeolus"
