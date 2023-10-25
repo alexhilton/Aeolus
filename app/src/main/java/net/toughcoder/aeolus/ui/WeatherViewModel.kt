@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -18,7 +17,6 @@ import net.toughcoder.aeolus.data.WeatherLocation
 import net.toughcoder.aeolus.data.WeatherNow
 import net.toughcoder.aeolus.data.WeatherNowRepository
 import net.toughcoder.aeolus.data.unit
-import kotlin.random.Random
 
 class WeatherViewModel : ViewModel() {
     companion object {
@@ -60,16 +58,27 @@ class WeatherViewModel : ViewModel() {
         viewModelScope.launch {
             viewModelState.update {
                 val loc = locationRepo.getLocation()
-                val weatherData = weatherNowRepo.getWeatherNow(loc)
-                if (!weatherData.successful) {
-                    it.copy(loading = false, city = loc, error = "Something is wrong, please try again later!")
-                } else {
+                if (!loc.successful()) {
                     it.copy(
                         loading = false,
-                        city = loc,
-                        weatherData = weatherNowRepo.getWeatherNow(loc),
-                        error = ""
+                        error = "Failed to get location, please try again later"
                     )
+                } else {
+                    val weatherData = weatherNowRepo.getWeatherNow(loc)
+                    if (!weatherData.successful) {
+                        it.copy(
+                            loading = false,
+                            city = loc,
+                            error = "Something is wrong, please try again later!"
+                        )
+                    } else {
+                        it.copy(
+                            loading = false,
+                            city = loc,
+                            weatherData = weatherNowRepo.getWeatherNow(loc),
+                            error = ""
+                        )
+                    }
                 }
             }
         }
