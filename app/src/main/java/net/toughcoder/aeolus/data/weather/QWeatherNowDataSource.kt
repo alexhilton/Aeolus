@@ -3,7 +3,6 @@ package net.toughcoder.aeolus.data.weather
 import android.util.Log
 import net.toughcoder.aeolus.data.WeatherLocation
 import net.toughcoder.aeolus.data.weather.api.QWeatherService
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -23,7 +22,7 @@ class QWeatherNowDataSource : WeatherNowDataSource {
                     feelsLike = feelsLike,
                     icon = icon,
                     text = text,
-                    wind360 = windDegree,
+                    windDegree = windDegree,
                     windDir = windDir,
                     windScale = windScale,
                     windSpeed = windSpeed,

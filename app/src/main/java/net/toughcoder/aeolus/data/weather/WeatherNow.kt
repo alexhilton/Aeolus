@@ -6,7 +6,7 @@ data class WeatherNow(
     val feelsLike: String = "",
     val icon: String = "",
     val text: String = "",
-    val wind360: String = "",
+    val windDegree: String = "",
     val windDir: String = "",
     val windScale: String = "",
     val windSpeed: String = "",

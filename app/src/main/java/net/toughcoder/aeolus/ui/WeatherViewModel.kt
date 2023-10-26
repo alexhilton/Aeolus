@@ -147,7 +147,7 @@ data class ViewModelState(
                 feelsLike = "${formatTemp(data.feelsLike)}$temp",
                 icon = ICONS[data.icon]!!,
                 text = data.text,
-                windDegree = (data.wind360.toFloat() + 180f) % 360f,
+                windDegree = (data.windDegree.toFloat() + 180f) % 360f,
                 iconDir = R.drawable.ic_nav,
                 windDir = data.windDir,
                 windScale = "${data.windScale} $scale",
