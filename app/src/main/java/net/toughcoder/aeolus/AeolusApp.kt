@@ -33,10 +33,6 @@ fun AeolusApp(
             )
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            LaunchedEffect(key1 = Unit) {
-                delay(1000)
-                viewModel.refresh()
-            }
             AeolusScreen(modifier, uiState, viewModel::refresh)
         }
     }

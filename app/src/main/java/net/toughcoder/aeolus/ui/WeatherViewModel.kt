@@ -58,6 +58,10 @@ class WeatherViewModel(
             viewModelState.value.toUiState()
         )
 
+    init {
+        refresh()
+    }
+
     fun refresh() {
         // Step #1: Mark as loading
         viewModelState.update { it.copy(loading = true) }
