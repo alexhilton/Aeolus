@@ -160,8 +160,12 @@ data class ViewModelState(
         }
 
     private fun formatTemp(temp: String): String {
-        val t = temp.toFloat()
-        return "%.1f".format(t)
+        return if ("." in temp) {
+            val t = temp.toFloat()
+            "%.1f".format(t)
+        } else {
+            temp
+        }
     }
 }
 
