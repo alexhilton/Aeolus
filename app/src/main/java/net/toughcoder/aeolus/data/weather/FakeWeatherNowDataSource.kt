@@ -31,6 +31,6 @@ class FakeWeatherNowDataSource : WeatherNowDataSource {
         Random.nextInt(10000).toString(),
         Random.nextInt(400).toString(),
         "10",
-        updateTime = SystemClock.uptimeMillis()
+        updateTime = SystemClock.uptimeMillis() / 1000L
     )
 }

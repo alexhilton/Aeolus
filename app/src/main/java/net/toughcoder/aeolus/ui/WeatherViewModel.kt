@@ -66,7 +66,7 @@ class WeatherViewModel(
         Log.d(LOG_TAG, "refresh loading loading you should see loading")
         viewModelState.value.weatherData?.let { weatherDetail ->
             val now = SystemClock.uptimeMillis()
-            if (now - weatherDetail.updateTime < 20 * 1000L) {
+            if (now - weatherDetail.updateTime < 20) {
                 viewModelState.update {
                     it.copy(loading = false, error = "Weather data is already up-to-date!")
                 }
