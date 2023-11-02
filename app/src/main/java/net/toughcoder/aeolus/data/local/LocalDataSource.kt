@@ -13,9 +13,11 @@ class LocalDataSource(val database: AeolusDatabase) : WeatherNowDataSource {
     override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow) {
         val dao = database.weatherNowDao()
         val entity = dao.getByCity(loc.name)
-        entity?.let {
+        if (entity == null) {
+            dao.insert(weatherNow.asEntity(loc.name))
+        } else {
             with(weatherNow) {
-                it.copy(
+                entity.copy(
                     updateTime = updateTime,
                     nowTemp = nowTemp,
                     feelsLike = feelsLike,
@@ -28,9 +30,9 @@ class LocalDataSource(val database: AeolusDatabase) : WeatherNowDataSource {
                     airPressure = airPressure,
                     visibility = visibility
                 )
+            }.also {
+                dao.update(it)
             }
-        }?.also {
-            dao.update(it)
         }
     }
 }

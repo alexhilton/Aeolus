@@ -1,5 +1,7 @@
 package net.toughcoder.aeolus.data.weather
 
+import net.toughcoder.aeolus.data.local.WeatherNowEntity
+
 data class WeatherNow(
     val successful: Boolean = false,
     val nowTemp: String = "",
@@ -15,4 +17,20 @@ data class WeatherNow(
     val visibility: String = "",
     val cloud: String = "",
     val updateTime: Long = -1
-)
+) {
+    fun asEntity(city: String): WeatherNowEntity = WeatherNowEntity(
+        city = city,
+        updateTime= updateTime,
+        nowTemp = nowTemp,
+        feelsLike = feelsLike,
+        icon = icon,
+        text = text,
+        windDegree = windDegree,
+        windDir = windDir,
+        windSpeed = windSpeed,
+        windScale = windScale,
+        humidity = humidity,
+        airPressure = airPressure,
+        visibility = visibility
+    )
+}

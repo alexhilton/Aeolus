@@ -59,7 +59,7 @@ class WeatherViewModel(
         )
 
     init {
-        // TODO: load local data first
+        loadLocalWeather()
         refresh()
     }
 
@@ -116,6 +116,22 @@ class WeatherViewModel(
             }
         }.launchIn(viewModelScope)
         Log.d(LOG_TAG, "refreshing is done.")
+    }
+
+    private fun loadLocalWeather() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val loc = locationRepo.getLocation()
+            val data = weatherNowRepo.getWeatherNow(loc)
+            Log.d(LOG_TAG, "from locals: location $loc, data $data")
+            locationState.update { loc }
+            weatherNowState.update { data }
+
+            combine(locationState, weatherNowState) { l, d ->
+                if (loc.successful() && data.successful) {
+                    viewModelState.update { it.copy(loading = false, city = l, weatherData = d) }
+                }
+            }.launchIn(viewModelScope)
+        }
     }
 
     private suspend fun loadWeatherNow(loc: WeatherLocation) {

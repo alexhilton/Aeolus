@@ -7,8 +7,7 @@ import net.toughcoder.aeolus.data.weather.WeatherNow
 
 @Entity(tableName = "weather_now")
 data class WeatherNowEntity(
-    @PrimaryKey val id: Int,
-    @ColumnInfo(name = "city") val city: String,
+    @PrimaryKey val city: String,
     @ColumnInfo(name = "update_time") val updateTime: Long,
     @ColumnInfo(name = "now_temp") val nowTemp: String,
     @ColumnInfo(name = "feels_like") val feelsLike: String,
@@ -17,6 +16,7 @@ data class WeatherNowEntity(
     @ColumnInfo(name = "wind_degree") val windDegree: String,
     @ColumnInfo(name = "wind_dir") val windDir: String,
     @ColumnInfo(name = "wind_scale") val windScale: String,
+    @ColumnInfo(name = "wind_speed") val windSpeed: String,
     @ColumnInfo(name = "humidity") val humidity: String,
     @ColumnInfo(name = "pressure") val airPressure: String,
     @ColumnInfo(name = "visibility") val visibility: String
@@ -32,6 +32,7 @@ data class WeatherNowEntity(
         windScale = windScale,
         humidity = humidity,
         airPressure = airPressure,
-        visibility = visibility
+        visibility = visibility,
+        updateTime = updateTime
     )
 }

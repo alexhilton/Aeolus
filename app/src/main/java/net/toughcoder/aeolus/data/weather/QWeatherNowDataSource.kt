@@ -13,28 +13,32 @@ class QWeatherNowDataSource : WeatherNowDataSource {
     }
     override suspend fun loadWeatherNow(loc: WeatherLocation): WeatherNow {
         val api = QWeatherService.create()
-        val response = api.fetchWeatherNow(loc.id)
-        return if (response.code == "200") {
-            with(response.now) {
-                WeatherNow(
-                    successful = true,
-                    nowTemp = temp,
-                    feelsLike = feelsLike,
-                    icon = icon,
-                    text = text,
-                    windDegree = windDegree,
-                    windDir = windDir,
-                    windScale = windScale,
-                    windSpeed = windSpeed,
-                    humidity = humidity,
-                    airPressure = pressure,
-                    visibility = visibility,
-                    cloud = cloud,
-                    updateTime = parseTime(response.updateTime)
-                )
+        try {
+            val response = api.fetchWeatherNow(loc.id)
+            return if (response.code == "200") {
+                with(response.now) {
+                    WeatherNow(
+                        successful = true,
+                        nowTemp = temp,
+                        feelsLike = feelsLike,
+                        icon = icon,
+                        text = text,
+                        windDegree = windDegree,
+                        windDir = windDir,
+                        windScale = windScale,
+                        windSpeed = windSpeed,
+                        humidity = humidity,
+                        airPressure = pressure,
+                        visibility = visibility,
+                        cloud = cloud,
+                        updateTime = parseTime(response.updateTime)
+                    )
+                }
+            } else {
+                WeatherNow(successful = false)
             }
-        } else {
-            WeatherNow(successful = false)
+        } catch (exception: Exception) {
+            return WeatherNow(successful = false)
         }
     }
 
