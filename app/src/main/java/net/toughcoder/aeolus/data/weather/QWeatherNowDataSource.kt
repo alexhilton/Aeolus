@@ -43,4 +43,8 @@ class QWeatherNowDataSource : WeatherNowDataSource {
         Log.d(LOG_TAG, "parseTime $t -> $d, long ${d.toEpochSecond(ZoneOffset.UTC)}")
         return d.toEpochSecond(ZoneOffset.UTC)
     }
+
+    override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow) {
+        // Not implemented
+    }
 }

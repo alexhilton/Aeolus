@@ -17,6 +17,10 @@ class FakeWeatherNowDataSource : WeatherNowDataSource {
         }
     }
 
+    override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow) {
+        TODO("Not yet implemented")
+    }
+
     private fun fakeNow() = WeatherNow(
         successful = true,
         (Random.nextFloat() * 40f).toString(),
@@ -33,4 +37,6 @@ class FakeWeatherNowDataSource : WeatherNowDataSource {
         "10",
         updateTime = SystemClock.uptimeMillis() / 1000L
     )
+
+
 }

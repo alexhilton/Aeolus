@@ -59,6 +59,7 @@ class WeatherViewModel(
         )
 
     init {
+        // TODO: load local data first
         refresh()
     }
 
@@ -119,7 +120,7 @@ class WeatherViewModel(
 
     private suspend fun loadWeatherNow(loc: WeatherLocation) {
         viewModelScope.launch(Dispatchers.IO) {
-            val data = weatherNowRepo.getWeatherNow(loc)
+            val data = weatherNowRepo.fetchWeatherNow(loc)
             weatherNowState.update { data }
         }
     }
