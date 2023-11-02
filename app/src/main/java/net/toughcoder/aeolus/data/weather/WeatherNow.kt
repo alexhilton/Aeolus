@@ -17,20 +17,19 @@ data class WeatherNow(
     val visibility: String = "",
     val cloud: String = "",
     val updateTime: Long = -1
-) {
-    fun asEntity(city: String): WeatherNowEntity = WeatherNowEntity(
-        city = city,
-        updateTime= updateTime,
-        nowTemp = nowTemp,
-        feelsLike = feelsLike,
-        icon = icon,
-        text = text,
-        windDegree = windDegree,
-        windDir = windDir,
-        windSpeed = windSpeed,
-        windScale = windScale,
-        humidity = humidity,
-        airPressure = airPressure,
-        visibility = visibility
-    )
-}
+)
+
+fun WeatherNowEntity.asModel(): WeatherNow = WeatherNow(
+    successful = true,
+    nowTemp = nowTemp,
+    feelsLike = feelsLike,
+    icon = icon,
+    text = text,
+    windDegree = windDegree,
+    windDir = windDir,
+    windScale = windScale,
+    humidity = humidity,
+    airPressure = airPressure,
+    visibility = visibility,
+    updateTime = updateTime
+)

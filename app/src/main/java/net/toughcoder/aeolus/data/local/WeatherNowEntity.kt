@@ -20,19 +20,19 @@ data class WeatherNowEntity(
     @ColumnInfo(name = "humidity") val humidity: String,
     @ColumnInfo(name = "pressure") val airPressure: String,
     @ColumnInfo(name = "visibility") val visibility: String
-) {
-    fun asModel(): WeatherNow = WeatherNow(
-        successful = true,
-        nowTemp = nowTemp,
-        feelsLike = feelsLike,
-        icon = icon,
-        text = text,
-        windDegree = windDegree,
-        windDir = windDir,
-        windScale = windScale,
-        humidity = humidity,
-        airPressure = airPressure,
-        visibility = visibility,
-        updateTime = updateTime
-    )
-}
+)
+fun WeatherNow.asEntity(city: String): WeatherNowEntity = WeatherNowEntity(
+    city = city,
+    updateTime= updateTime,
+    nowTemp = nowTemp,
+    feelsLike = feelsLike,
+    icon = icon,
+    text = text,
+    windDegree = windDegree,
+    windDir = windDir,
+    windSpeed = windSpeed,
+    windScale = windScale,
+    humidity = humidity,
+    airPressure = airPressure,
+    visibility = visibility
+)

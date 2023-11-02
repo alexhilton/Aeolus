@@ -127,7 +127,7 @@ class WeatherViewModel(
             weatherNowState.update { data }
 
             combine(locationState, weatherNowState) { l, d ->
-                if (loc.successful() && data.successful) {
+                if (l.successful() && d.successful) {
                     viewModelState.update { it.copy(loading = false, city = l, weatherData = d) }
                 }
             }.launchIn(viewModelScope)

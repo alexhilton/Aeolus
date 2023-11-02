@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.local
 import net.toughcoder.aeolus.data.WeatherLocation
 import net.toughcoder.aeolus.data.weather.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherNowDataSource
+import net.toughcoder.aeolus.data.weather.asModel
 
 class LocalDataSource(val database: AeolusDatabase) : WeatherNowDataSource {
     override suspend fun loadWeatherNow(loc: WeatherLocation): WeatherNow {
