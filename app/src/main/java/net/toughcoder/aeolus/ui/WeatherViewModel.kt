@@ -11,7 +11,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -90,32 +89,26 @@ class WeatherViewModel(
         }
 
         // Step #4: Combine the location and data and transform into view model state to refresh UI.
-        combine(locationState, weatherNowState) { location, weatherNow ->
-            viewModelState.update {
-                if (!location.successful()) {
-                    it.copy(
-                        loading = false,
-                        error = "Failed to get location, please try again later"
-                    )
-                } else {
-                    if (!weatherNow.successful) {
-                        it.copy(
-                            loading = false,
-                            city = location,
-                            error = "Something is wrong, please try again later!"
-                        )
-                    } else {
-                        it.copy(
-                            loading = false,
-                            city = location,
-                            weatherData = weatherNow,
-                            error = ""
-                        )
-                    }
-                }
-            }
-        }.launchIn(viewModelScope)
+        updateState()
         Log.d(LOG_TAG, "refreshing is done.")
+    }
+
+    private fun updateState() {
+        viewModelScope.launch {
+            combine(locationState, weatherNowState) { loc, now ->
+                val error = if (!loc.successful()) {
+                    "Failed to get location, please try again later!"
+                } else if (!now.successful) {
+                    "Something is wrong, please try again later!"
+                } else {
+                    ""
+                }
+                val weather = if (now.successful) now else viewModelState.value.weatherData
+                return@combine ViewModelState(false, loc, weather, error)
+            }.collect { state ->
+                viewModelState.update { state }
+            }
+        }
     }
 
     private fun loadLocalWeather() {
@@ -126,11 +119,7 @@ class WeatherViewModel(
             locationState.update { loc }
             weatherNowState.update { data }
 
-            combine(locationState, weatherNowState) { l, d ->
-                if (l.successful() && d.successful) {
-                    viewModelState.update { it.copy(loading = false, city = l, weatherData = d) }
-                }
-            }.launchIn(viewModelScope)
+            updateState()
         }
     }
 
