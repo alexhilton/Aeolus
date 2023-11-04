@@ -33,11 +33,12 @@ class WeatherNowRepository(
         return stream.asStateFlow()
     }
 
-    suspend fun refreshWeatherNow(location: WeatherLocation) {
+    suspend fun refreshWeatherNow(location: WeatherLocation, after: () -> Unit) {
         val bundle = network.loadWeatherNow(location)
         if (bundle.successful) {
             local.updateWeatherNow(location, bundle)
         }
         stream.update { bundle }
+        after()
     }
 }

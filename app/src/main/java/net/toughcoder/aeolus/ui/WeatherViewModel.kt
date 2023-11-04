@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -40,7 +40,7 @@ class WeatherViewModel(
     }
 
     private val locationState = MutableStateFlow(WeatherLocation())
-    private val weatherNowState = MutableStateFlow(WeatherNow())
+    private lateinit var weatherNowState: Flow<WeatherNow>
 
     private val viewModelState = MutableStateFlow(
         ViewModelState(
@@ -67,7 +67,6 @@ class WeatherViewModel(
         viewModelState.update { it.copy(loading = true) }
 
         // Step #2: Quit earlier if not need to update
-        Log.d(LOG_TAG, "refresh loading loading you should see loading")
         viewModelState.value.weatherData?.let { weatherDetail ->
             val now = SystemClock.uptimeMillis()
             if (now - weatherDetail.updateTime < 20) {
@@ -79,18 +78,13 @@ class WeatherViewModel(
         }
 
         // Step #3: Get latest location, then load new weather data based on the location
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val loc = locationRepo.getLocation()
             if (loc.successful()) {
                 locationState.update { loc }
-                val weatherNow = async { loadWeatherNow(loc) }
-                weatherNow.await()
+                weatherNowRepo.refreshWeatherNow(loc, ::updateState)
             }
         }
-
-        // Step #4: Combine the location and data and transform into view model state to refresh UI.
-        updateState()
-        Log.d(LOG_TAG, "refreshing is done.")
     }
 
     private fun updateState() {
@@ -114,19 +108,11 @@ class WeatherViewModel(
     private fun loadLocalWeather() {
         viewModelScope.launch(Dispatchers.IO) {
             val loc = locationRepo.getLocation()
-            val data = weatherNowRepo.getWeatherNow(loc)
-            Log.d(LOG_TAG, "from locals: location $loc, data $data")
+            weatherNowState = weatherNowRepo.weatherNowStream(loc)
+            Log.d(LOG_TAG, "from locals: location $loc")
             locationState.update { loc }
-            weatherNowState.update { data }
 
             updateState()
-        }
-    }
-
-    private suspend fun loadWeatherNow(loc: WeatherLocation) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val data = weatherNowRepo.fetchWeatherNow(loc)
-            weatherNowState.update { data }
         }
     }
 }
