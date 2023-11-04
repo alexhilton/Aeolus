@@ -67,14 +67,13 @@ class WeatherViewModel(
         viewModelState.update { it.copy(loading = true) }
 
         // Step #2: Quit earlier if not need to update
-        viewModelState.value.weatherData?.let { weatherDetail ->
-            val now = SystemClock.uptimeMillis()
-            if (now - weatherDetail.updateTime < 20) {
-                viewModelState.update {
-                    it.copy(loading = false, error = "Weather data is already up-to-date!")
-                }
-                return
+        val now = SystemClock.uptimeMillis()
+        Log.d(LOG_TAG, "now $now, last ${viewModelState.value.updateTime}")
+        if (now - viewModelState.value.updateTime < 20 * 1000L) {
+            viewModelState.update {
+                it.copy(loading = false, error = "Weather data is already up-to-date!")
             }
+            return
         }
 
         // Step #3: Get latest location, then load new weather data based on the location
@@ -98,7 +97,13 @@ class WeatherViewModel(
                     ""
                 }
                 val weather = if (now.successful) now else viewModelState.value.weatherData
-                return@combine ViewModelState(false, loc, weather, error)
+                return@combine ViewModelState(
+                    loading = false,
+                    city = loc,
+                    weatherData = weather,
+                    error = error,
+                    updateTime = SystemClock.uptimeMillis()
+                )
             }.collect { state ->
                 viewModelState.update { state }
             }
@@ -121,7 +126,8 @@ data class ViewModelState(
     var loading: Boolean = false,
     var city: WeatherLocation? = null,
     var weatherData: WeatherNow? = null,
-    var error: String = ""
+    var error: String = "",
+    var updateTime: Long = -1
 ) {
     fun toUiState() =
         weatherData?.let { convert(it) } ?: NowUiState.NoWeatherUiState(
