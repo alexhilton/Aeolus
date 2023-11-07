@@ -2,6 +2,7 @@ package net.toughcoder.aeolus.data
 
 import android.content.Context
 import androidx.room.Room
+import kotlinx.coroutines.Dispatchers
 import net.toughcoder.aeolus.data.local.AeolusDatabase
 import net.toughcoder.aeolus.data.local.LocalDataSource
 import net.toughcoder.aeolus.data.weather.FakeWeatherNowDataSource
@@ -23,7 +24,8 @@ class DataContainerImpl(private val context: Context) : DataContainer {
 //        WeatherNowRepository(FakeWeatherNowDataSource())
         WeatherNowRepository(
             LocalDataSource(database),
-            QWeatherNowDataSource()
+            QWeatherNowDataSource(),
+            Dispatchers.IO
         )
     }
 

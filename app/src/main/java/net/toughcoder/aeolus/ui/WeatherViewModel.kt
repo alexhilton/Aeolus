@@ -69,7 +69,7 @@ class WeatherViewModel(
         // Step #2: Quit earlier if not need to update
         val now = SystemClock.uptimeMillis()
         Log.d(LOG_TAG, "now $now, last ${viewModelState.value.updateTime}")
-        if (now - viewModelState.value.updateTime < 20 * 1000L) {
+        if (now - viewModelState.value.updateTime < 30 * 1000L) {
             viewModelState.update {
                 it.copy(loading = false, error = "Weather data is already up-to-date!")
             }
@@ -77,11 +77,12 @@ class WeatherViewModel(
         }
 
         // Step #3: Get latest location, then load new weather data based on the location
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val loc = locationRepo.getLocation()
             if (loc.successful()) {
                 locationState.update { loc }
-                weatherNowRepo.refreshWeatherNow(loc, ::updateState)
+                weatherNowRepo.refreshWeatherNow(loc)
+                updateState()
             }
         }
     }
@@ -111,7 +112,7 @@ class WeatherViewModel(
     }
 
     private fun loadLocalWeather() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val loc = locationRepo.getLocation()
             weatherNowState = weatherNowRepo.weatherNowStream(loc)
             Log.d(LOG_TAG, "from locals: location $loc")

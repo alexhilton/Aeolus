@@ -5,7 +5,7 @@ import net.toughcoder.aeolus.data.weather.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherNowDataSource
 import net.toughcoder.aeolus.data.weather.asModel
 
-class LocalDataSource(val database: AeolusDatabase) : WeatherNowDataSource {
+class LocalDataSource(private val database: AeolusDatabase) : WeatherNowDataSource {
     override suspend fun loadWeatherNow(loc: WeatherLocation): WeatherNow {
         val dao = database.weatherNowDao()
         return dao.getByCity(loc.name)?.asModel() ?: WeatherNow()
