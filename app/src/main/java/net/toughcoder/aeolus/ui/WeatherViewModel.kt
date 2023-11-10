@@ -98,12 +98,13 @@ class WeatherViewModel(
                     ""
                 }
                 val weather = if (now.successful) now else viewModelState.value.weatherData
+                val updateTime = if (now.successful) SystemClock.uptimeMillis() else viewModelState.value.updateTime
                 return@combine ViewModelState(
                     loading = false,
                     city = loc,
                     weatherData = weather,
                     error = error,
-                    updateTime = SystemClock.uptimeMillis()
+                    updateTime = updateTime
                 )
             }.collect { state ->
                 viewModelState.update { state }
