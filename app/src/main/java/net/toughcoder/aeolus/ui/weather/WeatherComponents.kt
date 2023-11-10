@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.ui
+package net.toughcoder.aeolus.ui.weather
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

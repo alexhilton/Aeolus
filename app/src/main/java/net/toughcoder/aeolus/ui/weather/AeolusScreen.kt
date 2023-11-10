@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.ui
+package net.toughcoder.aeolus.ui.weather
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn

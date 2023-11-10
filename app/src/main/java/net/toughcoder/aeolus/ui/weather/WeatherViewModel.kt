@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.ui
+package net.toughcoder.aeolus.ui.weather
 
 import android.os.SystemClock
 import android.util.Log
@@ -6,7 +6,6 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,6 +20,7 @@ import net.toughcoder.aeolus.data.WeatherLocation
 import net.toughcoder.aeolus.data.weather.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherNowRepository
 import net.toughcoder.aeolus.data.unit
+import net.toughcoder.aeolus.ui.ICONS
 
 class WeatherViewModel(
     private val locationRepo: LocationRepository,
