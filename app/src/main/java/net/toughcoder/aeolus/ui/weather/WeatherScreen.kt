@@ -70,7 +70,7 @@ fun AeolusScreen(
                 navigationIcon = {
                     IconButton(onClick = navToFavorites) {
                         Icon(
-                            imageVector = Icons.Filled.Favorite,
+                            imageVector = Icons.Default.Favorite,
                             contentDescription = "Go to favorites"
                         )
                     }

@@ -46,7 +46,7 @@ fun FavoritesScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Go back"
                         )
                     }
@@ -54,7 +54,7 @@ fun FavoritesScreen(
                 actions = {
                     IconButton(onClick = onSearch) {
                         Icon(
-                            imageVector = Icons.Filled.Search,
+                            imageVector = Icons.Default.Search,
                             contentDescription = "Search a city"
                         )
                     }
