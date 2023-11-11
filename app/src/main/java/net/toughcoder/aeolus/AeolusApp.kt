@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import net.toughcoder.aeolus.data.DataContainer
+import net.toughcoder.aeolus.ui.AeolusNavGraph
 import net.toughcoder.aeolus.ui.weather.AeolusScreen
 import net.toughcoder.aeolus.ui.weather.WeatherViewModel
 import net.toughcoder.aeolus.ui.theme.AeolusTheme
@@ -23,15 +24,7 @@ fun AeolusApp(
             modifier = modifier,
             color = MaterialTheme.colorScheme.background
         ) {
-            val viewModel: WeatherViewModel = viewModel(
-                factory = WeatherViewModel.provideFactory(
-                    dataContainer.locationRepository,
-                    dataContainer.weatherNowRepository
-                )
-            )
-            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-            AeolusScreen(modifier, uiState, viewModel::refresh)
+            AeolusNavGraph(appContainer = dataContainer)
         }
     }
 }

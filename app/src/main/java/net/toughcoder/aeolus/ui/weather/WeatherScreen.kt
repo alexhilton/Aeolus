@@ -47,6 +47,7 @@ fun AeolusScreen(
     modifier: Modifier = Modifier,
     uiState: NowUiState,
     onRefresh: () -> Unit,
+    navToFavorites: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val state = rememberPullRefreshState(uiState.isLoading, onRefresh)
@@ -67,7 +68,7 @@ fun AeolusScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* to Favorites */ }) {
+                    IconButton(onClick = navToFavorites) {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
                             contentDescription = "Go to favorites"
