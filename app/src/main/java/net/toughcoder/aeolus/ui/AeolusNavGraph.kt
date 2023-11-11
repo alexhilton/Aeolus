@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import net.toughcoder.aeolus.data.DataContainer
 import net.toughcoder.aeolus.ui.favorites.FavoritesScreen
+import net.toughcoder.aeolus.ui.search.SearchScreen
 import net.toughcoder.aeolus.ui.weather.AeolusScreen
 import net.toughcoder.aeolus.ui.weather.WeatherViewModel
 
@@ -58,9 +59,18 @@ fun AeolusNavGraph(
         ) {
             FavoritesScreen(
                 onBack = { navController.popBackStack() },
-                onSearch = { /*TODO*/ },
+                onSearch = { navController.navigate(AeolusDestinations.SEARCH_ROUTE) },
                 onLocationChanged = {}
             )
+        }
+
+        composable(
+            route = AeolusDestinations.SEARCH_ROUTE,
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "${AeolusDestinations.APP_URI}/${AeolusDestinations.SEARCH_ROUTE}" }
+            )
+        ) {
+            SearchScreen(onBack = { navController.popBackStack() }, onAddLocation = {})
         }
     }
 }

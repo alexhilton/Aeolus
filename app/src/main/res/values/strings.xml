@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">DevWeather</string>
     <string name="app_description">A weather app by a developer and for developers!</string>
-    <string name="favorites_title">Favorite Cities</string>
+    <string name="favorites_title">Favorite cities</string>
+    <string name="search_title">Search cities</string>
 </resources>
