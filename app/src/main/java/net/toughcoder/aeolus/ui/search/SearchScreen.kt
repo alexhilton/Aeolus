@@ -3,16 +3,19 @@ package net.toughcoder.aeolus.ui.search
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,6 +30,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.modifier.modifierLocalConsumer
@@ -45,6 +49,7 @@ fun SearchScreen(
     var active by remember { mutableStateOf(false) }
     val hotCities = listOf("beijing", "shanghai", "shenzhen", "guangzhou", "nanjing", "suchou", "hangzhou")
     var searchResults = remember { mutableStateListOf<String>() }
+    var searchHistories = remember { mutableStateListOf<String>() }
 
     Column(
         modifier
@@ -53,35 +58,69 @@ fun SearchScreen(
     ) {
         Spacer(Modifier.height(16.dp))
 
-        SearchBar(
-            query = query,
-            onQueryChange = { query = it},
-            onSearch = {
-                active = false
-                searchResults.add(it)
-                query = ""
-            },
-            active = active,
-            onActiveChange = { active = it },
-            modifier = modifier,
-            enabled = true,
-            placeholder = { Text("Search a city") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
-                )
-            },
-            trailingIcon = {
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SearchBar(
+                query = query,
+                onQueryChange = { query = it},
+                onSearch = {
+                    active = false
+                    if (it.trim().isNotEmpty()) {
+                        searchHistories.add(it)
+                        searchResults.add(it)
+                    }
+                },
+                active = active,
+                onActiveChange = { active = it },
+                modifier = Modifier.weight(1f),
+                enabled = true,
+                placeholder = { Text("Search a city") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search"
+                    )
+                },
+                trailingIcon = if (active && query.isNotEmpty()) {
+                    {
+                        IconButton(onClick = { query = "" }) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close"
+                            )
+                        }
+                    }
+                } else {
+                    null
+                }
+            ) {
+                SearchHistories(modifier, searchHistories) {
+                    active = false
+                    searchResults.add(it)
+                }
+            }
+
+            if (!active) {
+                Spacer(Modifier.width(16.dp))
+
                 IconButton(onClick = onBack) {
                     Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close"
+                        imageVector = Icons.Default.Done,
+                        contentDescription = "Done"
                     )
                 }
             }
-        ) {
-            HotCities(modifier, hotCities)
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        HotCities(modifier, hotCities) {
+            active = false
+            query = ""
+            onAddLocation(it)
+            onBack()
         }
 
         Spacer(Modifier.height(16.dp))
@@ -93,7 +132,8 @@ fun SearchScreen(
 @Composable
 fun HotCities(
     modifier: Modifier = Modifier,
-    cities: List<String>
+    cities: List<String>,
+    onHotClick: (String) -> Unit
 ) {
     LazyRow(
         modifier = modifier,
@@ -101,7 +141,7 @@ fun HotCities(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(cities) {
-            HotCityItem(modifier = modifier, city = it)
+            HotCityItem(modifier, it, onHotClick)
         }
     }
 }
@@ -109,16 +149,48 @@ fun HotCities(
 @Composable
 fun HotCityItem(
     modifier: Modifier,
-    city: String
+    city: String,
+    onHotClick: (String) -> Unit
 ) {
     Surface(
         shape = MaterialTheme.shapes.extraLarge,
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        onClick = { onHotClick(city) }
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             text = city,
             style = MaterialTheme.typography.titleLarge
+        )
+    }
+}
+
+@Composable
+fun SearchHistories(
+    modifier: Modifier,
+    histories: List<String>,
+    onHistoryClick: (String) -> Unit
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(histories) {
+            HistoryItem(modifier, it, onHistoryClick)
+        }
+    }
+}
+
+@Composable
+fun HistoryItem(
+    modifier: Modifier,
+    history: String,
+    onHistoryClick: (String) -> Unit
+) {
+    Surface(onClick = { onHistoryClick(history) }) {
+        Text(
+            modifier = Modifier.padding(16.dp), text = history,
         )
     }
 }
@@ -169,7 +241,7 @@ fun SearchResultItem(
 @Preview
 @Composable
 fun HotCityItemPreview() {
-    HotCityItem(modifier = Modifier, city = "Beijing")
+    HotCityItem(modifier = Modifier, city = "Beijing") {}
 }
 
 @Preview
