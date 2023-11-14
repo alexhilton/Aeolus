@@ -3,9 +3,13 @@ package net.toughcoder.aeolus.data
 import android.content.Context
 import androidx.room.Room
 import kotlinx.coroutines.Dispatchers
+import net.toughcoder.aeolus.data.qweather.GeoAPIService
+import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.data.local.AeolusDatabase
 import net.toughcoder.aeolus.data.local.LocalDataSource
-import net.toughcoder.aeolus.data.weather.FakeWeatherNowDataSource
+import net.toughcoder.aeolus.data.location.LocationRepository
+import net.toughcoder.aeolus.data.location.QWeatherLocationSource
+import net.toughcoder.aeolus.data.location.SearchRepository
 import net.toughcoder.aeolus.data.weather.QWeatherNowDataSource
 import net.toughcoder.aeolus.data.weather.WeatherNowRepository
 
@@ -14,6 +18,7 @@ interface DataContainer {
     val weatherNowRepository: WeatherNowRepository
     val database: AeolusDatabase
     val datastore: AeolusPreferences
+    val searchRepository: SearchRepository
 }
 
 class DataContainerImpl(private val context: Context) : DataContainer {
@@ -25,7 +30,7 @@ class DataContainerImpl(private val context: Context) : DataContainer {
 //        WeatherNowRepository(FakeWeatherNowDataSource())
         WeatherNowRepository(
             LocalDataSource(database),
-            QWeatherNowDataSource(),
+            QWeatherNowDataSource(QWeatherService.create()),
             Dispatchers.IO
         )
     }
@@ -36,5 +41,12 @@ class DataContainerImpl(private val context: Context) : DataContainer {
 
     override val datastore: AeolusPreferences by lazy {
         AeolusPreferences(context.aeolusStore)
+    }
+
+    override val searchRepository: SearchRepository by lazy {
+        SearchRepository(
+            QWeatherLocationSource(GeoAPIService.create()),
+            Dispatchers.IO
+        )
     }
 }

@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data.weather.api
+package net.toughcoder.aeolus.data.qweather
 
 import net.toughcoder.aeolus.BuildConfig
 import okhttp3.OkHttpClient
@@ -8,19 +8,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface QWeatherService {
-    @GET("v7/weather/now")
-    suspend fun fetchWeatherNow(
-        @Query("location") location: String,
+interface GeoAPIService {
+    @GET("v2/city/top")
+    suspend fun fetchTopCities(
+        @Query("range") range: String = "cn",
+        @Query("number") number: Int = 10,
         @Query("lang") lang: String = "zh",
-        @Query("unit") unit: String = "m",
         @Query("key") key: String = BuildConfig.QWEATHER_API_KEY
-    ) : QWeatherNowResponse
+    ) : QWeatherTopCitiesResponse
 
     companion object {
-        private const val BASE_URL = "https://devapi.qweather.com/"
+        const val BASE_URL = "https://geoapi.qweather.com/"
 
-        fun create(): QWeatherService {
+        fun create(): GeoAPIService {
             val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC}
 
             val client = OkHttpClient.Builder()
@@ -32,7 +32,7 @@ interface QWeatherService {
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(QWeatherService::class.java)
+                .create(GeoAPIService::class.java)
         }
     }
 }

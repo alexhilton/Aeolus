@@ -2,17 +2,18 @@ package net.toughcoder.aeolus.data.weather
 
 import android.util.Log
 import net.toughcoder.aeolus.data.WeatherLocation
-import net.toughcoder.aeolus.data.weather.api.QWeatherService
+import net.toughcoder.aeolus.data.qweather.QWeatherService
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-class QWeatherNowDataSource : WeatherNowDataSource {
+class QWeatherNowDataSource(
+    private val api: QWeatherService
+) : WeatherNowDataSource {
     companion object {
         const val LOG_TAG = "QWeatherNowDataSource"
     }
     override suspend fun loadWeatherNow(loc: WeatherLocation): WeatherNow {
-        val api = QWeatherService.create()
         try {
             val response = api.fetchWeatherNow(loc.id)
             return if (response.code == "200") {

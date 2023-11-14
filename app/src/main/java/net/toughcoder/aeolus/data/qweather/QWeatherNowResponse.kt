@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data.weather.api
+package net.toughcoder.aeolus.data.qweather
 
 import com.google.gson.annotations.SerializedName
 

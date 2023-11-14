@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import net.toughcoder.aeolus.data.WeatherLocation
 
 @Composable
 fun SearchScreen(
@@ -45,7 +46,7 @@ fun SearchScreen(
     onBack: () -> Unit,
     onAddLocation: (String) -> Unit
 ) {
-    val hotCities = listOf("beijing", "shanghai", "shenzhen", "guangzhou", "nanjing", "suchou", "hangzhou")
+    val hotCities by searchViewModel.getTopCities().collectAsStateWithLifecycle(initialValue = listOf())
     var searchResults = remember { mutableStateListOf<String>() }
     val searchHistories by searchViewModel.getSearchHistories().collectAsStateWithLifecycle(
         initialValue = listOf()
@@ -70,7 +71,7 @@ fun SearchScreen(
         Spacer(Modifier.height(16.dp))
 
         HotCities(modifier, hotCities) {
-            onAddLocation(it)
+            onAddLocation(it.name)
             onBack()
         }
 
@@ -156,8 +157,8 @@ fun SearchComponent(
 @Composable
 fun HotCities(
     modifier: Modifier = Modifier,
-    cities: List<String>,
-    onHotClick: (String) -> Unit
+    cities: List<WeatherLocation>,
+    onHotClick: (WeatherLocation) -> Unit
 ) {
     FlowRow(
         modifier = modifier,
@@ -173,8 +174,8 @@ fun HotCities(
 @Composable
 fun HotCityItem(
     modifier: Modifier,
-    city: String,
-    onHotClick: (String) -> Unit
+    city: WeatherLocation,
+    onHotClick: (WeatherLocation) -> Unit
 ) {
     Surface(
         shape = MaterialTheme.shapes.extraLarge,
@@ -183,7 +184,7 @@ fun HotCityItem(
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            text = city,
+            text = city.name,
             style = MaterialTheme.typography.titleLarge
         )
     }
@@ -272,7 +273,7 @@ fun SearchResultItem(
 @Preview
 @Composable
 fun HotCityItemPreview() {
-    HotCityItem(modifier = Modifier, city = "Beijing") {}
+    HotCityItem(modifier = Modifier, city = WeatherLocation("", "Bei Jing")) {}
 }
 
 @Preview

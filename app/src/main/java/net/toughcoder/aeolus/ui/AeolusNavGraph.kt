@@ -72,7 +72,10 @@ fun AeolusNavGraph(
             )
         ) {
             val viewModel: SearchViewModel = viewModel(
-                factory = SearchViewModel.providerFactory(appContainer.datastore)
+                factory = SearchViewModel.providerFactory(
+                    appContainer.datastore,
+                    appContainer.searchRepository
+                )
             )
             SearchScreen(
                 searchViewModel = viewModel,

@@ -4,11 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.AeolusPreferences
+import net.toughcoder.aeolus.data.WeatherLocation
+import net.toughcoder.aeolus.data.location.SearchRepository
 
 class SearchViewModel(
-    private val prefStore: AeolusPreferences
+    private val prefStore: AeolusPreferences,
+    private val searchRepo: SearchRepository
 ) : ViewModel() {
 
     fun getSearchHistories(): Flow<List<String>> = prefStore.getSearchHistories()
@@ -19,12 +23,17 @@ class SearchViewModel(
         }
     }
 
+    fun getTopCities(): Flow<List<WeatherLocation>> = flow {
+        emit(searchRepo.getHotCities())
+    }
+
     companion object {
-        fun providerFactory(prefStore: AeolusPreferences): ViewModelProvider.Factory =
+        fun providerFactory(prefStore: AeolusPreferences, searchRepo: SearchRepository)
+                : ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(prefStore) as T
+                    return SearchViewModel(prefStore, searchRepo) as T
                 }
             }
     }
