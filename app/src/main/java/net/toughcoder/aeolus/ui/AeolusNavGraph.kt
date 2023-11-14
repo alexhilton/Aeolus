@@ -13,6 +13,7 @@ import androidx.navigation.navDeepLink
 import net.toughcoder.aeolus.data.DataContainer
 import net.toughcoder.aeolus.ui.favorites.FavoritesScreen
 import net.toughcoder.aeolus.ui.search.SearchScreen
+import net.toughcoder.aeolus.ui.search.SearchViewModel
 import net.toughcoder.aeolus.ui.weather.AeolusScreen
 import net.toughcoder.aeolus.ui.weather.WeatherViewModel
 
@@ -70,7 +71,14 @@ fun AeolusNavGraph(
                 navDeepLink { uriPattern = "${AeolusDestinations.APP_URI}/${AeolusDestinations.SEARCH_ROUTE}" }
             )
         ) {
-            SearchScreen(onBack = { navController.popBackStack() }, onAddLocation = {})
+            val viewModel: SearchViewModel = viewModel(
+                factory = SearchViewModel.providerFactory(appContainer.datastore)
+            )
+            SearchScreen(
+                searchViewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onAddLocation = {}
+            )
         }
     }
 }

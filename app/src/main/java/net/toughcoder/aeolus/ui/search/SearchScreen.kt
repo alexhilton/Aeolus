@@ -36,15 +36,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
+    searchViewModel: SearchViewModel,
     onBack: () -> Unit,
     onAddLocation: (String) -> Unit
 ) {
     val hotCities = listOf("beijing", "shanghai", "shenzhen", "guangzhou", "nanjing", "suchou", "hangzhou")
     var searchResults = remember { mutableStateListOf<String>() }
+    val searchHistories by searchViewModel.getSearchHistories().collectAsStateWithLifecycle(
+        initialValue = listOf()
+    )
 
     Column(
         modifier
@@ -53,7 +58,12 @@ fun SearchScreen(
     ) {
         Spacer(Modifier.height(16.dp))
 
-        SearchComponent(modifier, onBack) {
+        SearchComponent(
+            modifier,
+            searchHistories,
+            onBack,
+            { searchViewModel.addSearchHistory(it) }
+        ) {
             searchResults.add(it)
         }
 
@@ -77,12 +87,13 @@ fun SearchScreen(
 @Composable
 fun SearchComponent(
     modifier: Modifier,
+    searchHistories: List<String>,
     onBack: () -> Unit,
+    onAddHistory: (String) -> Unit,
     onSearch: (String) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
-    var searchHistories = remember { mutableStateListOf<String>() }
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -94,7 +105,7 @@ fun SearchComponent(
             onSearch = {
                 active = false
                 if (it.trim().isNotEmpty()) {
-                    searchHistories.add(it)
+                    onAddHistory(it)
                     onSearch(it)
                 }
             },
@@ -268,10 +279,4 @@ fun HotCityItemPreview() {
 @Composable
 fun SearchResultItemPreview() {
     SearchResultItem(modifier = Modifier, result = "Francisco") {}
-}
-
-@Preview
-@Composable
-fun SearchScreenPreview() {
-    SearchScreen(onBack = { /*TODO*/ }, onAddLocation = {})
 }

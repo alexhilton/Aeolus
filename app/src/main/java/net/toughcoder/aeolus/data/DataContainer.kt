@@ -13,6 +13,7 @@ interface DataContainer {
     val locationRepository: LocationRepository
     val weatherNowRepository: WeatherNowRepository
     val database: AeolusDatabase
+    val datastore: AeolusPreferences
 }
 
 class DataContainerImpl(private val context: Context) : DataContainer {
@@ -31,5 +32,9 @@ class DataContainerImpl(private val context: Context) : DataContainer {
 
     override val database: AeolusDatabase by lazy {
         Room.databaseBuilder(context, AeolusDatabase::class.java, "aeolus.db").build()
+    }
+
+    override val datastore: AeolusPreferences by lazy {
+        AeolusPreferences(context.aeolusStore)
     }
 }
