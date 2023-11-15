@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.AeolusStore
-import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.location.SearchRepository
 
 class SearchViewModel(
@@ -36,10 +35,10 @@ class SearchViewModel(
         }
     }
 
-    fun getTopCities(): Flow<List<TopCityState>> = flow {
+    fun getTopCities(): Flow<List<CityState>> = flow {
         emit(
             searchRepo.getHotCities()
-                .map { TopCityState(it.name) }
+                .map { CityState(it.name) }
                 .toList()
         )
     }
@@ -49,7 +48,7 @@ class SearchViewModel(
         viewModelScope.launch {
             val result = searchRepo.searchCity(query)
             val error = if (result.isEmpty()) "No results found, please try again later!" else ""
-            val cities = result.map { TopCityState(it.name, it.id, it.admin) }
+            val cities = result.map { CityState(it.name, it.id, it.admin) }
             _searchResultState.update { SearchResultState(false, error, cities) }
         }
     }
@@ -66,7 +65,7 @@ class SearchViewModel(
     }
 }
 
-data class TopCityState(
+data class CityState(
     val name: String,
     val id: String = "",
     val admin: String = ""
@@ -75,5 +74,5 @@ data class TopCityState(
 data class SearchResultState(
     val loading: Boolean = false,
     val error: String = "",
-    val cities: List<TopCityState> = listOf()
+    val cities: List<CityState> = listOf()
 )

@@ -158,8 +158,8 @@ fun SearchComponent(
 @Composable
 fun HotCities(
     modifier: Modifier = Modifier,
-    cities: List<TopCityState>,
-    onHotClick: (TopCityState) -> Unit
+    cities: List<CityState>,
+    onHotClick: (CityState) -> Unit
 ) {
     FlowRow(
         modifier = modifier,
@@ -175,8 +175,8 @@ fun HotCities(
 @Composable
 fun HotCityItem(
     modifier: Modifier,
-    city: TopCityState,
-    onHotClick: (TopCityState) -> Unit
+    city: CityState,
+    onHotClick: (CityState) -> Unit
 ) {
     Surface(
         shape = MaterialTheme.shapes.extraLarge,
@@ -226,7 +226,7 @@ fun HistoryItem(
 fun SearchResultComponent(
     modifier: Modifier = Modifier,
     result: SearchResultState,
-    onResultClick: (TopCityState) -> Unit
+    onResultClick: (CityState) -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -252,8 +252,8 @@ fun SearchResultComponent(
 @Composable
 fun SearchResultList(
     modifier: Modifier = Modifier,
-    results: List<TopCityState>,
-    onResultClick: (TopCityState) -> Unit
+    results: List<CityState>,
+    onResultClick: (CityState) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -269,8 +269,8 @@ fun SearchResultList(
 @Composable
 fun SearchResultItem(
     modifier: Modifier,
-    result: TopCityState,
-    onResultClick: (TopCityState) -> Unit
+    result: CityState,
+    onResultClick: (CityState) -> Unit
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -301,11 +301,11 @@ fun SearchResultItem(
 @Preview
 @Composable
 fun HotCityItemPreview() {
-    HotCityItem(modifier = Modifier, city = TopCityState("Bei Jing")) {}
+    HotCityItem(modifier = Modifier, city = CityState("Bei Jing")) {}
 }
 
 @Preview
 @Composable
 fun SearchResultItemPreview() {
-    SearchResultItem(modifier = Modifier, result = TopCityState("Francisco")) {}
+    SearchResultItem(modifier = Modifier, result = CityState("Francisco")) {}
 }
