@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data
+package net.toughcoder.aeolus.model
 
 data class WeatherLocation(
     val id: String = "",

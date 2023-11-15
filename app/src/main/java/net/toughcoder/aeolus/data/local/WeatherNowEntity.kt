@@ -3,7 +3,7 @@ package net.toughcoder.aeolus.data.local
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import net.toughcoder.aeolus.data.weather.WeatherNow
+import net.toughcoder.aeolus.model.WeatherNow
 
 @Entity(tableName = "weather_now")
 data class WeatherNowEntity(

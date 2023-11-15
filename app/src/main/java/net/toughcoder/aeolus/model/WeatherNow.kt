@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data.weather
+package net.toughcoder.aeolus.model
 
 import net.toughcoder.aeolus.data.local.WeatherNowEntity
 

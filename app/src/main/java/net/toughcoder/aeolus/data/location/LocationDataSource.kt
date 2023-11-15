@@ -1,6 +1,6 @@
 package net.toughcoder.aeolus.data.location
 
-import net.toughcoder.aeolus.data.WeatherLocation
+import net.toughcoder.aeolus.model.WeatherLocation
 
 interface LocationDataSource {
     suspend fun searchHotCities(): List<WeatherLocation>

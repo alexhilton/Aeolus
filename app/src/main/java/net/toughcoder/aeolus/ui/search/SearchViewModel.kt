@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.AeolusStore
-import net.toughcoder.aeolus.data.WeatherLocation
+import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.location.SearchRepository
 
 class SearchViewModel(

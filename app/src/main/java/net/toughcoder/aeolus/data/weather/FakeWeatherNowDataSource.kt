@@ -2,7 +2,8 @@ package net.toughcoder.aeolus.data.weather
 
 import android.os.SystemClock
 import kotlinx.coroutines.delay
-import net.toughcoder.aeolus.data.WeatherLocation
+import net.toughcoder.aeolus.model.WeatherLocation
+import net.toughcoder.aeolus.model.WeatherNow
 import kotlin.random.Random
 
 class FakeWeatherNowDataSource : WeatherNowDataSource {

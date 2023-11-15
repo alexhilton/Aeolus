@@ -1,8 +1,9 @@
 package net.toughcoder.aeolus.data.weather
 
 import android.util.Log
-import net.toughcoder.aeolus.data.WeatherLocation
+import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
+import net.toughcoder.aeolus.model.WeatherNow
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter

@@ -16,8 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.data.location.LocationRepository
-import net.toughcoder.aeolus.data.WeatherLocation
-import net.toughcoder.aeolus.data.weather.WeatherNow
+import net.toughcoder.aeolus.model.WeatherLocation
+import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherNowRepository
 import net.toughcoder.aeolus.data.unit
 import net.toughcoder.aeolus.ui.ICONS

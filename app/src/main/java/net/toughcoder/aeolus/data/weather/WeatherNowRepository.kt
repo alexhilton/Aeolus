@@ -4,11 +4,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
-import net.toughcoder.aeolus.data.WeatherLocation
+import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.local.LocalDataSource
+import net.toughcoder.aeolus.model.WeatherNow
 
 class WeatherNowRepository(
     private val local: LocalDataSource,
