@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.ui.favorites
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,8 +39,7 @@ fun FavoritesScreen(
     modifier: Modifier = Modifier,
     viewModel: FavoritesViewModel,
     onBack: () -> Unit,
-    onSearch: () -> Unit,
-    onLocationChanged: (String) -> Unit
+    onSearch: () -> Unit
 ) {
     val favoriteCities by viewModel.getAllFavorites().collectAsStateWithLifecycle(initialValue = listOf())
 
@@ -76,7 +76,7 @@ fun FavoritesScreen(
                 }
             )
         }
-    ) {
+    ) { it ->
         Box(
             modifier = Modifier.padding(it),
             contentAlignment = Alignment.Center
@@ -88,7 +88,10 @@ fun FavoritesScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
             } else {
-                FavoriteList(modifier, favoriteCities)
+                FavoriteList(modifier, favoriteCities) { city ->
+                    viewModel.setDefaultCity(city)
+                    onBack()
+                }
             }
         }
     }
@@ -97,7 +100,8 @@ fun FavoritesScreen(
 @Composable
 fun FavoriteList(
     modifier: Modifier = Modifier,
-    favorites: List<CityState>
+    favorites: List<CityState>,
+    onFavoriteClick: (CityState) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -105,7 +109,7 @@ fun FavoriteList(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(favorites) {
-            FavoriteItem(modifier, it)
+            FavoriteItem(modifier, it, onFavoriteClick)
         }
     }
 }
@@ -113,10 +117,11 @@ fun FavoriteList(
 @Composable
 fun FavoriteItem(
     modifier: Modifier = Modifier,
-    city: CityState
+    city: CityState,
+    onClick: (CityState) -> Unit
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().clickable { onClick(city) },
         shape = MaterialTheme.shapes.extraSmall,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
@@ -143,5 +148,5 @@ fun FavoriteItem(
 @Preview
 @Composable
 fun FavoriteItemPreview() {
-    FavoriteItem(Modifier.fillMaxWidth(), CityState("Beijing", "", "China"))
+    FavoriteItem(Modifier.fillMaxWidth(), CityState("Beijing", "", "China")) {}
 }

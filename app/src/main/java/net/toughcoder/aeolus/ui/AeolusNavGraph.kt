@@ -66,7 +66,6 @@ fun AeolusNavGraph(
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() },
                 onSearch = { navController.navigate(AeolusDestinations.SEARCH_ROUTE) },
-                onLocationChanged = {}
             )
         }
 

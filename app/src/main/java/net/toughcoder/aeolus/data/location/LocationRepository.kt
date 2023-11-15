@@ -2,14 +2,15 @@ package net.toughcoder.aeolus.data.location
 
 import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import net.toughcoder.aeolus.data.AeolusStore
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.asModel
 
 class LocationRepository(
+    private val prefStore: AeolusStore,
     private val database: AeolusDatabase,
     private val dispatcher: CoroutineDispatcher
 ) {
@@ -18,13 +19,14 @@ class LocationRepository(
         const val LOG_TAG = "LocationRepo"
     }
 
-    suspend fun getLocation(): WeatherLocation {
-        delay(500)
-        return WeatherLocation(
-            "101190101",
-            "Nanjing"
-        )
-    }
+    fun getDefaultCity() = prefStore.getDefaultCity()
+//    : WeatherLocation {
+//        delay(500)
+//        return WeatherLocation(
+//            "101190101",
+//            "Nanjing"
+//        )
+//    }
 
     suspend fun favoriteCity(city: WeatherLocation) {
         withContext(dispatcher) {
@@ -53,5 +55,9 @@ class LocationRepository(
                     it.asModel()
                 }
         }
+    }
+
+    suspend fun setDefaultCity(city: WeatherLocation) {
+        prefStore.persistCity(city)
     }
 }

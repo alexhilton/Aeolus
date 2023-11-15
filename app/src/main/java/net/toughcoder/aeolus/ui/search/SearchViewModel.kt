@@ -82,7 +82,14 @@ data class CityState(
     val name: String,
     val id: String = "",
     val admin: String = ""
-)
+) {
+    fun toModel(): WeatherLocation =
+        WeatherLocation(
+            id = id,
+            name = name,
+            admin = admin
+        )
+}
 
 data class SearchResultState(
     val loading: Boolean = false,

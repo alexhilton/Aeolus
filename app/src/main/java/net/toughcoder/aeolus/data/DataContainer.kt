@@ -23,7 +23,7 @@ interface DataContainer {
 
 class DataContainerImpl(private val context: Context) : DataContainer {
     override val locationRepository: LocationRepository by lazy {
-        LocationRepository(database, Dispatchers.IO)
+        LocationRepository(datastore, database, Dispatchers.IO)
     }
 
     override val weatherNowRepository: WeatherNowRepository by lazy {
