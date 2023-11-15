@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.ui.search.CityState
+import net.toughcoder.aeolus.ui.search.asUiState
 
 class FavoritesViewModel(
     private val locationRepo: LocationRepository
@@ -14,7 +15,7 @@ class FavoritesViewModel(
     fun getAllFavorites(): Flow<List<CityState>> = flow {
         emit(
             locationRepo.loadAllFavoriteCities()
-                .map { CityState(name = it.name, id = it.id, admin = it.admin) }
+                .map { it.asUiState() }
         )
     }
 

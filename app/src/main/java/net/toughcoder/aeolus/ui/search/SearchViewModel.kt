@@ -41,7 +41,7 @@ class SearchViewModel(
     fun getTopCities(): Flow<List<CityState>> = flow {
         emit(
             searchRepo.getHotCities()
-                .map { CityState(it.name) }
+                .map { it.asUiState() }
                 .toList()
         )
     }
@@ -51,7 +51,7 @@ class SearchViewModel(
         viewModelScope.launch {
             val result = searchRepo.searchCity(query)
             val error = if (result.isEmpty()) "No results found, please try again later!" else ""
-            val cities = result.map { CityState(it.name, it.id, it.admin) }
+            val cities = result.map { it.asUiState() }
             _searchResultState.update { SearchResultState(false, error, cities) }
         }
     }
@@ -89,3 +89,10 @@ data class SearchResultState(
     val error: String = "",
     val cities: List<CityState> = listOf()
 )
+
+fun WeatherLocation.asUiState(): CityState =
+    CityState(
+        name = name,
+        id = id,
+        admin = admin
+    )
