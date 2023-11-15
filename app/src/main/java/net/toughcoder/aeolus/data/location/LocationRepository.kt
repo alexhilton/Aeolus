@@ -1,11 +1,13 @@
 package net.toughcoder.aeolus.data.location
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.model.WeatherLocation
+import net.toughcoder.aeolus.model.asModel
 
 class LocationRepository(
     private val database: AeolusDatabase,
@@ -13,6 +15,7 @@ class LocationRepository(
 ) {
     companion object {
         const val LIMIT = 20
+        const val LOG_TAG = "LocationRepo"
     }
 
     suspend fun getLocation(): WeatherLocation {
@@ -38,6 +41,17 @@ class LocationRepository(
                     dao.insert(city.asEntity())
                 }
             }
+        }
+    }
+
+    suspend fun loadAllFavoriteCities(): List<WeatherLocation> {
+        return withContext(dispatcher) {
+            val dao = database.locationDao()
+            dao.getAllCities()
+                .map {
+                    Log.d(LOG_TAG, "favorites: $it")
+                    it.asModel()
+                }
         }
     }
 }
