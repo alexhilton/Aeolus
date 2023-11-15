@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.toughcoder.aeolus.R
@@ -137,4 +138,10 @@ fun FavoriteItem(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun FavoriteItemPreview() {
+    FavoriteItem(Modifier.fillMaxWidth(), CityState("Beijing", "", "China"))
 }
