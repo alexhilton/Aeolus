@@ -28,6 +28,10 @@ class LocationRepository(
 //        )
 //    }
 
+    suspend fun setDefaultCity(city: WeatherLocation) {
+        prefStore.persistCity(city)
+    }
+
     suspend fun favoriteCity(city: WeatherLocation) {
         withContext(dispatcher) {
             val dao = database.locationDao()
@@ -55,9 +59,5 @@ class LocationRepository(
                     it.asModel()
                 }
         }
-    }
-
-    suspend fun setDefaultCity(city: WeatherLocation) {
-        prefStore.persistCity(city)
     }
 }

@@ -8,11 +8,10 @@ class SearchRepository(
     private val datasource: LocationDataSource,
     private val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun getHotCities(): List<WeatherLocation> {
-        return withContext(dispatcher) {
+    suspend fun getHotCities(): List<WeatherLocation> =
+        withContext(dispatcher) {
             datasource.searchHotCities()
         }
-    }
 
     suspend fun searchCity(query: String): List<WeatherLocation> =
         withContext(dispatcher) {
