@@ -10,14 +10,14 @@ import net.toughcoder.aeolus.model.asModel
 class LocalDataSource(private val database: AeolusDatabase) : WeatherNowDataSource {
     override suspend fun loadWeatherNow(loc: WeatherLocation): WeatherNow {
         val dao = database.weatherNowDao()
-        return dao.getByCity(loc.name)?.asModel() ?: WeatherNow()
+        return dao.getByCityId(loc.name)?.asModel() ?: WeatherNow()
     }
 
     override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow) {
         val dao = database.weatherNowDao()
-        val entity = dao.getByCity(loc.name)
+        val entity = dao.getByCityId(loc.id)
         if (entity == null) {
-            dao.insert(weatherNow.asEntity(loc.name))
+            dao.insert(weatherNow.asEntity(loc.id))
         } else {
             with(weatherNow) {
                 entity.copy(
