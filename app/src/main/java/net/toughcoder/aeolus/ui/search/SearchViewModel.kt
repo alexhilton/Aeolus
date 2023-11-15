@@ -6,12 +6,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import net.toughcoder.aeolus.data.AeolusPreferences
+import net.toughcoder.aeolus.data.AeolusStore
 import net.toughcoder.aeolus.data.WeatherLocation
 import net.toughcoder.aeolus.data.location.SearchRepository
 
 class SearchViewModel(
-    private val prefStore: AeolusPreferences,
+    private val prefStore: AeolusStore,
     private val searchRepo: SearchRepository
 ) : ViewModel() {
 
@@ -28,7 +28,7 @@ class SearchViewModel(
     }
 
     companion object {
-        fun providerFactory(prefStore: AeolusPreferences, searchRepo: SearchRepository)
+        fun providerFactory(prefStore: AeolusStore, searchRepo: SearchRepository)
                 : ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")

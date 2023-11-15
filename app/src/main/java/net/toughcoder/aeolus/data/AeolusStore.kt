@@ -11,7 +11,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-class AeolusPreferences(private val dataStore: DataStore<Preferences>) {
+/**
+ * Store key-value data.
+ */
+class AeolusStore(private val dataStore: DataStore<Preferences>) {
 
     private val searchHistoryKey = stringPreferencesKey("search_histories")
 
