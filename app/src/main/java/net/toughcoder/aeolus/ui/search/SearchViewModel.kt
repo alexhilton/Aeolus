@@ -23,8 +23,12 @@ class SearchViewModel(
         }
     }
 
-    fun getTopCities(): Flow<List<WeatherLocation>> = flow {
-        emit(searchRepo.getHotCities())
+    fun getTopCities(): Flow<List<TopCityState>> = flow {
+        emit(
+            searchRepo.getHotCities()
+                .map { TopCityState(it.name) }
+                .toList()
+        )
     }
 
     companion object {
@@ -38,3 +42,7 @@ class SearchViewModel(
             }
     }
 }
+
+data class TopCityState(
+    val name: String
+)

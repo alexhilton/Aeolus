@@ -37,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import net.toughcoder.aeolus.model.WeatherLocation
 
 @Composable
 fun SearchScreen(
@@ -157,8 +156,8 @@ fun SearchComponent(
 @Composable
 fun HotCities(
     modifier: Modifier = Modifier,
-    cities: List<WeatherLocation>,
-    onHotClick: (WeatherLocation) -> Unit
+    cities: List<TopCityState>,
+    onHotClick: (TopCityState) -> Unit
 ) {
     FlowRow(
         modifier = modifier,
@@ -174,8 +173,8 @@ fun HotCities(
 @Composable
 fun HotCityItem(
     modifier: Modifier,
-    city: WeatherLocation,
-    onHotClick: (WeatherLocation) -> Unit
+    city: TopCityState,
+    onHotClick: (TopCityState) -> Unit
 ) {
     Surface(
         shape = MaterialTheme.shapes.extraLarge,
@@ -273,7 +272,7 @@ fun SearchResultItem(
 @Preview
 @Composable
 fun HotCityItemPreview() {
-    HotCityItem(modifier = Modifier, city = WeatherLocation("", "Bei Jing")) {}
+    HotCityItem(modifier = Modifier, city = TopCityState("Bei Jing")) {}
 }
 
 @Preview
