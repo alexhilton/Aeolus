@@ -1,5 +1,7 @@
 package net.toughcoder.aeolus.data.local
 
+import net.toughcoder.aeolus.data.room.AeolusDatabase
+import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherNowDataSource

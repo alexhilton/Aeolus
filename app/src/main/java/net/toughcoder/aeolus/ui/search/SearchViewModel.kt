@@ -11,10 +11,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.AeolusStore
+import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.location.SearchRepository
+import net.toughcoder.aeolus.model.WeatherLocation
 
 class SearchViewModel(
     private val prefStore: AeolusStore,
+    private val locationRepo: LocationRepository,
     private val searchRepo: SearchRepository
 ) : ViewModel() {
 
@@ -53,13 +56,23 @@ class SearchViewModel(
         }
     }
 
+    fun favoriteCity(city: CityState): Unit {
+        viewModelScope.launch {
+            locationRepo.favoriteCity(WeatherLocation(city.id, city.name, city.admin))
+        }
+    }
+
     companion object {
-        fun providerFactory(prefStore: AeolusStore, searchRepo: SearchRepository)
+        fun providerFactory(
+            prefStore: AeolusStore,
+            locationRepository: LocationRepository,
+            searchRepo: SearchRepository
+        )
                 : ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(prefStore, searchRepo) as T
+                    return SearchViewModel(prefStore, locationRepository, searchRepo) as T
                 }
             }
     }

@@ -45,7 +45,6 @@ fun SearchScreen(
     modifier: Modifier = Modifier,
     searchViewModel: SearchViewModel,
     onBack: () -> Unit,
-    onAddLocation: (String) -> Unit
 ) {
     val hotCities by searchViewModel.getTopCities().collectAsStateWithLifecycle(initialValue = listOf())
     val searchResults by searchViewModel.searchResultState.collectAsStateWithLifecycle()
@@ -72,14 +71,14 @@ fun SearchScreen(
         Spacer(Modifier.height(16.dp))
 
         HotCities(modifier, hotCities) {
-            onAddLocation(it.name)
+            searchViewModel.favoriteCity(it)
             onBack()
         }
 
         Spacer(Modifier.height(16.dp))
 
         SearchResultComponent(modifier, searchResults) {
-            onAddLocation(it.name)
+            searchViewModel.favoriteCity(it)
             onBack()
         }
     }

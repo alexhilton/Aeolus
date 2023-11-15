@@ -5,7 +5,7 @@ import androidx.room.Room
 import kotlinx.coroutines.Dispatchers
 import net.toughcoder.aeolus.data.qweather.GeoAPIService
 import net.toughcoder.aeolus.data.qweather.QWeatherService
-import net.toughcoder.aeolus.data.local.AeolusDatabase
+import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.local.LocalDataSource
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.location.QWeatherLocationSource
@@ -23,7 +23,7 @@ interface DataContainer {
 
 class DataContainerImpl(private val context: Context) : DataContainer {
     override val locationRepository: LocationRepository by lazy {
-        LocationRepository()
+        LocationRepository(database, Dispatchers.IO)
     }
 
     override val weatherNowRepository: WeatherNowRepository by lazy {

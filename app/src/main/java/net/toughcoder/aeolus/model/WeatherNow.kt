@@ -1,6 +1,6 @@
 package net.toughcoder.aeolus.model
 
-import net.toughcoder.aeolus.data.local.WeatherNowEntity
+import net.toughcoder.aeolus.data.room.WeatherNowEntity
 
 data class WeatherNow(
     val successful: Boolean = false,

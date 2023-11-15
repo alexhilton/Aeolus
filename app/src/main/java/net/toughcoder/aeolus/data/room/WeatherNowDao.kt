@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data.local
+package net.toughcoder.aeolus.data.room
 
 import androidx.room.Dao
 import androidx.room.Delete
