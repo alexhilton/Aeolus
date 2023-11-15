@@ -8,9 +8,10 @@ class QWeatherLocationSource(
 ) : LocationDataSource {
     override suspend fun searchHotCities(): List<WeatherLocation> {
         try {
-            val response = api.fetchTopCities()
+            val response = api.fetchTopCities(number = 20)
             if (response.code == "200") {
                 return response.topCityList
+                    .filter { it.rank > 1 && (it.name == it.admin1 || it.name == it.admin2) }
                     .map { WeatherLocation(it.qweatherId, it.name) }
                     .toList()
             }
