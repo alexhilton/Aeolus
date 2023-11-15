@@ -18,3 +18,8 @@ data class QWeatherCityDTO(
     @field:SerializedName("type") val type: String,
     @field:SerializedName("rank") val rank: Int
 )
+
+data class QWeatherSearchResponse(
+    @field:SerializedName("code") val code: String,
+    @field:SerializedName("location") val cityList: List<QWeatherCityDTO>
+)

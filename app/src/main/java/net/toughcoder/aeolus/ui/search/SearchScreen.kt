@@ -2,6 +2,7 @@ package net.toughcoder.aeolus.ui.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,7 +31,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,7 +48,7 @@ fun SearchScreen(
     onAddLocation: (String) -> Unit
 ) {
     val hotCities by searchViewModel.getTopCities().collectAsStateWithLifecycle(initialValue = listOf())
-    var searchResults = remember { mutableStateListOf<String>() }
+    val searchResults by searchViewModel.searchResultState.collectAsStateWithLifecycle()
     val searchHistories by searchViewModel.getSearchHistories().collectAsStateWithLifecycle(
         initialValue = listOf()
     )
@@ -64,7 +66,7 @@ fun SearchScreen(
             onBack,
             { searchViewModel.addSearchHistory(it) }
         ) {
-            searchResults.add(it)
+            searchViewModel.searchCity(it)
         }
 
         Spacer(Modifier.height(16.dp))
@@ -76,8 +78,8 @@ fun SearchScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        SearchResults(modifier, searchResults) {
-            onAddLocation(it)
+        SearchResultComponent(modifier, searchResults) {
+            onAddLocation(it.name)
             onBack()
         }
     }
@@ -221,10 +223,37 @@ fun HistoryItem(
 }
 
 @Composable
-fun SearchResults(
+fun SearchResultComponent(
     modifier: Modifier = Modifier,
-    results: List<String>,
-    onResultClick: (String) -> Unit
+    result: SearchResultState,
+    onResultClick: (TopCityState) -> Unit
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        if (result.loading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(64.dp),
+                color = MaterialTheme.colorScheme.primary
+            )
+        } else if (result.error.isNotEmpty()) {
+            Text(
+                text = result.error,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
+        } else {
+            SearchResultList(modifier, result.cities, onResultClick)
+        }
+    }
+}
+
+@Composable
+fun SearchResultList(
+    modifier: Modifier = Modifier,
+    results: List<TopCityState>,
+    onResultClick: (TopCityState) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -240,8 +269,8 @@ fun SearchResults(
 @Composable
 fun SearchResultItem(
     modifier: Modifier,
-    result: String,
-    onResultClick: (String) -> Unit
+    result: TopCityState,
+    onResultClick: (TopCityState) -> Unit
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -257,13 +286,13 @@ fun SearchResultItem(
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary,
-                text = result
+                text = result.name
             )
             Text(
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.secondary,
-                text = "Other info of $result"
+                text = result.admin
             )
         }
     }
@@ -278,5 +307,5 @@ fun HotCityItemPreview() {
 @Preview
 @Composable
 fun SearchResultItemPreview() {
-    SearchResultItem(modifier = Modifier, result = "Francisco") {}
+    SearchResultItem(modifier = Modifier, result = TopCityState("Francisco")) {}
 }

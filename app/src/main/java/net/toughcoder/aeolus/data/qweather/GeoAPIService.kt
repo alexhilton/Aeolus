@@ -13,6 +13,14 @@ interface GeoAPIService {
         @Query("key") key: String = BuildConfig.QWEATHER_API_KEY
     ) : QWeatherTopCitiesResponse
 
+    @GET("v2/city/lookup")
+    suspend fun searchCity(
+        @Query("location") query: String,
+        @Query("number") number: Int = 10,
+        @Query("range") range: String = "cn",
+        @Query("key") key: String = BuildConfig.QWEATHER_API_KEY
+    ) : QWeatherSearchResponse
+
     companion object {
         const val BASE_URL = "https://geoapi.qweather.com/"
     }
