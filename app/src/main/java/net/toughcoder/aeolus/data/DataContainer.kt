@@ -30,7 +30,7 @@ class DataContainerImpl(private val context: Context) : DataContainer {
 //        WeatherNowRepository(FakeWeatherNowDataSource())
         WeatherNowRepository(
             LocalDataSource(database),
-            QWeatherNowDataSource(QWeatherService.create()),
+            QWeatherNowDataSource(QWeatherService.create(QWeatherService.BASE_URL)),
             Dispatchers.IO
         )
     }
@@ -45,7 +45,7 @@ class DataContainerImpl(private val context: Context) : DataContainer {
 
     override val searchRepository: SearchRepository by lazy {
         SearchRepository(
-            QWeatherLocationSource(GeoAPIService.create()),
+            QWeatherLocationSource(QWeatherService.create(GeoAPIService.BASE_URL)),
             Dispatchers.IO
         )
     }

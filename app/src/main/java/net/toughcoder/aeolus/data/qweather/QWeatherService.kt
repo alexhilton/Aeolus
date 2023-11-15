@@ -18,9 +18,9 @@ interface QWeatherService {
     ) : QWeatherNowResponse
 
     companion object {
-        private const val BASE_URL = "https://devapi.qweather.com/"
+        const val BASE_URL = "https://devapi.qweather.com/"
 
-        fun create(): QWeatherService {
+        inline fun <reified T> create(baseUrl: String): T {
             val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC}
 
             val client = OkHttpClient.Builder()
@@ -28,11 +28,11 @@ interface QWeatherService {
                 .build()
 
             return Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(baseUrl)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(QWeatherService::class.java)
+                .create(T::class.java)
         }
     }
 }
