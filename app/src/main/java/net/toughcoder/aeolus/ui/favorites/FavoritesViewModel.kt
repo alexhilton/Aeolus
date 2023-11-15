@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.location.LocationRepository
-import net.toughcoder.aeolus.ui.search.CityState
-import net.toughcoder.aeolus.ui.search.asUiState
+import net.toughcoder.aeolus.ui.CityState
+import net.toughcoder.aeolus.ui.asUiState
 
 class FavoritesViewModel(
     private val locationRepo: LocationRepository

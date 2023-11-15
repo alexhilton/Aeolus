@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.toughcoder.aeolus.R
-import net.toughcoder.aeolus.ui.search.CityState
+import net.toughcoder.aeolus.ui.CityState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

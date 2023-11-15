@@ -14,6 +14,8 @@ import net.toughcoder.aeolus.data.AeolusStore
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.location.SearchRepository
 import net.toughcoder.aeolus.model.WeatherLocation
+import net.toughcoder.aeolus.ui.CityState
+import net.toughcoder.aeolus.ui.asUiState
 
 class SearchViewModel(
     private val prefStore: AeolusStore,
@@ -78,28 +80,8 @@ class SearchViewModel(
     }
 }
 
-data class CityState(
-    val name: String,
-    val id: String = "",
-    val admin: String = ""
-) {
-    fun toModel(): WeatherLocation =
-        WeatherLocation(
-            id = id,
-            name = name,
-            admin = admin
-        )
-}
-
 data class SearchResultState(
     val loading: Boolean = false,
     val error: String = "",
     val cities: List<CityState> = listOf()
 )
-
-fun WeatherLocation.asUiState(): CityState =
-    CityState(
-        name = name,
-        id = id,
-        admin = admin
-    )
