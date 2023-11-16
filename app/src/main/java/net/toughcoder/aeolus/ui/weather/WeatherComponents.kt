@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.toughcoder.aeolus.R
+import net.toughcoder.aeolus.ui.CityState
 
 @Composable
 fun WeatherScreen(
@@ -239,7 +240,7 @@ fun DetailPreview() {
         humidity = "78 %",
         pressure = "1024 pa",
         visibility = "124 km",
-        city = "Nanjing",
+        city = CityState("Nanjing", "123", "Jiang Su"),
         isLoading = false,
         errorMessage = ""
     )

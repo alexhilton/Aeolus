@@ -7,6 +7,8 @@ data class CityState(
     val id: String = "",
     val admin: String = ""
 ) {
+    fun isEmpty() = name.isEmpty() || id.isEmpty()
+
     fun toModel(): WeatherLocation =
         WeatherLocation(
             id = id,

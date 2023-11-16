@@ -3,4 +3,5 @@
     <string name="app_description">A weather app by a developer and for developers!</string>
     <string name="favorites_title">Favorite cities</string>
     <string name="search_title">Search cities</string>
+    <string name="city_type_name">市</string>
 </resources>

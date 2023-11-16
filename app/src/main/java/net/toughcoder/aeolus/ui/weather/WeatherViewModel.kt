@@ -20,7 +20,9 @@ import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherNowRepository
 import net.toughcoder.aeolus.data.unit
+import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.ICONS
+import net.toughcoder.aeolus.ui.asUiState
 
 class WeatherViewModel(
     private val locationRepo: LocationRepository,
@@ -137,7 +139,7 @@ data class ViewModelState(
 ) {
     fun toUiState() =
         weatherData?.let { convert(it) } ?: NowUiState.NoWeatherUiState(
-            city?.name ?: "",
+            city?.asUiState(),
             false,
             error
         )
@@ -146,7 +148,7 @@ data class ViewModelState(
         with(unit()) {
             return NowUiState.WeatherNowUiState(
                 isLoading = loading,
-                city = city?.name ?: "",
+                city = city?.asUiState(),
                 temp = "${formatTemp(data.nowTemp)}$temp",
                 feelsLike = "${formatTemp(data.feelsLike)}$temp",
                 icon = ICONS[data.icon]!!,
@@ -174,7 +176,7 @@ data class ViewModelState(
 }
 
 sealed interface NowUiState {
-    val city: String
+    val city: CityState?
 
     val isLoading: Boolean
 
@@ -195,17 +197,17 @@ sealed interface NowUiState {
         val humidity: String,
         val pressure: String,
         val visibility: String,
-        override val city: String,
+        override val city: CityState?,
         override val isLoading: Boolean,
         override val errorMessage: String
     ) : NowUiState {
         override fun isEmpty(): Boolean {
-            return city.isEmpty() && temp.isEmpty() && text.isEmpty()
+            return (city?.isEmpty() ?: true) && temp.isEmpty() && text.isEmpty()
         }
     }
 
     data class NoWeatherUiState(
-        override val city: String,
+        override val city: CityState?,
         override val isLoading: Boolean,
         override val errorMessage: String
     ) : NowUiState {
