@@ -4,4 +4,6 @@
     <string name="favorites_title">Favorite cities</string>
     <string name="search_title">Search cities</string>
     <string name="city_type_name">市</string>
+    <string name="hot_city_title">Hot cities</string>
+    <string name="search_result_title">Search results</string>
 </resources>

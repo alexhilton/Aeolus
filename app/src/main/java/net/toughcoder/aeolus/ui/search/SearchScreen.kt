@@ -36,9 +36,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.ui.CityState
 
 @Composable
@@ -161,13 +163,24 @@ fun HotCities(
     cities: List<CityState>,
     onHotClick: (CityState) -> Unit
 ) {
-    FlowRow(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        cities.forEach {
-            HotCityItem(modifier, it, onHotClick)
+    Column(modifier = modifier) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.hot_city_title),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.secondary
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        FlowRow(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            cities.forEach {
+                HotCityItem(modifier, it, onHotClick)
+            }
         }
     }
 }
@@ -243,7 +256,7 @@ fun SearchResultComponent(
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
-        } else {
+        } else if (result.cities.isNotEmpty()) {
             SearchResultList(modifier, result.cities, onResultClick)
         }
     }
@@ -255,13 +268,24 @@ fun SearchResultList(
     results: List<CityState>,
     onResultClick: (CityState) -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(results) {
-            SearchResultItem(modifier = modifier, result = it, onResultClick)
+    Column(modifier = modifier) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.search_result_title),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.secondary
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LazyColumn(
+            modifier = modifier,
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(results) {
+                SearchResultItem(modifier = modifier, result = it, onResultClick)
+            }
         }
     }
 }
