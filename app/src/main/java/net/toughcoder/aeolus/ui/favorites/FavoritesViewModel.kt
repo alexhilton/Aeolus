@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.location.LocationRepository
@@ -14,11 +16,26 @@ class FavoritesViewModel(
     private val locationRepo: LocationRepository
 ) : ViewModel() {
 
-    fun getAllFavorites(): Flow<List<CityState>> = flow {
-        emit(
-            locationRepo.loadAllFavoriteCities()
-                .map { it.asUiState() }
-        )
+    fun getAllFavorites(): Flow<List<FavoriteState>> = flow {
+        locationRepo.getDefaultCity()
+            .collect { defaultCity ->
+                emit(
+                    locationRepo.loadAllFavoriteCities()
+                        .map {
+                            FavoriteState(
+                                city = it.asUiState(),
+                                selected = it.id == defaultCity.id
+                            )
+                        }
+                )
+            }
+//        emit(
+//            combine(locationRepo.getDefaultCity(), locationRepo.loadAllFavoriteCities()) {
+//
+//            }
+//            locationRepo.loadAllFavoriteCities()
+//                .map { it.asUiState() }
+//        )
     }
 
     fun setDefaultCity(city: CityState) {
@@ -39,3 +56,8 @@ class FavoritesViewModel(
             }
     }
 }
+
+data class FavoriteState(
+    val city: CityState,
+    val selected: Boolean = false
+)

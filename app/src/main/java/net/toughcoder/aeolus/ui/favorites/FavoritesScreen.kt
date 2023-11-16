@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -100,7 +102,7 @@ fun FavoritesScreen(
 @Composable
 fun FavoriteList(
     modifier: Modifier = Modifier,
-    favorites: List<CityState>,
+    favorites: List<FavoriteState>,
     onFavoriteClick: (CityState) -> Unit
 ) {
     LazyColumn(
@@ -117,36 +119,52 @@ fun FavoriteList(
 @Composable
 fun FavoriteItem(
     modifier: Modifier = Modifier,
-    city: CityState,
+    item: FavoriteState,
     onClick: (CityState) -> Unit
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth().clickable { onClick(city) },
+        modifier = modifier.fillMaxWidth().clickable { onClick(item.city) },
         shape = MaterialTheme.shapes.extraSmall,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.primary,
-                text = city.name
-            )
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.secondary,
-                text = city.admin
-            )
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    text = item.city.name
+                )
+                Text(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.secondary,
+                    text = item.city.admin
+                )
+            }
+
+            if (item.selected) {
+                Checkbox(
+                    checked = true, onCheckedChange = {}
+                )
+            }
         }
+
     }
 }
 
 @Preview
 @Composable
 fun FavoriteItemPreview() {
-    FavoriteItem(Modifier.fillMaxWidth(), CityState("Beijing", "", "China")) {}
+    FavoriteItem(
+        Modifier.fillMaxWidth(),
+        FavoriteState(CityState("Beijing", "", "China"))
+    ) {}
 }
