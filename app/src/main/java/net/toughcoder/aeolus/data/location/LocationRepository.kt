@@ -20,13 +20,6 @@ class LocationRepository(
     }
 
     fun getDefaultCity() = prefStore.getDefaultCity()
-//    : WeatherLocation {
-//        delay(500)
-//        return WeatherLocation(
-//            "101190101",
-//            "Nanjing"
-//        )
-//    }
 
     suspend fun setDefaultCity(city: WeatherLocation) {
         prefStore.persistCity(city)

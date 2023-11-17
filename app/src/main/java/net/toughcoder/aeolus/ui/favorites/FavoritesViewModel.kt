@@ -29,13 +29,6 @@ class FavoritesViewModel(
                         }
                 )
             }
-//        emit(
-//            combine(locationRepo.getDefaultCity(), locationRepo.loadAllFavoriteCities()) {
-//
-//            }
-//            locationRepo.loadAllFavoriteCities()
-//                .map { it.asUiState() }
-//        )
     }
 
     fun setDefaultCity(city: CityState) {
