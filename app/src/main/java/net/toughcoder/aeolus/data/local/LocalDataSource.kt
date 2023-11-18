@@ -5,6 +5,7 @@ import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherNowDataSource
+import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.asModel
 
 class LocalDataSource(private val database: AeolusDatabase) : WeatherNowDataSource {
@@ -37,5 +38,9 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherNowDataSour
                 dao.update(it)
             }
         }
+    }
+
+    override suspend fun loadDailyWeather(loc: WeatherLocation): List<DailyWeather> {
+        TODO("Not yet implemented")
     }
 }

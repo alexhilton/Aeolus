@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.local.LocalDataSource
+import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.WeatherNow
 
 class WeatherNowRepository(
@@ -15,7 +16,8 @@ class WeatherNowRepository(
     private val network: WeatherNowDataSource,
     private val dispatcher: CoroutineDispatcher,
 ) {
-    private lateinit var stream: MutableStateFlow<WeatherNow>
+    private lateinit var nowWeatherStream: MutableStateFlow<WeatherNow>
+    private lateinit var dailyWeatherStream: MutableStateFlow<List<DailyWeather>>
 
     suspend fun getWeatherNow(location: WeatherLocation): WeatherNow {
         return withContext(dispatcher) {
@@ -37,8 +39,8 @@ class WeatherNowRepository(
     suspend fun weatherNowStream(location: WeatherLocation): Flow<WeatherNow> {
         return withContext(dispatcher) {
             val localNow = local.loadWeatherNow(location)
-            stream = MutableStateFlow(localNow)
-            stream.asStateFlow()
+            nowWeatherStream = MutableStateFlow(localNow)
+            nowWeatherStream.asStateFlow()
         }
     }
 
@@ -48,7 +50,25 @@ class WeatherNowRepository(
             if (bundle.successful) {
                 local.updateWeatherNow(location, bundle)
             }
-            stream.update { bundle }
+            nowWeatherStream.update { bundle }
+        }
+    }
+
+    suspend fun dailyWeatherStream(location: WeatherLocation): Flow<List<DailyWeather>> {
+        return withContext(dispatcher) {
+            // TODO: local cache support
+            dailyWeatherStream = MutableStateFlow(listOf())
+            dailyWeatherStream.asStateFlow()
+        }
+    }
+
+    suspend fun refreshDailyWeather(location: WeatherLocation) {
+        withContext(dispatcher) {
+            val bundle = network.loadDailyWeather(location)
+            if (bundle.isNotEmpty()) {
+                // update local cache
+                dailyWeatherStream.update { bundle }
+            }
         }
     }
 }

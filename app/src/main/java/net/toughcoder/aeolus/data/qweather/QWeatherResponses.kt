@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.data.qweather
 
 import com.google.gson.annotations.SerializedName
+import net.toughcoder.aeolus.model.DailyWeather
 
 data class QWeatherNowResponse(
     @field:SerializedName("code") val code: String,
@@ -44,3 +45,57 @@ data class QWeatherSearchResponse(
     @field:SerializedName("code") val code: String,
     @field:SerializedName("location") val cityList: List<QWeatherCityDTO>
 )
+
+data class QWeatherDailyResponse(
+    @field:SerializedName("code") val code: String,
+    @field:SerializedName("daily") val dayList: List<QWeatherDayDTO>
+)
+
+data class QWeatherDayDTO(
+    @field:SerializedName("fxDate") val date: String,
+    @field:SerializedName("tempMax") val tempHigh: String,
+    @field:SerializedName("tempMin") val tempLow: String,
+    @field:SerializedName("sunrise") val sunrise: String,
+    @field:SerializedName("sunset") val sunset: String,
+
+    @field:SerializedName("iconDay") val iconDay: String,
+    @field:SerializedName("textDay") val textDay: String,
+    @field:SerializedName("wind360Day") val windDegreeDay: String,
+    @field:SerializedName("windDirDay") val windDirDay: String,
+    @field:SerializedName("windScaleDay") val windScaleDay: String,
+    @field:SerializedName("windSpeedDay") val windSpeedDay: String,
+
+    @field:SerializedName("iconNight") val iconNight: String,
+    @field:SerializedName("textNight") val textNight: String,
+    @field:SerializedName("wind360Night") val windDegreeNight: String,
+    @field:SerializedName("windDirNight") val windDirNight: String,
+    @field:SerializedName("windScaleNight") val windScaleNight: String,
+    @field:SerializedName("windSpeedNight") val windSpeedNight: String,
+
+    @field:SerializedName("precip") val precip: String,
+    @field:SerializedName("uvIndex") val uvIndex: String,
+    @field:SerializedName("humidity") val humidity: String,
+    @field:SerializedName("pressure") val pressure: String,
+    @field:SerializedName("vis") val visibility: String
+)
+
+fun QWeatherDayDTO.toModel(): DailyWeather =
+    DailyWeather(
+        date = date,
+        tempHigh = tempHigh,
+        tempLow = tempLow,
+        sunrise = sunrise,
+        sunset = sunset,
+        iconDay = iconDay,
+        textDay = textDay,
+        uvIndex = uvIndex,
+        humidity = humidity,
+        visibility = visibility,
+        pressure = pressure,
+        windScale = windScaleDay,
+        windDir = windDirDay,
+        windDegree = windDegreeDay,
+        windSpeed = windSpeedDay,
+        textNight = textNight,
+        iconNight = iconNight
+    )

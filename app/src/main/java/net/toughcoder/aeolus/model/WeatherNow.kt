@@ -33,3 +33,23 @@ fun WeatherNowEntity.asModel(): WeatherNow = WeatherNow(
     visibility = visibility,
     updateTime = updateTime
 )
+
+data class DailyWeather(
+    val date: String,
+    val tempHigh: String,
+    val tempLow: String,
+    val sunrise: String = "",
+    val sunset: String = "",
+    val iconDay: String,
+    val textDay: String,
+    val uvIndex: String,
+    val humidity: String,
+    val pressure: String,
+    val visibility: String,
+    val windDegree: String,
+    val windDir: String,
+    val windScale: String,
+    val windSpeed: String,
+    val iconNight: String,
+    val textNight: String
+)

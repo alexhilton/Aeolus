@@ -5,10 +5,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -54,6 +57,11 @@ fun WeatherDetails(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SimpleInfo(uiState.text, uiState.icon, uiState.temp)
+
+            if (uiState.dailyStates.isNotEmpty()) {
+                DailyInfo(modifier, uiState.dailyStates[0])
+                Spacer(Modifier.height(8.dp))
+            }
 
             Row(
                 modifier = Modifier.padding(horizontal = 8.dp),
@@ -106,7 +114,33 @@ fun SimpleInfo(
             BigLabel(temp)
         }
     }
+}
 
+@Composable
+fun DailyInfo(
+    modifier: Modifier = Modifier,
+    info: DailyUiState
+) {
+    Row(
+        modifier,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        TitleLabel("UV")
+        Spacer(Modifier.width(4.dp))
+        ValueLabel(info.uvIndex)
+
+        Spacer(Modifier.width(8.dp))
+
+        TitleLabel("最高")
+        Spacer(Modifier.width(4.dp))
+        ValueLabel(info.tempHigh)
+
+        Spacer(Modifier.width(8.dp))
+
+        TitleLabel("最低")
+        Spacer(Modifier.width(4.dp))
+        ValueLabel(info.tempLow)
+    }
 }
 
 @Composable
@@ -128,7 +162,9 @@ fun WindInfo(
         ) {
             TitleLabel(wind)
             Image(
-                modifier = Modifier.size(32.dp).rotate(dir),
+                modifier = Modifier
+                    .size(32.dp)
+                    .rotate(dir),
                 painter = painterResource(iconDir),
                 contentScale = ContentScale.Fit,
                 contentDescription = null
@@ -226,6 +262,21 @@ fun Weather15Days(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
+fun DailyInfoPreview() {
+    DailyInfo(info = DailyUiState(
+        "2023-11-29",
+        "19 \u2103",
+        "1 \u2103",
+        "05:00",
+        "18:00",
+        "Cloudy",
+        "Good",
+        "1"
+    ))
+}
+
+@Preview
+@Composable
 fun DetailPreview() {
     val state = NowUiState.WeatherNowUiState(
         temp = "25 \u2103",
@@ -242,6 +293,18 @@ fun DetailPreview() {
         visibility = "124 km",
         city = CityState("Nanjing", "123", "Jiang Su"),
         isLoading = false,
+        dailyStates = listOf(
+            DailyUiState(
+                "2023-11-18",
+                "29 \u2103",
+                "1 \u2103",
+                "05:00",
+                "18:00",
+                iconDay = "Cloudy",
+                textDay = "Good",
+                uvIndex = "1"
+            )
+        ),
         errorMessage = ""
     )
     WeatherDetails(

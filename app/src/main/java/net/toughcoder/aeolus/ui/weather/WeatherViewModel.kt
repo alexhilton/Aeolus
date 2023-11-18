@@ -20,9 +20,11 @@ import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherNowRepository
 import net.toughcoder.aeolus.data.unit
+import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.ICONS
 import net.toughcoder.aeolus.ui.asUiState
+import java.util.Date
 
 class WeatherViewModel(
     private val locationRepo: LocationRepository,
@@ -43,6 +45,7 @@ class WeatherViewModel(
 
     private val locationState = MutableStateFlow(WeatherLocation())
     private lateinit var weatherNowState: Flow<WeatherNow>
+    private lateinit var dailyWeatherState: Flow<List<DailyWeather>>
 
     private val viewModelState = MutableStateFlow(
         ViewModelState(
@@ -85,6 +88,7 @@ class WeatherViewModel(
                     if (loc.successful()) {
                         locationState.update { loc }
                         weatherNowRepo.refreshWeatherNow(loc)
+                        weatherNowRepo.refreshDailyWeather(loc)
                         updateState()
                     }
                 }
@@ -93,7 +97,7 @@ class WeatherViewModel(
 
     private fun updateState() {
         viewModelScope.launch {
-            combine(locationState, weatherNowState) { loc, now ->
+            combine(locationState, weatherNowState, dailyWeatherState) { loc, now, dailyWeathers ->
                 val error = if (!loc.successful()) {
                     "Failed to get location, please try again later!"
                 } else if (!now.successful) {
@@ -103,10 +107,12 @@ class WeatherViewModel(
                 }
                 val weather = if (now.successful) now else viewModelState.value.weatherData
                 val updateTime = if (now.successful) SystemClock.uptimeMillis() else viewModelState.value.updateTime
+                val daily = if (dailyWeathers.isNotEmpty()) dailyWeathers else viewModelState.value.dailyData
                 return@combine ViewModelState(
                     loading = false,
                     city = loc,
                     weatherData = weather,
+                    dailyData = daily,
                     error = error,
                     updateTime = updateTime
                 )
@@ -121,6 +127,7 @@ class WeatherViewModel(
             locationRepo.getDefaultCity()
                 .collect { loc ->
                     weatherNowState = weatherNowRepo.weatherNowStream(loc)
+                    dailyWeatherState = weatherNowRepo.dailyWeatherStream(loc)
                     Log.d(LOG_TAG, "from locals: location $loc")
                     locationState.update { loc }
                 }
@@ -134,6 +141,7 @@ data class ViewModelState(
     var loading: Boolean = false,
     var city: WeatherLocation? = null,
     var weatherData: WeatherNow? = null,
+    val dailyData: List<DailyWeather> = listOf(),
     var error: String = "",
     var updateTime: Long = -1
 ) {
@@ -149,8 +157,8 @@ data class ViewModelState(
             return NowUiState.WeatherNowUiState(
                 isLoading = loading,
                 city = city?.asUiState(),
-                temp = "${formatTemp(data.nowTemp)}$temp",
-                feelsLike = "${formatTemp(data.feelsLike)}$temp",
+                temp = "${data.nowTemp.formatTemp()}$temp",
+                feelsLike = "${data.feelsLike.formatTemp()}$temp",
                 icon = ICONS[data.icon]!!,
                 text = data.text,
                 windDegree = (data.windDegree.toFloat() + 180f) % 360f,
@@ -161,18 +169,10 @@ data class ViewModelState(
                 humidity = "${data.humidity} $percent",
                 pressure = "${data.airPressure} $pressure",
                 visibility = "${data.visibility} $length",
+                dailyStates = dailyData.map { it.asUiState() },
                 errorMessage = error
             )
         }
-
-    private fun formatTemp(temp: String): String {
-        return if ("." in temp) {
-            val t = temp.toFloat()
-            "%.1f".format(t)
-        } else {
-            temp
-        }
-    }
 }
 
 sealed interface NowUiState {
@@ -197,6 +197,7 @@ sealed interface NowUiState {
         val humidity: String,
         val pressure: String,
         val visibility: String,
+        val dailyStates: List<DailyUiState>,
         override val city: CityState?,
         override val isLoading: Boolean,
         override val errorMessage: String
@@ -212,5 +213,38 @@ sealed interface NowUiState {
         override val errorMessage: String
     ) : NowUiState {
         override fun isEmpty() = true
+    }
+}
+
+data class DailyUiState(
+    val date: String,
+    val tempHigh: String,
+    val tempLow: String,
+    val sunrise: String = "",
+    val sunset: String = "",
+    val iconDay: String,
+    val textDay: String,
+    val uvIndex: String,
+)
+
+fun DailyWeather.asUiState(): DailyUiState =
+    DailyUiState(
+        date = date,
+        tempHigh = "${tempHigh.formatTemp()}${unit().temp}",
+        tempLow = "${tempLow.formatTemp()}${unit().temp}",
+        sunrise = sunrise,
+        sunset = sunset,
+        iconDay = iconDay,
+        textDay = textDay,
+        uvIndex = uvIndex
+    )
+
+fun String.formatTemp(): String {
+    val temp = this
+    return if ("." in temp) {
+        val t = temp.toFloat()
+        "%.1f".format(t)
+    } else {
+        temp
     }
 }

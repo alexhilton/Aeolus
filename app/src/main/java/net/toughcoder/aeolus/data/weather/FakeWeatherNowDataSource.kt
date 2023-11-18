@@ -2,6 +2,7 @@ package net.toughcoder.aeolus.data.weather
 
 import android.os.SystemClock
 import kotlinx.coroutines.delay
+import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import kotlin.random.Random
@@ -39,5 +40,7 @@ class FakeWeatherNowDataSource : WeatherNowDataSource {
         updateTime = SystemClock.uptimeMillis() / 1000L
     )
 
-
+    override suspend fun loadDailyWeather(loc: WeatherLocation): List<DailyWeather> {
+        TODO("Not yet implemented")
+    }
 }
