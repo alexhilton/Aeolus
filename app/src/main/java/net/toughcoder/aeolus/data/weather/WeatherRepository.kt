@@ -56,8 +56,8 @@ class WeatherRepository(
 
     suspend fun dailyWeatherStream(location: WeatherLocation): Flow<List<DailyWeather>> {
         return withContext(dispatcher) {
-            // TODO: local cache support
-            dailyWeatherStream = MutableStateFlow(listOf())
+            val fromLocal = local.loadDailyWeather(location)
+            dailyWeatherStream = MutableStateFlow(fromLocal)
             dailyWeatherStream.asStateFlow()
         }
     }
@@ -67,6 +67,7 @@ class WeatherRepository(
             val bundle = network.loadDailyWeather(location)
             if (bundle.isNotEmpty()) {
                 // update local cache
+                local.updateDailyWeather(location, bundle)
                 dailyWeatherStream.update { bundle }
             }
         }

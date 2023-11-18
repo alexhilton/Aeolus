@@ -21,6 +21,7 @@ data class WeatherNowEntity(
     @ColumnInfo(name = "pressure") val airPressure: String,
     @ColumnInfo(name = "visibility") val visibility: String
 )
+
 fun WeatherNow.asEntity(cityId: String): WeatherNowEntity = WeatherNowEntity(
     cityId = cityId,
     updateTime= updateTime,

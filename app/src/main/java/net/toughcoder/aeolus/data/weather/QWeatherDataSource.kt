@@ -64,4 +64,11 @@ class QWeatherDataSource(
     override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow) {
         // Not implemented
     }
+
+    override suspend fun updateDailyWeather(
+        loc: WeatherLocation,
+        dailyWeathers: List<DailyWeather>
+    ) {
+        TODO("Not yet implemented")
+    }
 }

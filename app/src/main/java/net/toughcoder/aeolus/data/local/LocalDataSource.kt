@@ -41,6 +41,13 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
     }
 
     override suspend fun loadDailyWeather(loc: WeatherLocation): List<DailyWeather> {
-        TODO("Not yet implemented")
+        return emptyList()
+    }
+
+    override suspend fun updateDailyWeather(
+        loc: WeatherLocation,
+        dailyWeathers: List<DailyWeather>
+    ) {
+        //
     }
 }
