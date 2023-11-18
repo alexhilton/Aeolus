@@ -4,7 +4,7 @@ import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 
-interface WeatherNowDataSource {
+interface WeatherDataSource {
     suspend fun loadWeatherNow(loc: WeatherLocation): WeatherNow
 
     suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow)

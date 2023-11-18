@@ -39,7 +39,7 @@ fun AeolusNavGraph(
             val viewModel: HomeViewModel = viewModel(
                 factory = HomeViewModel.provideFactory(
                     appContainer.locationRepository,
-                    appContainer.weatherNowRepository
+                    appContainer.weatherRepository
                 )
             )
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()

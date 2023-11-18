@@ -10,12 +10,12 @@ import net.toughcoder.aeolus.data.local.LocalDataSource
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.location.QWeatherLocationSource
 import net.toughcoder.aeolus.data.location.SearchRepository
-import net.toughcoder.aeolus.data.weather.QWeatherNowDataSource
-import net.toughcoder.aeolus.data.weather.WeatherNowRepository
+import net.toughcoder.aeolus.data.weather.QWeatherDataSource
+import net.toughcoder.aeolus.data.weather.WeatherRepository
 
 interface DataContainer {
     val locationRepository: LocationRepository
-    val weatherNowRepository: WeatherNowRepository
+    val weatherRepository: WeatherRepository
     val database: AeolusDatabase
     val datastore: AeolusStore
     val searchRepository: SearchRepository
@@ -26,11 +26,11 @@ class DataContainerImpl(private val context: Context) : DataContainer {
         LocationRepository(datastore, database, Dispatchers.IO)
     }
 
-    override val weatherNowRepository: WeatherNowRepository by lazy {
+    override val weatherRepository: WeatherRepository by lazy {
 //        WeatherNowRepository(FakeWeatherNowDataSource())
-        WeatherNowRepository(
+        WeatherRepository(
             LocalDataSource(database),
-            QWeatherNowDataSource(QWeatherService.create(QWeatherService.BASE_URL)),
+            QWeatherDataSource(QWeatherService.create(QWeatherService.BASE_URL)),
             Dispatchers.IO
         )
     }

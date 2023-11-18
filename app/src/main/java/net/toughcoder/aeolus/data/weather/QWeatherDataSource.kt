@@ -10,9 +10,9 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-class QWeatherNowDataSource(
+class QWeatherDataSource(
     private val api: QWeatherService
-) : WeatherNowDataSource {
+) : WeatherDataSource {
     companion object {
         const val LOG_TAG = "QWeatherNowDataSource"
     }

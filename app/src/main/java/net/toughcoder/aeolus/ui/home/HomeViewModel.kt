@@ -18,7 +18,7 @@ import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
-import net.toughcoder.aeolus.data.weather.WeatherNowRepository
+import net.toughcoder.aeolus.data.weather.WeatherRepository
 import net.toughcoder.aeolus.data.unit
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.ui.CityState
@@ -27,13 +27,13 @@ import net.toughcoder.aeolus.ui.asUiState
 
 class HomeViewModel(
     private val locationRepo: LocationRepository,
-    private val weatherNowRepo: WeatherNowRepository
+    private val weatherRepo: WeatherRepository
 ) : ViewModel() {
     companion object {
         const val LOG_TAG = "WeatherViewModel"
         fun provideFactory(
             locationRepo: LocationRepository,
-            weatherNowRepo: WeatherNowRepository
+            weatherNowRepo: WeatherRepository
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -86,8 +86,8 @@ class HomeViewModel(
                 .collect { loc ->
                     if (loc.successful()) {
                         locationState.update { loc }
-                        weatherNowRepo.refreshWeatherNow(loc)
-                        weatherNowRepo.refreshDailyWeather(loc)
+                        weatherRepo.refreshWeatherNow(loc)
+                        weatherRepo.refreshDailyWeather(loc)
                         updateState()
                     }
                 }
@@ -125,8 +125,8 @@ class HomeViewModel(
         viewModelScope.launch {
             locationRepo.getDefaultCity()
                 .collect { loc ->
-                    weatherNowState = weatherNowRepo.weatherNowStream(loc)
-                    dailyWeatherState = weatherNowRepo.dailyWeatherStream(loc)
+                    weatherNowState = weatherRepo.weatherNowStream(loc)
+                    dailyWeatherState = weatherRepo.dailyWeatherStream(loc)
                     Log.d(LOG_TAG, "from locals: location $loc")
                     locationState.update { loc }
                 }

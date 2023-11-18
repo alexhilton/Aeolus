@@ -11,9 +11,9 @@ import net.toughcoder.aeolus.data.local.LocalDataSource
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.WeatherNow
 
-class WeatherNowRepository(
+class WeatherRepository(
     private val local: LocalDataSource,
-    private val network: WeatherNowDataSource,
+    private val network: WeatherDataSource,
     private val dispatcher: CoroutineDispatcher,
 ) {
     private lateinit var nowWeatherStream: MutableStateFlow<WeatherNow>
