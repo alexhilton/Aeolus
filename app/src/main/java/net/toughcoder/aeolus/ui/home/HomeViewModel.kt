@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.ui.weather
+package net.toughcoder.aeolus.ui.home
 
 import android.os.SystemClock
 import android.util.Log
@@ -24,9 +24,8 @@ import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.ICONS
 import net.toughcoder.aeolus.ui.asUiState
-import java.util.Date
 
-class WeatherViewModel(
+class HomeViewModel(
     private val locationRepo: LocationRepository,
     private val weatherNowRepo: WeatherNowRepository
 ) : ViewModel() {
@@ -38,7 +37,7 @@ class WeatherViewModel(
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return WeatherViewModel(locationRepo, weatherNowRepo) as T
+                return HomeViewModel(locationRepo, weatherNowRepo) as T
             }
         }
     }

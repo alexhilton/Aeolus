@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.ui.weather
+package net.toughcoder.aeolus.ui.home
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -59,7 +59,7 @@ fun WeatherDetails(
             SimpleInfo(uiState.text, uiState.icon, uiState.temp)
 
             if (uiState.dailyStates.isNotEmpty()) {
-                DailyInfo(modifier, uiState.dailyStates[0])
+                GeneralInfo(modifier, uiState.dailyStates[0])
                 Spacer(Modifier.height(8.dp))
             }
 
@@ -117,7 +117,7 @@ fun SimpleInfo(
 }
 
 @Composable
-fun DailyInfo(
+fun GeneralInfo(
     modifier: Modifier = Modifier,
     info: DailyUiState
 ) {
@@ -263,7 +263,7 @@ fun Weather15Days(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun DailyInfoPreview() {
-    DailyInfo(info = DailyUiState(
+    GeneralInfo(info = DailyUiState(
         "2023-11-29",
         "19 \u2103",
         "1 \u2103",

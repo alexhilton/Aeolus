@@ -15,8 +15,8 @@ import net.toughcoder.aeolus.ui.favorites.FavoritesScreen
 import net.toughcoder.aeolus.ui.favorites.FavoritesViewModel
 import net.toughcoder.aeolus.ui.search.SearchScreen
 import net.toughcoder.aeolus.ui.search.SearchViewModel
-import net.toughcoder.aeolus.ui.weather.AeolusScreen
-import net.toughcoder.aeolus.ui.weather.WeatherViewModel
+import net.toughcoder.aeolus.ui.home.HomeScreen
+import net.toughcoder.aeolus.ui.home.HomeViewModel
 
 @Composable
 fun AeolusNavGraph(
@@ -36,15 +36,15 @@ fun AeolusNavGraph(
                 navDeepLink { uriPattern = "${AeolusDestinations.APP_URI}/${AeolusDestinations.WEATHER_ROUTE}" }
             )
         ) {
-            val viewModel: WeatherViewModel = viewModel(
-                factory = WeatherViewModel.provideFactory(
+            val viewModel: HomeViewModel = viewModel(
+                factory = HomeViewModel.provideFactory(
                     appContainer.locationRepository,
                     appContainer.weatherNowRepository
                 )
             )
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            AeolusScreen(
+            HomeScreen(
                 modifier,
                 uiState,
                 viewModel::refresh
