@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.AeolusStore
 import net.toughcoder.aeolus.data.room.AeolusDatabase
+import net.toughcoder.aeolus.data.room.DailyWeatherDao
 import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.asModel
@@ -27,17 +28,28 @@ class LocationRepository(
 
     suspend fun favoriteCity(city: WeatherLocation) {
         withContext(dispatcher) {
-            val dao = database.locationDao()
-            val qe = dao.getCity(city.id)
+            val locationDao = database.locationDao()
+            val qe = locationDao.getCity(city.id)
             if (qe == null) {
-                if (dao.getCount() < LIMIT) {
-                    dao.insert(city.asEntity())
+                if (locationDao.getCount() < LIMIT) {
+                    locationDao.insert(city.asEntity())
                 } else {
-                    val list = dao.getAllCities()
+                    val dailyWeatherDao = database.dailyWeatherDao()
+                    val nowWeatherDao = database.weatherNowDao()
+                    val list = locationDao.getAllCities()
                     for (idx in list.size - 1 downTo LIMIT - 1) {
-                        dao.delete(list[idx])
+                        locationDao.delete(list[idx])
+                        // Remove its belonging weather info as well
+                        val now = nowWeatherDao.getByCityId(list[idx].qid)
+                        if (now != null) {
+                            nowWeatherDao.delete(now)
+                        }
+                        val weathers = dailyWeatherDao.getDailyWeathers(list[idx].qid)
+                        if (weathers.isNotEmpty()) {
+                            dailyWeatherDao.deleteDailyWeathers(weathers)
+                        }
                     }
-                    dao.insert(city.asEntity())
+                    locationDao.insert(city.asEntity())
                 }
             }
         }

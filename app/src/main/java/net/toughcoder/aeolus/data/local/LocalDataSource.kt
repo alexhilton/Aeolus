@@ -2,11 +2,13 @@ package net.toughcoder.aeolus.data.local
 
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
+import net.toughcoder.aeolus.data.room.toEntity
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherDataSource
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.asModel
+import net.toughcoder.aeolus.model.toModel
 
 class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource {
     override suspend fun loadWeatherNow(loc: WeatherLocation): WeatherNow {
@@ -41,13 +43,17 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
     }
 
     override suspend fun loadDailyWeather(loc: WeatherLocation): List<DailyWeather> {
-        return emptyList()
+        val dao = database.dailyWeatherDao()
+        val weathers = dao.getDailyWeathers(loc.id)
+        return weathers.map { it.toModel() }
     }
 
     override suspend fun updateDailyWeather(
         loc: WeatherLocation,
         dailyWeathers: List<DailyWeather>
     ) {
-        //
+        val dao = database.dailyWeatherDao()
+        val weathers = dailyWeathers.mapIndexed{ idx, item -> item.toEntity(loc.id, idx) }
+        dao.addDailyWeathers(weathers)
     }
 }

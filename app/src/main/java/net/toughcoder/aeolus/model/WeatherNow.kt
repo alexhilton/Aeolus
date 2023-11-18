@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.model
 
+import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 
 data class WeatherNow(
@@ -53,3 +54,24 @@ data class DailyWeather(
     val iconNight: String,
     val textNight: String
 )
+
+fun DailyWeatherEntity.toModel(): DailyWeather =
+    DailyWeather(
+        date,
+        tempHigh,
+        tempLow,
+        sunrise,
+        sunset,
+        iconDay,
+        textDay,
+        uvIndex,
+        humidity,
+        pressure,
+        visibility,
+        windDegree,
+        windDir,
+        windScale,
+        windSpeed,
+        iconNight,
+        textNight
+    )
