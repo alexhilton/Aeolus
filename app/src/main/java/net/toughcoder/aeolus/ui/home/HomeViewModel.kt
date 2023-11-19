@@ -247,3 +247,7 @@ fun String.formatTemp(): String {
         temp
     }
 }
+
+fun String.toWindDegree(): Float {
+    return (this.toFloat() + 180f) % 360f
+}

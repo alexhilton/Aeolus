@@ -18,6 +18,7 @@ class WeatherRepository(
 ) {
     private lateinit var nowWeatherStream: MutableStateFlow<WeatherNow>
     private lateinit var dailyWeatherStream: MutableStateFlow<List<DailyWeather>>
+    private lateinit var weatherSnapshotStream: MutableStateFlow<DailyWeather>
 
     suspend fun getWeatherNow(location: WeatherLocation): WeatherNow {
         return withContext(dispatcher) {
@@ -69,6 +70,37 @@ class WeatherRepository(
                 // update local cache
                 local.updateDailyWeather(location, bundle)
                 dailyWeatherStream.update { bundle }
+            }
+        }
+    }
+
+    suspend fun getWeatherSnapshotStream(location: WeatherLocation): Flow<DailyWeather> {
+        return withContext(dispatcher) {
+            val weatherList = local.loadDailyWeather(location)
+            val fromLocal = if (weatherList.isEmpty()) DailyWeather() else weatherList[0]
+            weatherSnapshotStream = MutableStateFlow(fromLocal)
+            weatherSnapshotStream.asStateFlow()
+        }
+    }
+
+    suspend fun loadWeatherSnapshot(location: WeatherLocation) {
+        return withContext(dispatcher) {
+            val weatherList = network.loadDailyWeather(location)
+            if (weatherList.isNotEmpty()) {
+                local.updateDailyWeather(location, weatherList)
+                weatherSnapshotStream.update { weatherList[0] }
+            }
+        }
+    }
+
+    suspend fun fetchDayWeather(location: WeatherLocation): DailyWeather {
+        return withContext(dispatcher) {
+            val weatherList = network.loadDailyWeather(location)
+            if (weatherList.isNotEmpty()) {
+                local.updateDailyWeather(location, weatherList)
+                weatherList[0]
+            } else {
+                DailyWeather()
             }
         }
     }

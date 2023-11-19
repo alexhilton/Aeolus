@@ -60,7 +60,10 @@ fun AeolusNavGraph(
             )
         ) {
             val viewModel:FavoritesViewModel = viewModel(
-                factory = FavoritesViewModel.providerFactory(appContainer.locationRepository)
+                factory = FavoritesViewModel.providerFactory(
+                    appContainer.locationRepository,
+                    appContainer.weatherRepository
+                )
             )
             FavoritesScreen(
                 viewModel = viewModel,
