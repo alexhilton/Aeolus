@@ -11,6 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navDeepLink
 import net.toughcoder.aeolus.data.DataContainer
+import net.toughcoder.aeolus.ui.daily.DailyWeatherScreen
+import net.toughcoder.aeolus.ui.daily.DailyWeatherViewModel
 import net.toughcoder.aeolus.ui.favorites.FavoritesScreen
 import net.toughcoder.aeolus.ui.favorites.FavoritesViewModel
 import net.toughcoder.aeolus.ui.search.SearchScreen
@@ -47,7 +49,9 @@ fun AeolusNavGraph(
             HomeScreen(
                 modifier,
                 uiState,
-                viewModel::refresh
+                viewModel::refresh,
+                // TODO: should pass current location to daily screen, because it is bound to a specific location
+                navToDaily = { navController.navigate(AeolusDestinations.DAILY_WEATHER) }
             ) {
                 navController.navigate(AeolusDestinations.FAVORITES_ROUTE)
             }
@@ -89,6 +93,23 @@ fun AeolusNavGraph(
                 searchViewModel = viewModel,
                 onBack = { navController.popBackStack() },
             )
+        }
+
+        composable(
+            route = AeolusDestinations.DAILY_WEATHER,
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "${AeolusDestinations.APP_URI}/${AeolusDestinations.DAILY_WEATHER}" }
+            )
+        ) {
+            val viewModel: DailyWeatherViewModel = viewModel(
+                factory = DailyWeatherViewModel.providerFactory(
+                    appContainer.locationRepository,
+                    appContainer.weatherRepository
+                )
+            )
+            DailyWeatherScreen(modifier, viewModel) {
+                navController.popBackStack()
+            }
         }
     }
 }

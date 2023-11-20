@@ -5,4 +5,5 @@ object AeolusDestinations {
     const val WEATHER_ROUTE = "weather"
     const val FAVORITES_ROUTE = "favorites"
     const val SEARCH_ROUTE = "search"
+    const val DAILY_WEATHER = "daily_weather"
 }
