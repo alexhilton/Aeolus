@@ -29,15 +29,17 @@ import net.toughcoder.aeolus.ui.CityState
 
 @Composable
 fun WeatherScreen(
+    modifier: Modifier = Modifier,
     uiState: NowUiState.WeatherNowUiState,
-    modifier: Modifier = Modifier
+    gotoDaily: () -> Unit
 ) {
     Column(
         modifier = modifier
     ) {
         WeatherDetails(modifier, uiState)
         Weather24Hours(modifier)
-        Weather15Days(modifier)
+
+        DailyWeatherSection(modifier, dailyWeathers = uiState.dailyStates, gotoDaily)
     }
 }
 
@@ -269,7 +271,7 @@ fun DailyInfoPreview() {
         "1 \u2103",
         "05:00",
         "18:00",
-        "Cloudy",
+        R.drawable.ic_101,
         "Good",
         "1"
     ))
@@ -300,7 +302,7 @@ fun DetailPreview() {
                 "1 \u2103",
                 "05:00",
                 "18:00",
-                iconDay = "Cloudy",
+                iconDay = R.drawable.ic_1001,
                 textDay = "Good",
                 uvIndex = "1"
             )

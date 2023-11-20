@@ -102,10 +102,12 @@ fun HomeScreen(
                     exit = fadeOut()
                 ) {
                     WeatherScreen(
-                        uiState = uiState as NowUiState.WeatherNowUiState,
                         modifier = Modifier
-                            .padding(8.dp)
-                    )
+                            .padding(8.dp),
+                        uiState = uiState as NowUiState.WeatherNowUiState
+                    ) {
+                        // go to daily weather screen
+                    }
                 }
             }
 

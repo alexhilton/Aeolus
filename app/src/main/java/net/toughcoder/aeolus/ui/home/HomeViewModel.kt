@@ -221,7 +221,7 @@ data class DailyUiState(
     val tempLow: String,
     val sunrise: String = "",
     val sunset: String = "",
-    val iconDay: String,
+    @DrawableRes val iconDay: Int,
     val textDay: String,
     val uvIndex: String,
 )
@@ -233,7 +233,7 @@ fun DailyWeather.asUiState(): DailyUiState =
         tempLow = "${tempLow.formatTemp()}${unit().temp}",
         sunrise = sunrise,
         sunset = sunset,
-        iconDay = iconDay,
+        iconDay = ICONS[iconDay]!!,
         textDay = textDay,
         uvIndex = uvIndex
     )
