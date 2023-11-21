@@ -22,8 +22,10 @@ import net.toughcoder.aeolus.data.weather.WeatherRepository
 import net.toughcoder.aeolus.data.unit
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.ui.CityState
+import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.ICONS
 import net.toughcoder.aeolus.ui.asUiState
+import net.toughcoder.aeolus.ui.formatTemp
 
 class HomeViewModel(
     private val locationRepo: LocationRepository,
@@ -213,41 +215,4 @@ sealed interface NowUiState {
     ) : NowUiState {
         override fun isEmpty() = true
     }
-}
-
-data class DailyUiState(
-    val date: String,
-    val tempHigh: String,
-    val tempLow: String,
-    val sunrise: String = "",
-    val sunset: String = "",
-    @DrawableRes val iconDay: Int,
-    val textDay: String,
-    val uvIndex: String,
-)
-
-fun DailyWeather.asUiState(): DailyUiState =
-    DailyUiState(
-        date = date,
-        tempHigh = "${tempHigh.formatTemp()}${unit().temp}",
-        tempLow = "${tempLow.formatTemp()}${unit().temp}",
-        sunrise = sunrise,
-        sunset = sunset,
-        iconDay = ICONS[iconDay]!!,
-        textDay = textDay,
-        uvIndex = uvIndex
-    )
-
-fun String.formatTemp(): String {
-    val temp = this
-    return if ("." in temp) {
-        val t = temp.toFloat()
-        "%.1f".format(t)
-    } else {
-        temp
-    }
-}
-
-fun String.toWindDegree(): Float {
-    return (this.toFloat() + 180f) % 360f
 }

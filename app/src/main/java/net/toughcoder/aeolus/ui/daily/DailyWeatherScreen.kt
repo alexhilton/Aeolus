@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.favorites.DayWeatherUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +73,7 @@ fun DailyWeatherScreen(
 @Composable
 fun DailyHorizontalList(
     modifier: Modifier = Modifier,
-    weathers: List<DayWeatherUiState>
+    weathers: List<DailyUiState>
 ) {
     Row(
         modifier = modifier
@@ -89,7 +90,7 @@ fun DailyHorizontalList(
 @Composable
 fun DailyDetailItem(
     modifier: Modifier = Modifier,
-    weather: DayWeatherUiState
+    weather: DailyUiState
 ) {
     Surface(
         shape = MaterialTheme.shapes.medium,
@@ -100,8 +101,8 @@ fun DailyDetailItem(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(weather.text)
-            Text(weather.high)
+            Text(weather.date)
+            Text(weather.textDay)
         }
     }
 }

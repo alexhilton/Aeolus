@@ -15,8 +15,8 @@ import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.ICONS
 import net.toughcoder.aeolus.ui.asUiState
-import net.toughcoder.aeolus.ui.home.formatTemp
-import net.toughcoder.aeolus.ui.home.toWindDegree
+import net.toughcoder.aeolus.ui.formatTemp
+import net.toughcoder.aeolus.ui.toWindDegree
 
 class FavoritesViewModel(
     private val locationRepo: LocationRepository,
