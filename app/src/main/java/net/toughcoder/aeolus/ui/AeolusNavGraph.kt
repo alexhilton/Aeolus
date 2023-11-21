@@ -6,9 +6,11 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import net.toughcoder.aeolus.data.DataContainer
 import net.toughcoder.aeolus.ui.daily.DailyWeatherScreen
@@ -50,8 +52,7 @@ fun AeolusNavGraph(
                 modifier,
                 uiState,
                 viewModel::refresh,
-                // TODO: should pass current location to daily screen, because it is bound to a specific location
-                navToDaily = { navController.navigate(AeolusDestinations.DAILY_WEATHER) }
+                navToDaily = { navController.navigate("${AeolusDestinations.DAILY_WEATHER}/$it") }
             ) {
                 navController.navigate(AeolusDestinations.FAVORITES_ROUTE)
             }
@@ -96,15 +97,17 @@ fun AeolusNavGraph(
         }
 
         composable(
-            route = AeolusDestinations.DAILY_WEATHER,
-            deepLinks = listOf(
-                navDeepLink { uriPattern = "${AeolusDestinations.APP_URI}/${AeolusDestinations.DAILY_WEATHER}" }
+            route = "${AeolusDestinations.DAILY_WEATHER}/{cityId}",
+            arguments = listOf(
+                navArgument("cityId") { type = NavType.StringType }
             )
-        ) {
+        ) {backStackEntry ->
             val viewModel: DailyWeatherViewModel = viewModel(
                 factory = DailyWeatherViewModel.providerFactory(
                     appContainer.locationRepository,
-                    appContainer.weatherRepository
+                    appContainer.weatherRepository,
+                    backStackEntry,
+                    defaultArgs = backStackEntry.arguments
                 )
             )
             DailyWeatherScreen(modifier, viewModel) {

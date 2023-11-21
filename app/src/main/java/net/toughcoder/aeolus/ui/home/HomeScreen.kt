@@ -48,7 +48,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     uiState: NowUiState,
     onRefresh: () -> Unit,
-    navToDaily: () -> Unit,
+    navToDaily: (String) -> Unit,
     navToFavorites: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -106,7 +106,7 @@ fun HomeScreen(
                         modifier = Modifier
                             .padding(8.dp),
                         uiState = uiState as NowUiState.WeatherNowUiState,
-                        gotoDaily = navToDaily
+                        gotoDaily = { uiState.city?.let { city -> navToDaily(city.id) } }
                     )
                 }
             }
