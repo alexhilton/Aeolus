@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.ui
 
 import androidx.annotation.DrawableRes
+import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.data.unit
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.WeatherLocation
@@ -37,6 +38,15 @@ data class DailyUiState(
     @DrawableRes val iconDay: Int,
     val textDay: String,
     val uvIndex: String,
+    val textNight: String = "",
+    @DrawableRes val iconNight: Int = 0,
+    val windDegree: Float = 0f,
+    val windDir: String = "",
+    val windScale: String = "",
+    @DrawableRes val iconDir: Int = 0,
+    val humidity: String = "",
+    val pressure: String = "",
+    val visibility: String = ""
 )
 
 fun DailyWeather.asUiState(): DailyUiState =
@@ -48,7 +58,16 @@ fun DailyWeather.asUiState(): DailyUiState =
         sunset = sunset,
         iconDay = ICONS[iconDay]!!,
         textDay = textDay,
-        uvIndex = uvIndex
+        uvIndex = uvIndex,
+        textNight = textNight,
+        iconNight = ICONS[iconNight]!!,
+        windDegree = windDegree.toWindDegree(),
+        windDir = windDir,
+        windScale = "$windScale ${unit().scale}",
+        iconDir = R.drawable.ic_nav,
+        humidity = "$humidity %",
+        pressure = "$pressure ${unit().pressure}",
+        visibility = "$visibility ${unit().length}"
     )
 
 fun String.formatTemp(): String {

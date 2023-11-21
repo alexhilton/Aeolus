@@ -1,10 +1,14 @@
 package net.toughcoder.aeolus.ui.daily
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -21,6 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -102,7 +109,41 @@ fun DailyDetailItem(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(weather.date)
+            Image(
+                modifier = Modifier
+                    .size(36.dp),
+                painter = painterResource(weather.iconDay),
+                contentScale = ContentScale.Fit,
+                contentDescription = ""
+            )
             Text(weather.textDay)
+            Text(weather.tempHigh)
+
+            Spacer(Modifier.height(36.dp))
+
+            Text(weather.tempLow)
+            Image(
+                modifier = Modifier
+                    .size(36.dp),
+                painter = painterResource(weather.iconNight),
+                contentScale = ContentScale.Fit,
+                contentDescription = ""
+            )
+            Text(weather.textNight)
+            Text(weather.windDir)
+            Image(
+                modifier = Modifier
+                    .size(24.dp)
+                    .rotate(weather.windDegree),
+                painter = painterResource(weather.iconDir),
+                contentScale = ContentScale.Fit,
+                contentDescription = null
+            )
+            Text(weather.windScale)
+            Text("紫外线 ${weather.uvIndex}")
+            Text("湿度 ${weather.humidity}")
+            Text("气压 ${weather.pressure}")
+            Text("能见度 ${weather.visibility}")
         }
     }
 }
