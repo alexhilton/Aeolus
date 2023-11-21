@@ -53,12 +53,17 @@ class QWeatherDataSource(
     }
 
     override suspend fun loadDailyWeather(loc: WeatherLocation): List<DailyWeather> {
-        val response = api.fetchWeather3D(loc.id)
-        return if (response.code == "200") {
-            response.dayList.map { it.toModel() }
-        } else {
-            listOf()
+        try {
+            val response = api.fetchWeather3D(loc.id)
+            return if (response.code == "200") {
+                response.dayList.map { it.toModel() }
+            } else {
+                emptyList()
+            }
+        } catch(exception: Exception) {
+            Log.d(LOG_TAG, "Faild to load daily weather ${exception.message}")
         }
+        return emptyList()
     }
 
     override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow) {
