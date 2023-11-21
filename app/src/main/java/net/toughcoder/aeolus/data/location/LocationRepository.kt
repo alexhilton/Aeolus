@@ -2,10 +2,12 @@ package net.toughcoder.aeolus.data.location
 
 import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.AeolusStore
 import net.toughcoder.aeolus.data.room.AeolusDatabase
-import net.toughcoder.aeolus.data.room.DailyWeatherDao
 import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.asModel
@@ -65,4 +67,9 @@ class LocationRepository(
                 }
         }
     }
+
+    fun getLocationInfo(cityId: String): Flow<WeatherLocation> = flow {
+        val dao = database.locationDao()
+        emit(dao.getCity(cityId)?.asModel() ?: WeatherLocation())
+    }.flowOn(dispatcher)
 }

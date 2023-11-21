@@ -2,16 +2,32 @@ package net.toughcoder.aeolus.ui.daily
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.SharedMemory
 import android.util.Log
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.savedstate.SavedStateRegistryOwner
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.weather.WeatherRepository
+import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.ui.CityState
+import net.toughcoder.aeolus.ui.asUiState
 import net.toughcoder.aeolus.ui.favorites.DayWeatherUiState
+import net.toughcoder.aeolus.ui.favorites.asSnapshotUiState
 
 class DailyWeatherViewModel(
     private val locationRepo: LocationRepository,
@@ -21,8 +37,30 @@ class DailyWeatherViewModel(
 
     private val cityId: String = Uri.decode(savedStateHandle.get<String>("cityId"))
 
+    private val viewModelState = MutableStateFlow(DailyScreenUiState())
+    private lateinit var weatherStream: Flow<List<DailyWeather>>
+
+    val uiState = viewModelState
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            viewModelState.value
+        )
+
     init {
         Log.d(LOG_TAG, "cityId is $cityId")
+        viewModelScope.launch {
+            locationRepo.getLocationInfo(cityId)
+                .flatMapMerge { loc ->
+                    weatherStream = weatherRepo.dailyWeatherStream(loc)
+                    weatherRepo.refreshDailyWeather(loc)
+                    viewModelState.update { it.copy(city = loc.asUiState()) }
+                    weatherStream
+                }.collect {weathers ->
+                    viewModelState.update { it.copy(dailyWeathers = weathers.map { item -> item.asSnapshotUiState() }) }
+                }
+
+        }
     }
 
     companion object {
@@ -48,6 +86,6 @@ class DailyWeatherViewModel(
 }
 
 data class DailyScreenUiState(
-    val city: CityState,
-    val dailyWeathers: List<DayWeatherUiState>
+    val city: CityState? = null,
+    val dailyWeathers: List<DayWeatherUiState> = emptyList()
 )
