@@ -51,8 +51,10 @@ class DailyWeatherViewModel(
                     weatherRepo.refreshDailyWeather(loc)
                     viewModelState.update { it.copy(city = loc.asUiState()) }
                     weatherStream
-                }.collect {weathers ->
-                    viewModelState.update { it.copy(dailyWeathers = weathers.map { item -> item.asUiState() }) }
+                }.collect { weathers ->
+                    viewModelState.update {
+                        it.copy(dailyWeathers = weathers.map { item -> item.asUiState() })
+                    }
                 }
 
         }

@@ -108,6 +108,7 @@ fun DailyDetailItem(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(weather.weekday)
             Text(weather.date)
             Image(
                 modifier = Modifier
