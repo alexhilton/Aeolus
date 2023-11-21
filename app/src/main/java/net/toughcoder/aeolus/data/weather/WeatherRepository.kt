@@ -63,11 +63,21 @@ class WeatherRepository(
         }
     }
 
-    suspend fun refreshDailyWeather(location: WeatherLocation) {
+    suspend fun fetch3DayWeathers(location: WeatherLocation) {
         withContext(dispatcher) {
             val bundle = network.loadDailyWeather(location)
             if (bundle.isNotEmpty()) {
                 // update local cache
+                local.updateDailyWeather(location, bundle)
+                dailyWeatherStream.update { bundle }
+            }
+        }
+    }
+
+    suspend fun fetch7DayWeathers(location: WeatherLocation) {
+        withContext(dispatcher) {
+            val bundle = network.load7DayWeathers(location)
+            if (bundle.isNotEmpty()) {
                 local.updateDailyWeather(location, bundle)
                 dailyWeatherStream.update { bundle }
             }

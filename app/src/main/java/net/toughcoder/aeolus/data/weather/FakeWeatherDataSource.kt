@@ -44,6 +44,11 @@ class FakeWeatherDataSource : WeatherDataSource {
         TODO("Not yet implemented")
     }
 
+
+    override suspend fun load7DayWeathers(loc: WeatherLocation): List<DailyWeather> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun updateDailyWeather(
         loc: WeatherLocation,
         dailyWeathers: List<DailyWeather>

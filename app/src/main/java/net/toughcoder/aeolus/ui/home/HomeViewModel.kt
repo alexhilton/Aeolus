@@ -89,7 +89,7 @@ class HomeViewModel(
                     if (loc.successful()) {
                         locationState.update { loc }
                         weatherRepo.refreshWeatherNow(loc)
-                        weatherRepo.refreshDailyWeather(loc)
+                        weatherRepo.fetch3DayWeathers(loc)
                         updateState()
                     }
                 }

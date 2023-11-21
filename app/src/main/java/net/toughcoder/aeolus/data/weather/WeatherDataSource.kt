@@ -11,5 +11,7 @@ interface WeatherDataSource {
 
     suspend fun loadDailyWeather(loc: WeatherLocation): List<DailyWeather>
 
+    suspend fun load7DayWeathers(loc: WeatherLocation): List<DailyWeather>
+
     suspend fun updateDailyWeather(loc: WeatherLocation, dailyWeathers: List<DailyWeather>)
 }

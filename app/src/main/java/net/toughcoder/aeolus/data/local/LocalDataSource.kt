@@ -48,6 +48,10 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         return weathers.map { it.toModel() }
     }
 
+    override suspend fun load7DayWeathers(loc: WeatherLocation): List<DailyWeather> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun updateDailyWeather(
         loc: WeatherLocation,
         dailyWeathers: List<DailyWeather>
