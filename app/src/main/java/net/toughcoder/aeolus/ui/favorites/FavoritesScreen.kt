@@ -72,7 +72,7 @@ fun FavoritesScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Go back"
+                            contentDescription = stringResource(R.string.description_back)
                         )
                     }
                 },
@@ -80,7 +80,7 @@ fun FavoritesScreen(
                     IconButton(onClick = onSearch) {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = "Search a city"
+                            contentDescription = stringResource(R.string.description_search)
                         )
                     }
                 }
@@ -93,7 +93,7 @@ fun FavoritesScreen(
         ) {
             if (favoriteCities.isEmpty()) {
                 Text(
-                    text = "No favorites yet, go to Search page to add favorite city.",
+                    text = stringResource(R.string.empty_favorites),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary
                 )

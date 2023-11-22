@@ -28,9 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.favorites.DayWeatherUiState
 import net.toughcoder.aeolus.ui.home.GeneralInfo
@@ -55,7 +57,10 @@ fun DailyWeatherScreen(
                 ),
                 title = {
                     Text(
-                        text = "${uiState.city?.name},${uiState.city?.admin} 7天预报",
+                        text = stringResource(
+                            R.string.daily_screen_title,
+                            "${uiState.city?.name},${uiState.city?.admin}"
+                        ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -64,7 +69,7 @@ fun DailyWeatherScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Go back"
+                            contentDescription = stringResource(R.string.description_back)
                         )
                     }
                 }
@@ -72,7 +77,10 @@ fun DailyWeatherScreen(
         }
     ) {
         if (uiState.dailyWeathers.isEmpty()) {
-            Text(modifier = Modifier.padding(it), text = "Daily weather shows here")
+            Text(
+                modifier = Modifier.padding(it),
+                text = stringResource(R.string.daily_screen_placeholder)
+            )
         } else {
             DailyHorizontalList(modifier.padding(it), uiState.dailyWeathers)
         }

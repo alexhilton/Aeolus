@@ -6,4 +6,18 @@
     <string name="city_type_name">City</string>
     <string name="hot_city_title">Hot cities</string>
     <string name="search_result_title">Search results</string>
+    <string name="search_placeholder">Type to search a city</string>
+    <string name="empty_search_results">No results found, please try again later!</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="day_after">Day after</string>
+    <string name="button_view_more">Click to view more</string>
+    <string name="daily_screen_title">%1$s, 7 days forecast</string>
+    <string name="daily_screen_placeholder">Daily weather shows here</string>
+    <string name="empty_favorites">No favorites yet, go to Search page to add favorite city.</string>
+    <string name="description_manage_city">Manage cities</string>
+    <string name="description_back">Go back</string>
+    <string name="description_search">Search cities</string>
+    <string name="description_close">Close</string>
+    <string name="description_done">Done</string>
 </resources>

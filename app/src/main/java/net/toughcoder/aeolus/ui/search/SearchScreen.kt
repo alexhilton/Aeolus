@@ -117,11 +117,11 @@ fun SearchComponent(
             onActiveChange = { active = it },
             modifier = Modifier.weight(1f),
             enabled = true,
-            placeholder = { Text("Search a city") },
+            placeholder = { Text(stringResource(R.string.search_placeholder)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "Search"
+                    contentDescription = stringResource(R.string.description_search)
                 )
             },
             trailingIcon = if (active && query.isNotEmpty()) {
@@ -129,7 +129,7 @@ fun SearchComponent(
                     IconButton(onClick = { query = "" }) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close"
+                            contentDescription = stringResource(R.string.description_close)
                         )
                     }
                 }
@@ -149,7 +149,7 @@ fun SearchComponent(
             IconButton(onClick = onBack) {
                 Icon(
                     imageVector = Icons.Default.Done,
-                    contentDescription = "Done"
+                    contentDescription = stringResource(R.string.description_done)
                 )
             }
         }
