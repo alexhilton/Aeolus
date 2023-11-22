@@ -255,8 +255,15 @@ fun ValueLabel(
 }
 
 @Composable
-fun Weather15Days(modifier: Modifier = Modifier) {
-    Text(text = "Show weather in 15 days. \n Scroll horizontally.")
+fun GeneralText(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.secondary
+    )
 }
 
 @Preview

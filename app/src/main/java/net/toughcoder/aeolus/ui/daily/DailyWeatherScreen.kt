@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.favorites.DayWeatherUiState
+import net.toughcoder.aeolus.ui.home.GeneralInfo
+import net.toughcoder.aeolus.ui.home.GeneralText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,8 +110,8 @@ fun DailyDetailItem(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(weather.weekday)
-            Text(weather.date)
+            GeneralText(weather.weekday)
+            GeneralText(weather.date)
             Image(
                 modifier = Modifier
                     .size(36.dp),
@@ -117,12 +119,12 @@ fun DailyDetailItem(
                 contentScale = ContentScale.Fit,
                 contentDescription = ""
             )
-            Text(weather.textDay)
-            Text(weather.tempHigh)
+            GeneralText(weather.textDay)
+            GeneralText(weather.tempHigh)
 
             Spacer(Modifier.height(36.dp))
 
-            Text(weather.tempLow)
+            GeneralText(weather.tempLow)
             Image(
                 modifier = Modifier
                     .size(36.dp),
@@ -130,8 +132,8 @@ fun DailyDetailItem(
                 contentScale = ContentScale.Fit,
                 contentDescription = ""
             )
-            Text(weather.textNight)
-            Text(weather.windDir)
+            GeneralText(weather.textNight)
+            GeneralText(weather.windDir)
             Image(
                 modifier = Modifier
                     .size(24.dp)
@@ -140,11 +142,11 @@ fun DailyDetailItem(
                 contentScale = ContentScale.Fit,
                 contentDescription = null
             )
-            Text(weather.windScale)
-            Text("紫外线 ${weather.uvIndex}")
-            Text("湿度 ${weather.humidity}")
-            Text("气压 ${weather.pressure}")
-            Text("能见度 ${weather.visibility}")
+            GeneralText(weather.windScale)
+            GeneralText("紫外线 ${weather.uvIndex}")
+            GeneralText("湿度 ${weather.humidity}")
+            GeneralText("气压 ${weather.pressure}")
+            GeneralText("能见度 ${weather.visibility}")
         }
     }
 }

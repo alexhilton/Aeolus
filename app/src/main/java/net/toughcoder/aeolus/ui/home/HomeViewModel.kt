@@ -78,7 +78,7 @@ class HomeViewModel(
         // Step #2: Quit earlier if not need to update
         val now = SystemClock.uptimeMillis()
         Log.d(LOG_TAG, "now $now, last ${viewModelState.value.updateTime}")
-        if (now - viewModelState.value.updateTime < 10 * 1000L) {
+        if (now - viewModelState.value.updateTime < 120 * 1000L) {
             viewModelState.update {
                 it.copy(loading = false, error = "Weather data is already up-to-date!")
             }
@@ -241,11 +241,17 @@ data class HourlyUiState(
 
 fun HourlyWeather.asUiState(): HourlyUiState =
     HourlyUiState(
-        time = dateTime,
+        time = dateTime.smartHour(),
         temp = "${temp.formatTemp()}${unit().temp}",
         text = text,
         icon = ICONS[icon]!!,
         iconDir = R.drawable.ic_nav,
-        windScale = windScale,
+        windScale = "$windScale${unit().scale}",
         windDegree = windDegree.toWindDegree()
     )
+
+fun String.smartHour(): String {
+    val d = this.substring(5, 10)
+    val t = this.substring(11, 16)
+    return if (t == "00:00") d else t
+}

@@ -94,15 +94,15 @@ fun DailyWeatherItem(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Label(text = title)
+            GeneralText(text = title)
 
             Spacer(Modifier.width(6.dp))
 
-            Label(text = weather.date)
+            GeneralText(text = weather.date)
 
             Spacer(Modifier.width(16.dp))
 
-            Label(text = weather.textDay)
+            GeneralText(text = weather.textDay)
 
             Spacer(Modifier.width(16.dp))
 
@@ -115,20 +115,8 @@ fun DailyWeatherItem(
             )
         }
 
-        Label(text = "${weather.tempHigh} / ${weather.tempLow}")
+        GeneralText(text = "${weather.tempHigh} / ${weather.tempLow}")
     }
-}
-
-@Composable
-fun Label(
-    modifier: Modifier = Modifier,
-    text: String
-) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleMedium,
-        color = MaterialTheme.colorScheme.secondary
-    )
 }
 
 @Preview
