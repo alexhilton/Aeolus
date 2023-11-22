@@ -31,7 +31,6 @@ fun WeatherLocation.asUiState(): CityState =
         admin = admin
     )
 
-
 data class DailyUiState(
     val date: String,
     val tempHigh: String,

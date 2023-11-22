@@ -4,8 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.model.WeatherLocation
@@ -125,8 +123,6 @@ class WeatherRepository(
             hourlyWeatherStream.asStateFlow()
         }
     }
-
-
 
     suspend fun fetchHourlyWeathers(location: WeatherLocation) {
         hourlyWeatherStream.update { network.load24HourWeathers(location) }
