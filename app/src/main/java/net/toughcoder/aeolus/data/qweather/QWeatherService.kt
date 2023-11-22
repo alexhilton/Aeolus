@@ -35,6 +35,14 @@ interface QWeatherService {
         @Query("key") key: String = BuildConfig.QWEATHER_API_KEY
     ) : QWeatherDailyResponse
 
+    @GET("v7/weather/24h")
+    suspend fun fetchWeather24H(
+        @Query("location") location: String,
+        @Query("lang") lang: String = "zh",
+        @Query("unit") unit: String = "m",
+        @Query("key") key: String = BuildConfig.QWEATHER_API_KEY
+    ) : QWeatherHourlyResponse
+
     companion object {
         const val BASE_URL = "https://devapi.qweather.com/"
 

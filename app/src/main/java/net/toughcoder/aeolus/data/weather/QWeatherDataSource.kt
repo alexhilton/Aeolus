@@ -5,7 +5,9 @@ import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.data.qweather.toModel
 import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.WeatherNow
+import net.toughcoder.aeolus.model.toModel
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -89,5 +91,17 @@ class QWeatherDataSource(
         dailyWeathers: List<DailyWeather>
     ) {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun load24HourWeathers(loc: WeatherLocation): List<HourlyWeather> {
+        try {
+            val response = api.fetchWeather24H(loc.id)
+            return if (response.code == "200") {
+                response.hourList.map { it.toModel() }
+            } else {
+                emptyList()
+            }
+        } catch (exception: Exception) {}
+        return emptyList()
     }
 }

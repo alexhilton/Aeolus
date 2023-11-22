@@ -30,7 +30,7 @@ fun DailyWeatherSection(
     gotoMore: () -> Unit
 ) {
     if (dailyWeathers.isNotEmpty() && dailyWeathers.size >= 3) {
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(16.dp))
 
         DailyWeathersInfo(modifier, dailyWeathers, gotoMore)
     }

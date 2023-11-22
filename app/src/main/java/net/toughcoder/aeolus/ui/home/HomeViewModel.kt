@@ -21,11 +21,13 @@ import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherRepository
 import net.toughcoder.aeolus.data.unit
 import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.ICONS
 import net.toughcoder.aeolus.ui.asUiState
 import net.toughcoder.aeolus.ui.formatTemp
+import net.toughcoder.aeolus.ui.toWindDegree
 
 class HomeViewModel(
     private val locationRepo: LocationRepository,
@@ -47,6 +49,7 @@ class HomeViewModel(
     private val locationState = MutableStateFlow(WeatherLocation())
     private lateinit var weatherNowState: Flow<WeatherNow>
     private lateinit var dailyWeatherState: Flow<List<DailyWeather>>
+    private lateinit var hourlyWeatherState: Flow<List<HourlyWeather>>
 
     private val viewModelState = MutableStateFlow(
         ViewModelState(
@@ -75,7 +78,7 @@ class HomeViewModel(
         // Step #2: Quit earlier if not need to update
         val now = SystemClock.uptimeMillis()
         Log.d(LOG_TAG, "now $now, last ${viewModelState.value.updateTime}")
-        if (now - viewModelState.value.updateTime < 30 * 1000L) {
+        if (now - viewModelState.value.updateTime < 10 * 1000L) {
             viewModelState.update {
                 it.copy(loading = false, error = "Weather data is already up-to-date!")
             }
@@ -90,6 +93,7 @@ class HomeViewModel(
                         locationState.update { loc }
                         weatherRepo.refreshWeatherNow(loc)
                         weatherRepo.fetch3DayWeathers(loc)
+                        weatherRepo.fetchHourlyWeathers(loc)
                         updateState()
                     }
                 }
@@ -98,7 +102,9 @@ class HomeViewModel(
 
     private fun updateState() {
         viewModelScope.launch {
-            combine(locationState, weatherNowState, dailyWeatherState) { loc, now, dailyWeathers ->
+            combine(
+                locationState, weatherNowState, dailyWeatherState, hourlyWeatherState
+            ) { loc, now, dailyWeathers, hourlyWeathers ->
                 val error = if (!loc.successful()) {
                     "Failed to get location, please try again later!"
                 } else if (!now.successful) {
@@ -109,11 +115,13 @@ class HomeViewModel(
                 val weather = if (now.successful) now else viewModelState.value.weatherData
                 val updateTime = if (now.successful) SystemClock.uptimeMillis() else viewModelState.value.updateTime
                 val daily = if (dailyWeathers.isNotEmpty()) dailyWeathers else viewModelState.value.dailyData
+                val hourly = if (hourlyWeathers.isNotEmpty()) hourlyWeathers else viewModelState.value.hourlyData
                 return@combine ViewModelState(
                     loading = false,
                     city = loc,
                     weatherData = weather,
                     dailyData = daily,
+                    hourlyData = hourly,
                     error = error,
                     updateTime = updateTime
                 )
@@ -129,6 +137,7 @@ class HomeViewModel(
                 .collect { loc ->
                     weatherNowState = weatherRepo.weatherNowStream(loc)
                     dailyWeatherState = weatherRepo.dailyWeatherStream(loc)
+                    hourlyWeatherState = weatherRepo.hourlyWeatherStream(loc)
                     Log.d(LOG_TAG, "from locals: location $loc")
                     locationState.update { loc }
                 }
@@ -142,7 +151,8 @@ data class ViewModelState(
     var loading: Boolean = false,
     var city: WeatherLocation? = null,
     var weatherData: WeatherNow? = null,
-    val dailyData: List<DailyWeather> = listOf(),
+    val dailyData: List<DailyWeather> = emptyList(),
+    val hourlyData: List<HourlyWeather> = emptyList(),
     var error: String = "",
     var updateTime: Long = -1
 ) {
@@ -171,6 +181,7 @@ data class ViewModelState(
                 pressure = "${data.airPressure} $pressure",
                 visibility = "${data.visibility} $length",
                 dailyStates = dailyData.map { it.asUiState() },
+                hourlyStates = hourlyData.map {it.asUiState() },
                 errorMessage = error
             )
         }
@@ -199,6 +210,7 @@ sealed interface NowUiState {
         val pressure: String,
         val visibility: String,
         val dailyStates: List<DailyUiState>,
+        val hourlyStates: List<HourlyUiState>,
         override val city: CityState?,
         override val isLoading: Boolean,
         override val errorMessage: String
@@ -216,3 +228,24 @@ sealed interface NowUiState {
         override fun isEmpty() = true
     }
 }
+
+data class HourlyUiState(
+    val time: String,
+    val temp: String,
+    val text: String,
+    @DrawableRes val icon: Int,
+    @DrawableRes val iconDir: Int,
+    val windScale: String,
+    val windDegree: Float
+)
+
+fun HourlyWeather.asUiState(): HourlyUiState =
+    HourlyUiState(
+        time = dateTime,
+        temp = "${temp.formatTemp()}${unit().temp}",
+        text = text,
+        icon = ICONS[icon]!!,
+        iconDir = R.drawable.ic_nav,
+        windScale = windScale,
+        windDegree = windDegree.toWindDegree()
+    )

@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.model
 
+import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 
@@ -74,4 +75,25 @@ fun DailyWeatherEntity.toModel(): DailyWeather =
         windSpeed,
         iconNight,
         textNight
+    )
+
+data class HourlyWeather(
+    val dateTime: String,
+    val temp: String,
+    val icon: String,
+    val text: String,
+    val windDegree: String,
+    val windDir: String,
+    val windScale: String
+)
+
+fun QWeatherHourDTO.toModel(): HourlyWeather =
+    HourlyWeather(
+        dateTime = dateTime,
+        temp = temp,
+        text = text,
+        icon = icon,
+        windDegree = windDegree,
+        windDir = windDir,
+        windScale = windScale
     )

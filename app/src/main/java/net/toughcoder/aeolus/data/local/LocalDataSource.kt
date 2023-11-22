@@ -7,6 +7,7 @@ import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherDataSource
 import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.asModel
 import net.toughcoder.aeolus.model.toModel
 
@@ -59,5 +60,9 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         val dao = database.dailyWeatherDao()
         val weathers = dailyWeathers.mapIndexed{ idx, item -> item.toEntity(loc.id, idx) }
         dao.addDailyWeathers(weathers)
+    }
+
+    override suspend fun load24HourWeathers(loc: WeatherLocation): List<HourlyWeather> {
+        TODO("Not yet implemented")
     }
 }

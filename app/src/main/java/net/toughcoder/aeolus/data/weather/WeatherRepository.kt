@@ -4,11 +4,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.local.LocalDataSource
 import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.WeatherNow
 
 class WeatherRepository(
@@ -19,6 +22,7 @@ class WeatherRepository(
     private lateinit var nowWeatherStream: MutableStateFlow<WeatherNow>
     private lateinit var dailyWeatherStream: MutableStateFlow<List<DailyWeather>>
     private lateinit var weatherSnapshotStream: MutableStateFlow<DailyWeather>
+    private lateinit var hourlyWeatherStream: MutableStateFlow<List<HourlyWeather>>
 
     suspend fun getWeatherNow(location: WeatherLocation): WeatherNow {
         return withContext(dispatcher) {
@@ -113,5 +117,18 @@ class WeatherRepository(
                 DailyWeather()
             }
         }
+    }
+
+    suspend fun hourlyWeatherStream(location: WeatherLocation): Flow<List<HourlyWeather>> {
+        return withContext(dispatcher) {
+            hourlyWeatherStream = MutableStateFlow(emptyList())
+            hourlyWeatherStream.asStateFlow()
+        }
+    }
+
+
+
+    suspend fun fetchHourlyWeathers(location: WeatherLocation) {
+        hourlyWeatherStream.update { network.load24HourWeathers(location) }
     }
 }

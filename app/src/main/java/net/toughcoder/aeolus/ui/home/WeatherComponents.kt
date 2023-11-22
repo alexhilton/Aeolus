@@ -38,7 +38,8 @@ fun WeatherScreen(
         modifier = modifier
     ) {
         WeatherDetails(modifier, uiState)
-        Weather24Hours(modifier)
+
+        HourlyWeatherSection(modifier, uiState.hourlyStates)
 
         DailyWeatherSection(modifier, dailyWeathers = uiState.dailyStates, gotoDaily)
     }
@@ -254,11 +255,6 @@ fun ValueLabel(
 }
 
 @Composable
-fun Weather24Hours(modifier: Modifier = Modifier) {
-    Text(text = "show weather in 24 hours.\n Scroll horizontally.")
-}
-
-@Composable
 fun Weather15Days(modifier: Modifier = Modifier) {
     Text(text = "Show weather in 15 days. \n Scroll horizontally.")
 }
@@ -308,6 +304,7 @@ fun DetailPreview() {
                 uvIndex = "1"
             )
         ),
+        hourlyStates = emptyList(),
         errorMessage = ""
     )
     WeatherDetails(
