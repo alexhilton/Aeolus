@@ -44,6 +44,10 @@
     <string name="weekday_6">Sun</string>
 
     <string name="settings_title">Settings</string>
+    <string name="settings_entry_language_title">Display language</string>
+    <string name="settings_entry_language_description">Select the display language used in screens.</string>
+    <string name="settings_entry_unit_title">Unit system</string>
+    <string name="settings_entry_unit_description">Select the unit system used in temperature and wind.</string>
 
     <string name="description_manage_city">Go to manage cities</string>
     <string name="description_back">Go back</string>
