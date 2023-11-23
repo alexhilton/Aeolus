@@ -151,10 +151,10 @@ fun DailyDetailItem(
                 contentDescription = null
             )
             GeneralText(weather.windScale)
-            GeneralText("紫外线 ${weather.uvIndex}")
-            GeneralText("湿度 ${weather.humidity}")
-            GeneralText("气压 ${weather.pressure}")
-            GeneralText("能见度 ${weather.visibility}")
+            GeneralText(stringResource(R.string.uv_index, weather.uvIndex))
+            GeneralText(stringResource(R.string.humidity, weather.humidity))
+            GeneralText(stringResource(R.string.pressure, weather.pressure))
+            GeneralText(stringResource(R.string.visibility, weather.visibility))
         }
     }
 }

@@ -66,11 +66,11 @@ fun DailyWeather.asUiState(): DailyUiState =
         iconNight = ICONS[iconNight]!!,
         windDegree = windDegree.toWindDegree(),
         windDir = windDir,
-        windScale = "$windScale ${unit().scale}",
+        windScale = "$windScale${unit().scale}",
         iconDir = R.drawable.ic_nav,
-        humidity = "$humidity %",
-        pressure = "$pressure ${unit().pressure}",
-        visibility = "$visibility ${unit().length}",
+        humidity = "$humidity%",
+        pressure = "$pressure${unit().pressure}",
+        visibility = "$visibility${unit().length}",
         weekday = date.weekday()
     )
 
