@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
+import net.toughcoder.aeolus.ui.NO_ERROR
 
 @Composable
 fun WeatherScreen(
@@ -313,7 +314,7 @@ fun DetailPreview() {
             )
         ),
         hourlyStates = emptyList(),
-        errorMessage = ""
+        errorMessage = NO_ERROR
     )
     WeatherDetails(
         Modifier.fillMaxWidth(),

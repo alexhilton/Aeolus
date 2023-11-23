@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.toughcoder.aeolus.R
+import net.toughcoder.aeolus.ui.NO_ERROR
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
@@ -93,7 +94,7 @@ fun HomeScreen(
             if (uiState.isEmpty()) {
                 EmptyScreen(
                     modifier = Modifier.align(Alignment.Center),
-                    message = uiState.errorMessage
+                    message = stringResource(uiState.errorMessage)
                 )
             } else {
                 val visible by remember { mutableStateOf(true) }
@@ -121,10 +122,11 @@ fun HomeScreen(
             )
         }
 
-        if (!uiState.isEmpty() && !uiState.isLoading && uiState.errorMessage.isNotEmpty()) {
-            val message = remember(uiState) { uiState.errorMessage }
-            LaunchedEffect(key1 = message, key2 = snackbarHostState) {
-                snackbarHostState.showSnackbar(uiState.errorMessage)
+        if (!uiState.isEmpty() && !uiState.isLoading && uiState.errorMessage != NO_ERROR) {
+            val msgId = remember(uiState) { uiState.errorMessage }
+            val message = stringResource(msgId)
+            LaunchedEffect(key1 = msgId, key2 = snackbarHostState) {
+                snackbarHostState.showSnackbar(message)
             }
         }
     }

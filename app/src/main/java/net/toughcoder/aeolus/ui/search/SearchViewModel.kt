@@ -1,7 +1,6 @@
 package net.toughcoder.aeolus.ui.search
 
 import androidx.annotation.StringRes
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -86,6 +85,6 @@ class SearchViewModel(
 
 data class SearchResultState(
     val loading: Boolean = false,
-    @StringRes val error: Int = 0,
+    @StringRes val error: Int = NO_ERROR,
     val cities: List<CityState> = listOf()
 )

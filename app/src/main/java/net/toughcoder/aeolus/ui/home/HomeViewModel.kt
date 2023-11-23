@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.ui.home
 import android.os.SystemClock
 import android.util.Log
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -25,6 +26,7 @@ import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.ICONS
+import net.toughcoder.aeolus.ui.NO_ERROR
 import net.toughcoder.aeolus.ui.asUiState
 import net.toughcoder.aeolus.ui.formatTemp
 import net.toughcoder.aeolus.ui.toWindDegree
@@ -54,7 +56,7 @@ class HomeViewModel(
     private val viewModelState = MutableStateFlow(
         ViewModelState(
             loading = true,
-            error = "Loading weather data, please wait!"
+            error = R.string.error_loading
         )
     )
 
@@ -80,7 +82,7 @@ class HomeViewModel(
         Log.d(LOG_TAG, "now $now, last ${viewModelState.value.updateTime}")
         if (now - viewModelState.value.updateTime < 120 * 1000L) {
             viewModelState.update {
-                it.copy(loading = false, error = "Weather data is already up-to-date!")
+                it.copy(loading = false, error = R.string.error_up_to_date)
             }
             return
         }
@@ -106,11 +108,11 @@ class HomeViewModel(
                 locationState, weatherNowState, dailyWeatherState, hourlyWeatherState
             ) { loc, now, dailyWeathers, hourlyWeathers ->
                 val error = if (!loc.successful()) {
-                    "Failed to get location, please try again later!"
+                    R.string.error_location
                 } else if (!now.successful) {
-                    "Something is wrong, please try again later!"
+                    R.string.error_network
                 } else {
-                    ""
+                    NO_ERROR
                 }
                 val weather = if (now.successful) now else viewModelState.value.weatherData
                 val updateTime = if (now.successful) SystemClock.uptimeMillis() else viewModelState.value.updateTime
@@ -153,7 +155,7 @@ data class ViewModelState(
     var weatherData: WeatherNow? = null,
     val dailyData: List<DailyWeather> = emptyList(),
     val hourlyData: List<HourlyWeather> = emptyList(),
-    var error: String = "",
+    @StringRes var error: Int = NO_ERROR,
     var updateTime: Long = -1
 ) {
     fun toUiState() =
@@ -192,7 +194,7 @@ sealed interface NowUiState {
 
     val isLoading: Boolean
 
-    val errorMessage: String
+    val errorMessage: Int
 
     fun isEmpty(): Boolean
 
@@ -213,7 +215,7 @@ sealed interface NowUiState {
         val hourlyStates: List<HourlyUiState>,
         override val city: CityState?,
         override val isLoading: Boolean,
-        override val errorMessage: String
+        @StringRes override val errorMessage: Int
     ) : NowUiState {
         override fun isEmpty(): Boolean {
             return (city?.isEmpty() ?: true) && temp.isEmpty() && text.isEmpty()
@@ -223,7 +225,7 @@ sealed interface NowUiState {
     data class NoWeatherUiState(
         override val city: CityState?,
         override val isLoading: Boolean,
-        override val errorMessage: String
+        @StringRes override val errorMessage: Int
     ) : NowUiState {
         override fun isEmpty() = true
     }
