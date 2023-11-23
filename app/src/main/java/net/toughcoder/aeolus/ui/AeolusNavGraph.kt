@@ -21,6 +21,8 @@ import net.toughcoder.aeolus.ui.search.SearchScreen
 import net.toughcoder.aeolus.ui.search.SearchViewModel
 import net.toughcoder.aeolus.ui.home.HomeScreen
 import net.toughcoder.aeolus.ui.home.HomeViewModel
+import net.toughcoder.aeolus.ui.settings.SettingsScreen
+import net.toughcoder.aeolus.ui.settings.SettingsViewModel
 
 @Composable
 fun AeolusNavGraph(
@@ -52,7 +54,8 @@ fun AeolusNavGraph(
                 modifier,
                 uiState,
                 viewModel::refresh,
-                navToDaily = { navController.navigate("${AeolusDestinations.DAILY_WEATHER}/$it") }
+                navToDaily = { navController.navigate("${AeolusDestinations.DAILY_WEATHER}/$it") },
+                navToSettings = { navController.navigate(AeolusDestinations.SETTINGS_ROUTE) }
             ) {
                 navController.navigate(AeolusDestinations.FAVORITES_ROUTE)
             }
@@ -111,6 +114,20 @@ fun AeolusNavGraph(
                 )
             )
             DailyWeatherScreen(modifier, viewModel) {
+                navController.popBackStack()
+            }
+        }
+
+        composable(
+            route = AeolusDestinations.SETTINGS_ROUTE,
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "${AeolusDestinations.APP_URI}/${AeolusDestinations.SETTINGS_ROUTE}" }
+            )
+        ) {
+            val viewModel: SettingsViewModel = viewModel(
+                factory = SettingsViewModel.providerFactory(appContainer.datastore)
+            )
+            SettingsScreen(modifier, viewModel) {
                 navController.popBackStack()
             }
         }

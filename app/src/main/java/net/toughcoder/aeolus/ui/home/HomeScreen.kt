@@ -17,6 +17,8 @@ import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -50,6 +52,7 @@ fun HomeScreen(
     uiState: NowUiState,
     onRefresh: () -> Unit,
     navToDaily: (String) -> Unit,
+    navToSettings: () -> Unit,
     navToFavorites: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -75,6 +78,14 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = stringResource(R.string.description_manage_city)
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = navToSettings) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(R.string.description_settings)
                         )
                     }
                 }

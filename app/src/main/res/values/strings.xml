@@ -43,9 +43,12 @@
     <string name="weekday_5">Sat</string>
     <string name="weekday_6">Sun</string>
 
-    <string name="description_manage_city">Manage cities</string>
+    <string name="settings_title">Settings</string>
+
+    <string name="description_manage_city">Go to manage cities</string>
     <string name="description_back">Go back</string>
     <string name="description_search">Search cities</string>
     <string name="description_close">Close</string>
     <string name="description_done">Done</string>
+    <string name="description_settings">Go to Settings</string>
 </resources>
