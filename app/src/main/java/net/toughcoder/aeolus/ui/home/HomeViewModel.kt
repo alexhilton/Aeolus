@@ -116,8 +116,8 @@ class HomeViewModel(
                 }
                 val weather = if (now.successful) now else viewModelState.value.weatherData
                 val updateTime = if (now.successful) SystemClock.uptimeMillis() else viewModelState.value.updateTime
-                val daily = if (dailyWeathers.isNotEmpty()) dailyWeathers else viewModelState.value.dailyData
-                val hourly = if (hourlyWeathers.isNotEmpty()) hourlyWeathers else viewModelState.value.hourlyData
+                val daily = dailyWeathers.ifEmpty { viewModelState.value.dailyData }
+                val hourly = hourlyWeathers.ifEmpty { viewModelState.value.hourlyData }
                 return@combine ViewModelState(
                     loading = false,
                     city = loc,
