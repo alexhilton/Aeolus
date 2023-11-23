@@ -14,7 +14,17 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="day_after">Day after</string>
+    <string name="uv_index_title">UV</string>
+    <string name="temp_high_title">High</string>
+    <string name="temp_low_title">Low</string>
+    <string name="scale_title">Scale</string>
+    <string name="speed_title">Speed</string>
+    <string name="feelslike_title">Feel</string>
+    <string name="humidity_title">Humidity</string>
+    <string name="pressure_title">Pressure</string>
+    <string name="visibility_title">Visibility</string>
     <string name="button_view_more">Click to view more</string>
+
     <string name="daily_screen_title">%1$s, 7 days forecast</string>
     <string name="daily_screen_placeholder">Daily weather shows here</string>
     <string name="uv_index">UV %1$s</string>

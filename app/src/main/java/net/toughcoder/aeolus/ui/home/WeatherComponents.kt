@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -129,19 +130,19 @@ fun GeneralInfo(
         modifier,
         horizontalArrangement = Arrangement.Center
     ) {
-        TitleLabel("UV")
+        TitleLabel(stringResource(R.string.uv_index_title))
         Spacer(Modifier.width(4.dp))
         ValueLabel(info.uvIndex)
 
         Spacer(Modifier.width(8.dp))
 
-        TitleLabel("最高")
+        TitleLabel(stringResource(R.string.temp_high_title))
         Spacer(Modifier.width(4.dp))
         ValueLabel(info.tempHigh)
 
         Spacer(Modifier.width(8.dp))
 
-        TitleLabel("最低")
+        TitleLabel(stringResource(R.string.temp_low_title))
         Spacer(Modifier.width(4.dp))
         ValueLabel(info.tempLow)
     }
@@ -174,8 +175,8 @@ fun WindInfo(
                 contentDescription = null
             )
         }
-        ItemDescription("风力", scale)
-        ItemDescription("风速", speed)
+        ItemDescription(stringResource(R.string.scale_title), scale)
+        ItemDescription(stringResource(R.string.speed_title), speed)
     }
 }
 
@@ -190,10 +191,10 @@ fun OtherInfo(
     Column(
         modifier = modifier
     ) {
-        ItemDescription("体感温度", feelsLike)
-        ItemDescription("相对温度", humidity)
-        ItemDescription("大气压强", pressure)
-        ItemDescription("能见度", visibility)
+        ItemDescription(stringResource(R.string.feelslike_title), feelsLike)
+        ItemDescription(stringResource(R.string.humidity_title), humidity)
+        ItemDescription(stringResource(R.string.pressure_title), pressure)
+        ItemDescription(stringResource(R.string.visibility_title), visibility)
     }
 }
 
