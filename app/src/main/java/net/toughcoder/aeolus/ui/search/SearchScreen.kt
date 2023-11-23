@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.ui.CityState
+import net.toughcoder.aeolus.ui.NO_ERROR
 
 @Composable
 fun SearchScreen(
@@ -250,9 +251,9 @@ fun SearchResultComponent(
                 modifier = Modifier.size(64.dp),
                 color = MaterialTheme.colorScheme.primary
             )
-        } else if (result.error.isNotEmpty()) {
+        } else if (result.error != NO_ERROR) {
             Text(
-                text = result.error,
+                text = stringResource(result.error),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )

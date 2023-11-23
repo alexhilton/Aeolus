@@ -10,6 +10,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+const val NO_ERROR = 0
+
 data class CityState(
     val name: String,
     val id: String = "",

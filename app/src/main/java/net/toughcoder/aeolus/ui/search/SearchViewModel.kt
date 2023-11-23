@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.ui.search
 
+import androidx.annotation.StringRes
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +18,7 @@ import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.location.SearchRepository
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.ui.CityState
+import net.toughcoder.aeolus.ui.NO_ERROR
 import net.toughcoder.aeolus.ui.asUiState
 
 class SearchViewModel(
@@ -54,7 +56,7 @@ class SearchViewModel(
         _searchResultState.update { it.copy(loading = true) }
         viewModelScope.launch {
             val result = searchRepo.searchCity(query)
-            val error = if (result.isEmpty()) "No favorites yet, go to Search page to add favorite city." else ""
+            val error = if (result.isEmpty()) R.string.empty_search_results else NO_ERROR
             val cities = result.map { it.asUiState() }
             _searchResultState.update { SearchResultState(false, error, cities) }
         }
@@ -84,6 +86,6 @@ class SearchViewModel(
 
 data class SearchResultState(
     val loading: Boolean = false,
-    val error: String = "",
+    @StringRes val error: Int = 0,
     val cities: List<CityState> = listOf()
 )
