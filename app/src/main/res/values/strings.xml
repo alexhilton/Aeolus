@@ -19,7 +19,7 @@
     <string name="temp_low_title">Low</string>
     <string name="scale_title">Scale</string>
     <string name="speed_title">Speed</string>
-    <string name="feelslike_title">Feel</string>
+    <string name="feelslike_title">Feels like</string>
     <string name="humidity_title">Humidity</string>
     <string name="pressure_title">Pressure</string>
     <string name="visibility_title">Visibility</string>
