@@ -31,6 +31,13 @@
     <string name="humidity">Humidity %1$s</string>
     <string name="pressure">Pressure %1$s</string>
     <string name="visibility">Visibility %1$s</string>
+    <string name="weekday_0">Mon</string>
+    <string name="weekday_1">Tue</string>
+    <string name="weekday_2">Wed</string>
+    <string name="weekday_3">Thu</string>
+    <string name="weekday_4">Fri</string>
+    <string name="weekday_5">Sat</string>
+    <string name="weekday_6">Sun</string>
 
     <string name="description_manage_city">Manage cities</string>
     <string name="description_back">Go back</string>

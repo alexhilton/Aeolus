@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.ui
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.data.unit
 import net.toughcoder.aeolus.model.DailyWeather
@@ -49,7 +50,7 @@ data class DailyUiState(
     val humidity: String = "",
     val pressure: String = "",
     val visibility: String = "",
-    val weekday: String = ""
+    @StringRes val weekday: Int = 0
 )
 
 fun DailyWeather.asUiState(): DailyUiState =
@@ -88,9 +89,18 @@ fun String.toWindDegree(): Float {
     return (this.toFloat() + 180f) % 360f
 }
 
-fun String.weekday(): String {
+@StringRes
+fun String.weekday(): Int {
     val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA)
     val d = LocalDate.parse(this, fmt)
-    val w = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
+    val w = listOf(
+        R.string.weekday_0,
+        R.string.weekday_1,
+        R.string.weekday_2,
+        R.string.weekday_3,
+        R.string.weekday_4,
+        R.string.weekday_5,
+        R.string.weekday_6,
+    )
     return w[d.dayOfWeek.value - 1]
 }
