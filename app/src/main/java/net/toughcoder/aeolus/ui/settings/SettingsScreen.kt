@@ -1,6 +1,8 @@
 package net.toughcoder.aeolus.ui.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,12 +23,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import net.toughcoder.aeolus.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,14 +70,17 @@ fun SettingsScreen(
             )
         }
     ) {
-        SettingsSection(Modifier.padding(it), uiState)
+        SettingsSection(Modifier.padding(it), uiState) { k, v ->
+            viewModel.updateSettingsEntry(k, v)
+        }
     }
 }
 
 @Composable
 fun SettingsSection(
     modifier: Modifier = Modifier,
-    uiState: SettingsUiState
+    uiState: SettingsUiState,
+    onChange: (String, String) -> Unit
 ) {
     Column(
         modifier = modifier.padding(8.dp),
@@ -79,13 +90,17 @@ fun SettingsSection(
             SettingsEntry(
                 modifier,
                 uiState.language
-            )
+            ) { k, v ->
+                onChange(k, v)
+            }
         }
         if (uiState.unit != null) {
             SettingsEntry(
                 modifier,
                 uiState.unit
-            )
+            ) { k, v ->
+                onChange(k, v)
+            }
         }
     }
 }
@@ -93,7 +108,8 @@ fun SettingsSection(
 @Composable
 fun SettingsEntry(
     modifier: Modifier = Modifier,
-    entry: SettingsEntryUiState
+    entry: SettingsEntryUiState,
+    onEntryChange: (String, String) -> Unit
 ) {
     Surface(
         shape = MaterialTheme.shapes.small,
@@ -113,17 +129,79 @@ fun SettingsEntry(
                 color = MaterialTheme.colorScheme.primary
             )
 
-            Row {
-                Text(
-                    text = entry.value,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = ""
+//            Row {
+//                Text(
+//                    text = entry.value,
+//                    style = MaterialTheme.typography.titleMedium,
+//                    color = MaterialTheme.colorScheme.secondary
+//                )
+//                Icon(
+//                    imageVector = Icons.Default.KeyboardArrowRight,
+//                    contentDescription = ""
+//                )
+//            }
+
+            DropDownSettingsEntry(
+                key = entry.key,
+                value = entry.value,
+                options = entry.options,
+                onSelect = onEntryChange
+            )
+        }
+    }
+}
+
+@Composable
+fun DropDownSettingsEntry(
+    key: String,
+    value: String,
+    options: List<String>,
+    modifier: Modifier = Modifier,
+    expanded: Boolean = false,
+    onSelect: (String, String) -> Unit
+) {
+    var isExpanded by remember { mutableStateOf(expanded) }
+
+    Row(
+        modifier = modifier.clickable { isExpanded = true },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.secondary
+        )
+
+        DropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = {
+                isExpanded = false
+            }
+        ) {
+            options.forEachIndexed { index, s ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = s,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = if (s == value) {
+                                MaterialTheme.colorScheme.inversePrimary
+                            } else {
+                                MaterialTheme.colorScheme.secondary
+                            }
+                        )
+                    },
+                    onClick = {
+                        isExpanded = false
+                        onSelect(key, s)
+                    }
                 )
             }
         }
+
+        Icon(
+            imageVector = Icons.Default.KeyboardArrowRight,
+            contentDescription = ""
+        )
     }
 }

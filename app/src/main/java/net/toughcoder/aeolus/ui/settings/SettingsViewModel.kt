@@ -39,10 +39,29 @@ class SettingsViewModel(
         viewModelState.update { SettingsUiState(lang, unit) }
     }
 
-    fun updateSettingsEntry(entry: SettingsEntryUiState) {
-        val lang = if (entry.key == "language") entry else viewModelState.value.language
-        val unit = if (entry.key == "unit") entry else viewModelState.value.unit
-        viewModelState.update { SettingsUiState(lang, unit) }
+    fun updateSettingsEntry(key: String, value: String) {
+        var needUpdate = false
+        val langEntry = viewModelState.value.language
+        val lang = if (key == "language") {
+            langEntry?.let {
+                needUpdate = value != it.value
+            }
+            langEntry?.copy(value = value)
+        } else {
+            langEntry
+        }
+        val unitEntry = viewModelState.value.unit
+        val unit = if (key == "unit") {
+            unitEntry?.let {
+                needUpdate = value != it.value
+            }
+            unitEntry?.copy(value = value)
+        } else {
+            unitEntry
+        }
+        if (needUpdate) {
+            viewModelState.update { SettingsUiState(lang, unit) }
+        }
     }
 
     companion object {
