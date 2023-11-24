@@ -33,7 +33,7 @@ import net.toughcoder.aeolus.ui.NO_ERROR
 @Composable
 fun WeatherScreen(
     modifier: Modifier = Modifier,
-    uiState: NowUiState.WeatherNowUiState,
+    uiState: HomeUiState.WeatherUiState,
     gotoDaily: () -> Unit
 ) {
     Column(
@@ -50,7 +50,7 @@ fun WeatherScreen(
 @Composable
 fun WeatherDetails(
     modifier: Modifier = Modifier,
-    uiState: NowUiState.WeatherNowUiState
+    uiState: HomeUiState.WeatherUiState
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -286,7 +286,7 @@ fun DailyInfoPreview() {
 @Preview
 @Composable
 fun DetailPreview() {
-    val state = NowUiState.WeatherNowUiState(
+    val state = HomeUiState.WeatherUiState(
         temp = "25 \u2103",
         feelsLike = "28 \u2103",
         icon = R.drawable.ic_101,

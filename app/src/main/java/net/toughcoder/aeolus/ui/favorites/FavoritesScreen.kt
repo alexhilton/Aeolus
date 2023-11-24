@@ -111,7 +111,7 @@ fun FavoritesScreen(
 @Composable
 fun FavoriteList(
     modifier: Modifier = Modifier,
-    favorites: List<FavoriteState>,
+    favorites: List<FavoriteUiState>,
     onFavoriteClick: (CityState) -> Unit
 ) {
     LazyColumn(
@@ -128,7 +128,7 @@ fun FavoriteList(
 @Composable
 fun FavoriteItem(
     modifier: Modifier = Modifier,
-    item: FavoriteState,
+    item: FavoriteUiState,
     onClick: (CityState) -> Unit
 ) {
     Surface(
@@ -239,7 +239,7 @@ fun WeatherSnapshot(
 fun FavoriteItemPreview() {
     FavoriteItem(
         Modifier.fillMaxWidth(),
-        FavoriteState(
+        FavoriteUiState(
             CityState("Beijing", "", "China"),
             DailyUiState(
                 "2023-11-19", "19", "1", "06:07", "18:00",

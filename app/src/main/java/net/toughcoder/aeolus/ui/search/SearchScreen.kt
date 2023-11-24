@@ -239,7 +239,7 @@ fun HistoryItem(
 @Composable
 fun SearchResultComponent(
     modifier: Modifier = Modifier,
-    result: SearchResultState,
+    result: SearchResultUiState,
     onResultClick: (CityState) -> Unit
 ) {
     Box(

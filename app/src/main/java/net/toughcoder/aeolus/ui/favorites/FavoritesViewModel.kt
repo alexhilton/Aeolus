@@ -17,14 +17,14 @@ class FavoritesViewModel(
     private val weatherRepo: WeatherRepository
 ) : ViewModel() {
 
-    fun getAllFavorites(): Flow<List<FavoriteState>> = flow {
+    fun getAllFavorites(): Flow<List<FavoriteUiState>> = flow {
         locationRepo.getDefaultCity()
             .collect { defaultCity ->
                 emit(
                     locationRepo.loadAllFavoriteCities()
                         .map {
                             val weather = weatherRepo.fetchDayWeather(it)
-                            FavoriteState(
+                            FavoriteUiState(
                                 city = it.asUiState(),
                                 snapshot = weather.asUiState(),
                                 selected = it.id == defaultCity.id
@@ -54,7 +54,7 @@ class FavoritesViewModel(
     }
 }
 
-data class FavoriteState(
+data class FavoriteUiState(
     val city: CityState,
     val snapshot: DailyUiState,
     val selected: Boolean = false

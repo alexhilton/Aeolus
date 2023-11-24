@@ -17,7 +17,6 @@ import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -49,7 +48,7 @@ import net.toughcoder.aeolus.ui.NO_ERROR
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    uiState: NowUiState,
+    uiState: HomeUiState,
     onRefresh: () -> Unit,
     navToDaily: (String) -> Unit,
     navToSettings: () -> Unit,
@@ -117,7 +116,7 @@ fun HomeScreen(
                     WeatherScreen(
                         modifier = Modifier
                             .padding(8.dp),
-                        uiState = uiState as NowUiState.WeatherNowUiState,
+                        uiState = uiState as HomeUiState.WeatherUiState,
                         gotoDaily = { uiState.city?.let { city -> navToDaily(city.id) } }
                     )
                 }

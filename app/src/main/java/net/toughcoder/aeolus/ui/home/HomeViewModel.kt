@@ -159,15 +159,15 @@ data class ViewModelState(
     var updateTime: Long = -1
 ) {
     fun toUiState() =
-        weatherData?.let { convert(it) } ?: NowUiState.NoWeatherUiState(
+        weatherData?.let { convert(it) } ?: HomeUiState.NoWeatherUiState(
             city?.asUiState(),
             false,
             error
         )
 
-    private fun convert(data: WeatherNow): NowUiState =
+    private fun convert(data: WeatherNow): HomeUiState =
         with(unit()) {
-            return NowUiState.WeatherNowUiState(
+            return HomeUiState.WeatherUiState(
                 isLoading = loading,
                 city = city?.asUiState(),
                 temp = "${data.nowTemp.formatTemp()}$temp",
@@ -189,7 +189,7 @@ data class ViewModelState(
         }
 }
 
-sealed interface NowUiState {
+sealed interface HomeUiState {
     val city: CityState?
 
     val isLoading: Boolean
@@ -198,7 +198,7 @@ sealed interface NowUiState {
 
     fun isEmpty(): Boolean
 
-    data class WeatherNowUiState(
+    data class WeatherUiState(
         val temp: String,
         val feelsLike: String,
         @DrawableRes val icon: Int,
@@ -216,7 +216,7 @@ sealed interface NowUiState {
         override val city: CityState?,
         override val isLoading: Boolean,
         @StringRes override val errorMessage: Int
-    ) : NowUiState {
+    ) : HomeUiState {
         override fun isEmpty(): Boolean {
             return (city?.isEmpty() ?: true) && temp.isEmpty() && text.isEmpty()
         }
@@ -226,7 +226,7 @@ sealed interface NowUiState {
         override val city: CityState?,
         override val isLoading: Boolean,
         @StringRes override val errorMessage: Int
-    ) : NowUiState {
+    ) : HomeUiState {
         override fun isEmpty() = true
     }
 }

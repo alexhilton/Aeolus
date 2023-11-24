@@ -26,7 +26,7 @@ class SearchViewModel(
     private val searchRepo: SearchRepository
 ) : ViewModel() {
 
-    private val _searchResultState = MutableStateFlow(SearchResultState(false))
+    private val _searchResultState = MutableStateFlow(SearchResultUiState(false))
 
     val searchResultState = _searchResultState
         .stateIn(
@@ -57,7 +57,7 @@ class SearchViewModel(
             val result = searchRepo.searchCity(query)
             val error = if (result.isEmpty()) R.string.empty_search_results else NO_ERROR
             val cities = result.map { it.asUiState() }
-            _searchResultState.update { SearchResultState(false, error, cities) }
+            _searchResultState.update { SearchResultUiState(false, error, cities) }
         }
     }
 
@@ -83,7 +83,7 @@ class SearchViewModel(
     }
 }
 
-data class SearchResultState(
+data class SearchResultUiState(
     val loading: Boolean = false,
     @StringRes val error: Int = NO_ERROR,
     val cities: List<CityState> = listOf()
