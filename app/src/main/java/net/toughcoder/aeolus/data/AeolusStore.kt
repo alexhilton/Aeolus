@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.data
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -10,15 +11,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
+import net.toughcoder.aeolus.model.DEFAULT_MEASURE
+import net.toughcoder.aeolus.model.KEY_LANGUAGE
+import net.toughcoder.aeolus.model.KEY_MEASURE
 import net.toughcoder.aeolus.model.WeatherLocation
 
 /**
  * Store key-value data.
  */
 class AeolusStore(private val dataStore: DataStore<Preferences>) {
+    companion object {
+        const val LOG_TAG = "AeolusStore"
+    }
 
     private val searchHistoryKey = stringPreferencesKey("search_histories")
     private val defaultCityKey = stringPreferencesKey("default_city")
+    private val languageKey = stringPreferencesKey(KEY_LANGUAGE)
+    private val measureKey = stringPreferencesKey(KEY_MEASURE)
 
     fun getSearchHistories(): Flow<List<String>> {
         return dataStore.data.map { prefs ->
@@ -66,6 +76,36 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
             } else {
                 val parts = bundle.split(";")
                 WeatherLocation(id = parts[0], name = parts[1], admin = parts[2])
+            }
+        }
+    }
+
+    fun getLanguage(): Flow<String> {
+        return dataStore.data.map { prefs ->
+            prefs[languageKey] ?: DEFAULT_LANGUAGE
+        }
+    }
+
+    suspend fun persistLanguage(lang: String) {
+        withContext(Dispatchers.IO) {
+            dataStore.edit { prefs ->
+                prefs[languageKey] = lang
+                Log.d(LOG_TAG, "persistMeasure $lang")
+            }
+        }
+    }
+
+    fun getMeasure(): Flow<String> {
+        return dataStore.data.map { prefs ->
+            prefs[measureKey] ?: DEFAULT_MEASURE
+        }
+    }
+
+    suspend fun persistMeasure(measure: String) {
+        withContext(Dispatchers.IO) {
+            dataStore.edit { prefs ->
+                prefs[measureKey] = measure
+                Log.d(LOG_TAG, "persistMeasure $measure")
             }
         }
     }

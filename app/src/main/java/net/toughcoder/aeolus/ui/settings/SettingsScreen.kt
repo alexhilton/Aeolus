@@ -149,7 +149,7 @@ fun DropDownSettingsEntry(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(entryState.optionsTitle[entryState.value]),
+            text = stringResource(entryState.valueTitle()),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.secondary
         )
@@ -166,7 +166,7 @@ fun DropDownSettingsEntry(
                         Text(
                             text = stringResource(sid),
                             style = MaterialTheme.typography.titleMedium,
-                            color = if (index == entryState.value) {
+                            color = if (entryState.selected(index)) {
                                 MaterialTheme.colorScheme.inversePrimary
                             } else {
                                 MaterialTheme.colorScheme.secondary

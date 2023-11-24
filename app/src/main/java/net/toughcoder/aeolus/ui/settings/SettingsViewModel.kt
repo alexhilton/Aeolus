@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.ui.settings
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,9 +11,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.AeolusStore
-import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
-import net.toughcoder.aeolus.model.DEFAULT_MEASURE
 import net.toughcoder.aeolus.model.KEY_LANGUAGE
 import net.toughcoder.aeolus.model.KEY_MEASURE
 import net.toughcoder.aeolus.model.LANGUAGE_ITEM
@@ -20,11 +20,9 @@ import net.toughcoder.aeolus.model.MEASURE_ITEM
 import net.toughcoder.aeolus.model.SettingsItem
 
 class SettingsViewModel(
-    store: AeolusStore
+    private val store: AeolusStore
 ) : ViewModel() {
     private val viewModelState = MutableStateFlow(SettingsUiState())
-    private val languageStream = MutableStateFlow(DEFAULT_LANGUAGE)
-    private val measureStream = MutableStateFlow(DEFAULT_MEASURE)
 
     val uiState = viewModelState
         .stateIn(
@@ -40,15 +38,19 @@ class SettingsViewModel(
     fun updateSettingsEntry(key: String, value: String) {
         var needUpdate = false
         if (key == KEY_LANGUAGE) {
-            needUpdate = value != languageStream.value
+            needUpdate = viewModelState.value.language?.needUpdate(value) ?: true
             if (needUpdate) {
-                languageStream.update { value }
+                viewModelScope.launch {
+                    store.persistLanguage(value)
+                }
             }
         }
         if (key == KEY_MEASURE) {
-            needUpdate = value != measureStream.value
+            needUpdate = viewModelState.value.measure?.needUpdate(value) ?: true
             if (needUpdate) {
-                measureStream.update { value }
+                viewModelScope.launch {
+                    store.persistMeasure(value)
+                }
             }
         }
         if (needUpdate) {
@@ -57,14 +59,17 @@ class SettingsViewModel(
     }
 
     private fun refreshState() {
-        combine(languageStream, measureStream) { lang, measure ->
+        combine(store.getLanguage(), store.getMeasure()) { lang, measure ->
             val entryLang = LANGUAGE_ITEM.toUiState(lang)
             val entryMeasure = MEASURE_ITEM.toUiState(measure)
+            Log.d(LOG_TAG, "refresh language = $lang, measure = $measure")
             viewModelState.update { SettingsUiState(entryLang, entryMeasure) }
         }.launchIn(viewModelScope)
     }
 
     companion object {
+        const val LOG_TAG = "SettingsViewModel"
+
         fun providerFactory(prefStore: AeolusStore) : ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
@@ -83,10 +88,18 @@ data class SettingsUiState(
 data class SettingsEntryUiState(
     val key: String,
     @StringRes val title: Int,
-    val value: Int,
+    private val index: Int,
     val options: List<String>,
     val optionsTitle: List<Int>
-)
+) {
+    fun needUpdate(newValue: String) = value() != newValue
+
+    private fun value() = options[index]
+
+    fun selected(idx: Int) =  idx == index
+
+    fun valueTitle() = optionsTitle[index]
+}
 
 fun SettingsItem.toUiState(newValue: String): SettingsEntryUiState {
     var valueIndex = 0
@@ -99,7 +112,7 @@ fun SettingsItem.toUiState(newValue: String): SettingsEntryUiState {
     return SettingsEntryUiState(
         key = key,
         title = title,
-        value = valueIndex,
+        index = valueIndex,
         options = options,
         optionsTitle = optionsTitle
     )
