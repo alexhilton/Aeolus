@@ -46,8 +46,8 @@
     <string name="settings_title">Settings</string>
     <string name="settings_entry_language_title">Display language</string>
     <string name="settings_entry_language_description">Select the display language used in screens.</string>
-    <string name="settings_entry_unit_title">Unit system</string>
-    <string name="settings_entry_unit_description">Select the unit system used in temperature and wind.</string>
+    <string name="settings_entry_measure_title">Measure system</string>
+    <string name="settings_entry_measure_description">Select the measure system used in temperature and wind.</string>
     <string name="settings_entry_lang_en">English</string>
     <string name="settings_entry_lang_zh">Chinese</string>
     <string name="settings_entry_lang_auto">Auto (Follow system)</string>

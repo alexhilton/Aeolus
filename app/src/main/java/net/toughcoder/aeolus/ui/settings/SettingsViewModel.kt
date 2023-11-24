@@ -63,6 +63,7 @@ class SettingsViewModel(
             viewModelState.update { SettingsUiState(entryLang, entryMeasure) }
         }.launchIn(viewModelScope)
     }
+
     companion object {
         fun providerFactory(prefStore: AeolusStore) : ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
@@ -76,7 +77,7 @@ class SettingsViewModel(
 
 data class SettingsUiState(
     val language: SettingsEntryUiState? = null,
-    val unit: SettingsEntryUiState? = null
+    val measure: SettingsEntryUiState? = null
 )
 
 data class SettingsEntryUiState(

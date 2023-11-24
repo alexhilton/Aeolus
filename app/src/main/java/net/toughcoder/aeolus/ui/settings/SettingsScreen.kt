@@ -2,7 +2,6 @@ package net.toughcoder.aeolus.ui.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import net.toughcoder.aeolus.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,10 +92,10 @@ fun SettingsSection(
                 onChange(k, v)
             }
         }
-        if (uiState.unit != null) {
+        if (uiState.measure != null) {
             SettingsEntry(
                 modifier,
-                uiState.unit
+                uiState.measure
             ) { k, v ->
                 onChange(k, v)
             }
@@ -128,18 +126,6 @@ fun SettingsEntry(
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
-
-//            Row {
-//                Text(
-//                    text = entry.value,
-//                    style = MaterialTheme.typography.titleMedium,
-//                    color = MaterialTheme.colorScheme.secondary
-//                )
-//                Icon(
-//                    imageVector = Icons.Default.KeyboardArrowRight,
-//                    contentDescription = ""
-//                )
-//            }
 
             DropDownSettingsEntry(
                 entryState,

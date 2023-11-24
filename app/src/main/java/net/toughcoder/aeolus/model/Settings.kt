@@ -33,10 +33,13 @@ val LANGUAGE_ITEM = SettingsItem(
 )
 
 val MEASURE_ITEM = SettingsItem(
-    title = R.string.settings_entry_unit_title,
+    title = R.string.settings_entry_measure_title,
     key = KEY_MEASURE,
     value = DEFAULT_MEASURE,
     defaultValue = DEFAULT_MEASURE,
     options = listOf("metric", "imperial"),
-    optionsTitle = listOf(R.string.settings_entry_measure_metric, R.string.settings_entry_measure_imperial)
+    optionsTitle = listOf(
+        R.string.settings_entry_measure_metric,
+        R.string.settings_entry_measure_imperial
+    )
 )
