@@ -59,7 +59,7 @@ fun DailyWeatherScreen(
                     Text(
                         text = stringResource(
                             R.string.daily_screen_title,
-                            "${uiState.city?.name},${uiState.city?.admin}"
+                            "${uiState.city?.fullname()}"
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

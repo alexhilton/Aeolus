@@ -146,7 +146,7 @@ fun FavoriteItem(
                 Text(
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary,
-                    text = "${item.city.name}, ${item.city.admin}"
+                    text = item.city.fullname()
                 )
 
                 if (!item.snapshot.isEmpty()) {

@@ -19,6 +19,8 @@ data class CityState(
 ) {
     fun isEmpty() = name.isEmpty() || id.isEmpty()
 
+    fun fullname() = "$name, $admin"
+
     fun toModel(): WeatherLocation =
         WeatherLocation(
             id = id,

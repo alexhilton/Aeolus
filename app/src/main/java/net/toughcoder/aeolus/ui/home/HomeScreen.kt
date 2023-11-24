@@ -68,7 +68,7 @@ fun HomeScreen(
                 ),
                 title = {
                     Text(
-                        text = "${uiState.city?.name}, ${uiState.city?.admin}",
+                        text = uiState.city?.fullname() ?: "null",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
