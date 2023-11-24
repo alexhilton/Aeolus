@@ -108,7 +108,7 @@ fun SettingsSection(
 @Composable
 fun SettingsEntry(
     modifier: Modifier = Modifier,
-    entry: SettingsEntryUiState,
+    entryState: SettingsEntryUiState,
     onEntryChange: (String, String) -> Unit
 ) {
     Surface(
@@ -124,7 +124,7 @@ fun SettingsEntry(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(entry.title),
+                text = stringResource(entryState.title),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -142,9 +142,7 @@ fun SettingsEntry(
 //            }
 
             DropDownSettingsEntry(
-                key = entry.key,
-                value = entry.value,
-                options = entry.options,
+                entryState,
                 onSelect = onEntryChange
             )
         }
@@ -153,9 +151,7 @@ fun SettingsEntry(
 
 @Composable
 fun DropDownSettingsEntry(
-    key: String,
-    value: String,
-    options: List<String>,
+    entryState: SettingsEntryUiState,
     modifier: Modifier = Modifier,
     expanded: Boolean = false,
     onSelect: (String, String) -> Unit
@@ -167,7 +163,7 @@ fun DropDownSettingsEntry(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = value,
+            text = stringResource(entryState.optionsTitle[entryState.value]),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.secondary
         )
@@ -178,13 +174,13 @@ fun DropDownSettingsEntry(
                 isExpanded = false
             }
         ) {
-            options.forEachIndexed { index, s ->
+            entryState.optionsTitle.forEachIndexed { index, sid ->
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = s,
+                            text = stringResource(sid),
                             style = MaterialTheme.typography.titleMedium,
-                            color = if (s == value) {
+                            color = if (index == entryState.value) {
                                 MaterialTheme.colorScheme.inversePrimary
                             } else {
                                 MaterialTheme.colorScheme.secondary
@@ -193,7 +189,7 @@ fun DropDownSettingsEntry(
                     },
                     onClick = {
                         isExpanded = false
-                        onSelect(key, s)
+                        onSelect(entryState.key, entryState.options[index])
                     }
                 )
             }

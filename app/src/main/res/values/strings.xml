@@ -48,6 +48,11 @@
     <string name="settings_entry_language_description">Select the display language used in screens.</string>
     <string name="settings_entry_unit_title">Unit system</string>
     <string name="settings_entry_unit_description">Select the unit system used in temperature and wind.</string>
+    <string name="settings_entry_lang_en">English</string>
+    <string name="settings_entry_lang_zh">Chinese</string>
+    <string name="settings_entry_lang_auto">Auto (Follow system)</string>
+    <string name="settings_entry_measure_metric">Metric</string>
+    <string name="settings_entry_measure_imperial">Imperial</string>
 
     <string name="description_manage_city">Go to manage cities</string>
     <string name="description_back">Go back</string>
