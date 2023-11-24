@@ -55,7 +55,9 @@ data class DailyUiState(
     val pressure: String = "",
     val visibility: String = "",
     @StringRes val weekday: Int = 0
-)
+) {
+    fun isEmpty() = textDay.isEmpty()
+}
 
 fun DailyWeather.asUiState(): DailyUiState =
     DailyUiState(

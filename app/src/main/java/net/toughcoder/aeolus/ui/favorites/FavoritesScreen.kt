@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.ui.CityState
+import net.toughcoder.aeolus.ui.DailyUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -169,14 +170,14 @@ fun FavoriteItem(
 @Composable
 fun WeatherSnapshot(
     modifier: Modifier = Modifier,
-    snapshot: DayWeatherUiState
+    snapshot: DailyUiState
 ) {
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = snapshot.text,
+                text = snapshot.textDay,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -186,7 +187,7 @@ fun WeatherSnapshot(
             Image(
                 modifier = Modifier
                     .size(36.dp),
-                painter = painterResource(snapshot.icon),
+                painter = painterResource(snapshot.iconDay),
                 contentScale = ContentScale.Fit,
                 contentDescription = ""
             )
@@ -194,7 +195,7 @@ fun WeatherSnapshot(
             Spacer(Modifier.width(16.dp))
 
             Text(
-                text = "${snapshot.high} / ${snapshot.low}",
+                text = "${snapshot.tempHigh} / ${snapshot.tempLow}",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -240,7 +241,12 @@ fun FavoriteItemPreview() {
         Modifier.fillMaxWidth(),
         FavoriteState(
             CityState("Beijing", "", "China"),
-            DayWeatherUiState("19", "1", R.drawable.ic_100, "Cloudy", 123f, R.drawable.ic_nav, "South", "1")
+            DailyUiState(
+                "2023-11-19", "19", "1", "06:07", "18:00",
+                R.drawable.ic_100, "Cloudy",
+                "12", "Sun",
+                R.drawable.ic_nav, 123f, "South", "1"
+            )
         )
     ) {}
 }

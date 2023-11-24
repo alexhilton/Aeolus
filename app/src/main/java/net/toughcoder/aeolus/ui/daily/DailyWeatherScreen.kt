@@ -34,8 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.ui.DailyUiState
-import net.toughcoder.aeolus.ui.favorites.DayWeatherUiState
-import net.toughcoder.aeolus.ui.home.GeneralInfo
 import net.toughcoder.aeolus.ui.home.GeneralText
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,22 +1,16 @@
 package net.toughcoder.aeolus.ui.favorites
 
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.data.location.LocationRepository
-import net.toughcoder.aeolus.data.unit
 import net.toughcoder.aeolus.data.weather.WeatherRepository
-import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.ui.CityState
-import net.toughcoder.aeolus.ui.ICONS
+import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.asUiState
-import net.toughcoder.aeolus.ui.formatTemp
-import net.toughcoder.aeolus.ui.toWindDegree
 
 class FavoritesViewModel(
     private val locationRepo: LocationRepository,
@@ -32,7 +26,7 @@ class FavoritesViewModel(
                             val weather = weatherRepo.fetchDayWeather(it)
                             FavoriteState(
                                 city = it.asUiState(),
-                                snapshot = weather.asSnapshotUiState(),
+                                snapshot = weather.asUiState(),
                                 selected = it.id == defaultCity.id
                             )
                         }
@@ -62,31 +56,6 @@ class FavoritesViewModel(
 
 data class FavoriteState(
     val city: CityState,
-    val snapshot: DayWeatherUiState,
+    val snapshot: DailyUiState,
     val selected: Boolean = false
 )
-
-data class DayWeatherUiState(
-    val high: String,
-    val low: String,
-    @DrawableRes val icon: Int,
-    val text: String,
-    val windDegree: Float,
-    @DrawableRes val iconDir: Int,
-    val windDir: String,
-    val windScale: String
-) {
-    fun isEmpty() = text.isEmpty()
-}
-
-fun DailyWeather.asSnapshotUiState(): DayWeatherUiState =
-    DayWeatherUiState(
-        high = "${tempHigh.formatTemp()}${unit().temp}",
-        low = "${tempLow.formatTemp()}${unit().temp}",
-        icon = ICONS[iconDay]!!,
-        text = textDay,
-        windDegree = windDegree.toWindDegree(),
-        iconDir = R.drawable.ic_nav,
-        windDir = windDir,
-        windScale = "$windScale ${unit().scale}"
-    )
