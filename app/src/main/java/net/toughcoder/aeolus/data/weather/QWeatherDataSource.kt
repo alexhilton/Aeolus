@@ -6,6 +6,7 @@ import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.data.qweather.toModel
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
+import net.toughcoder.aeolus.model.MEASURE_IMPERIAL
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.model.toModel
 import java.time.LocalDateTime
@@ -18,9 +19,10 @@ class QWeatherDataSource(
     companion object {
         const val LOG_TAG = "QWeatherNowDataSource"
     }
-    override suspend fun loadWeatherNow(loc: WeatherLocation): WeatherNow {
+    override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): WeatherNow {
         try {
-            val response = api.fetchWeatherNow(loc.id)
+            val qpm = if (measure == MEASURE_IMPERIAL) "i" else "m"
+            val response = api.fetchWeatherNow(loc.id, lang, qpm)
             return if (response.code == "200") {
                 with(response.now) {
                     WeatherNow(
@@ -37,10 +39,12 @@ class QWeatherDataSource(
                         airPressure = pressure,
                         visibility = visibility,
                         cloud = cloud,
-                        updateTime = parseTime(response.updateTime)
+                        updateTime = parseTime(response.updateTime),
+                        measure = measure
                     )
                 }
             } else {
+                Log.d(LOG_TAG, "Error code: ${response.code}")
                 WeatherNow(successful = false)
             }
         } catch (exception: Exception) {
@@ -63,7 +67,7 @@ class QWeatherDataSource(
                 emptyList()
             }
         } catch(exception: Exception) {
-            Log.d(LOG_TAG, "Faild to load daily weather ${exception.message}")
+            Log.d(LOG_TAG, "Failed to load daily weather ${exception.message}")
         }
         return emptyList()
     }
@@ -77,7 +81,7 @@ class QWeatherDataSource(
                 emptyList()
             }
         } catch(exception: Exception) {
-            Log.d(LOG_TAG, "Faild to load daily weather ${exception.message}")
+            Log.d(LOG_TAG, "Failed to load 7 days weather ${exception.message}")
         }
         return emptyList()
     }

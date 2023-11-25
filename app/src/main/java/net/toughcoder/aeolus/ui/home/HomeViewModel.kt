@@ -23,6 +23,7 @@ import net.toughcoder.aeolus.data.weather.WeatherRepository
 import net.toughcoder.aeolus.model.unit
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
+import net.toughcoder.aeolus.model.getMeasure
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.ICONS
@@ -143,7 +144,6 @@ class HomeViewModel(
                     Log.d(LOG_TAG, "from locals: location $loc")
                     locationState.update { loc }
                 }
-
             updateState()
         }
     }
@@ -166,7 +166,7 @@ data class ViewModelState(
         )
 
     private fun convert(data: WeatherNow): HomeUiState =
-        with(unit()) {
+        with(data.getMeasure()) {
             return HomeUiState.WeatherUiState(
                 isLoading = loading,
                 city = city?.asUiState(),

@@ -18,10 +18,11 @@ data class WeatherNow(
     val airPressure: String = "",
     val visibility: String = "",
     val cloud: String = "",
-    val updateTime: Long = -1
+    val updateTime: Long = -1,
+    val measure: String = ""
 )
 
-fun WeatherNowEntity.asModel(): WeatherNow = WeatherNow(
+fun WeatherNowEntity.asModel(measure: String): WeatherNow = WeatherNow(
     successful = true,
     nowTemp = nowTemp,
     feelsLike = feelsLike,
@@ -33,7 +34,8 @@ fun WeatherNowEntity.asModel(): WeatherNow = WeatherNow(
     humidity = humidity,
     airPressure = airPressure,
     visibility = visibility,
-    updateTime = updateTime
+    updateTime = updateTime,
+    measure = measure
 )
 
 data class DailyWeather(

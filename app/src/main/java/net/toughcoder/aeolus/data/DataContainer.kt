@@ -31,6 +31,7 @@ class DataContainerImpl(private val context: Context) : DataContainer {
     override val weatherRepository: WeatherRepository by lazy {
 //        WeatherNowRepository(FakeWeatherNowDataSource())
         WeatherRepository(
+            datastore,
             LocalDataSource(database),
             QWeatherDataSource(QWeatherService.create(QWeatherService.BASE_URL)),
             Dispatchers.IO

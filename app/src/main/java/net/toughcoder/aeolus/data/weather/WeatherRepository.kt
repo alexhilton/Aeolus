@@ -4,15 +4,21 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.local.LocalDataSource
+import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
+import net.toughcoder.aeolus.model.DEFAULT_MEASURE
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.WeatherNow
 
 class WeatherRepository(
+    private val store: AeolusStore,
     private val local: LocalDataSource,
     private val network: WeatherDataSource,
     private val dispatcher: CoroutineDispatcher,
@@ -24,13 +30,13 @@ class WeatherRepository(
 
     suspend fun getWeatherNow(location: WeatherLocation): WeatherNow {
         return withContext(dispatcher) {
-            local.loadWeatherNow(location)
+            local.loadWeatherNow(location, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
         }
     }
 
     suspend fun fetchWeatherNow(location: WeatherLocation): WeatherNow {
         return withContext(dispatcher) {
-            val bundle = network.loadWeatherNow(location)
+            val bundle = network.loadWeatherNow(location, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
             if (bundle.successful) {
                 // Update database
                 local.updateWeatherNow(location, bundle)
@@ -41,7 +47,9 @@ class WeatherRepository(
 
     suspend fun weatherNowStream(location: WeatherLocation): Flow<WeatherNow> {
         return withContext(dispatcher) {
-            val localNow = local.loadWeatherNow(location)
+            val lang = runBlocking { store.getLanguage().first() }
+            val measure = runBlocking { store.getMeasure().first() }
+            val localNow = local.loadWeatherNow(location, lang, measure)
             nowWeatherStream = MutableStateFlow(localNow)
             nowWeatherStream.asStateFlow()
         }
@@ -49,7 +57,9 @@ class WeatherRepository(
 
     suspend fun refreshWeatherNow(location: WeatherLocation) {
         withContext(dispatcher) {
-            val bundle = network.loadWeatherNow(location)
+            val lang = runBlocking { store.getLanguage().first() }
+            val measure = runBlocking { store.getMeasure().first() }
+            val bundle = network.loadWeatherNow(location, lang, measure)
             if (bundle.successful) {
                 local.updateWeatherNow(location, bundle)
             }

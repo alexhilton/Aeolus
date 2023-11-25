@@ -8,7 +8,10 @@ const val KEY_MEASURE = "measure"
 
 const val DEFAULT_LANGUAGE = "en"
 
-const val DEFAULT_MEASURE = "metric"
+const val MEASURE_METRIC = "metric"
+const val MEASURE_IMPERIAL = "imperial"
+
+const val DEFAULT_MEASURE = MEASURE_METRIC
 
 data class SettingsItem(
     @StringRes val title: Int,
@@ -37,7 +40,7 @@ val MEASURE_ITEM = SettingsItem(
     key = KEY_MEASURE,
     value = DEFAULT_MEASURE,
     defaultValue = DEFAULT_MEASURE,
-    options = listOf("metric", "imperial"),
+    options = listOf(MEASURE_METRIC, MEASURE_IMPERIAL),
     optionsTitle = listOf(
         R.string.settings_entry_measure_metric,
         R.string.settings_entry_measure_imperial

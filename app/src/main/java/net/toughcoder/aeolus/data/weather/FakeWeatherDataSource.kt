@@ -9,7 +9,7 @@ import net.toughcoder.aeolus.model.WeatherNow
 import kotlin.random.Random
 
 class FakeWeatherDataSource : WeatherDataSource {
-    override suspend fun loadWeatherNow(loc: WeatherLocation): WeatherNow {
+    override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): WeatherNow {
         delay(((Random.nextFloat() + 0.1f) * 3000f).toLong())
         val hasError = Random.nextInt(15) % 4 == 0
         val data = fakeNow()
