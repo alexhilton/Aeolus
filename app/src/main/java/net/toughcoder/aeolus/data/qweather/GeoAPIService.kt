@@ -18,6 +18,7 @@ interface GeoAPIService {
         @Query("location") query: String,
         @Query("number") number: Int = 10,
         @Query("range") range: String = "cn",
+        @Query("lang") lang: String = "zh",
         @Query("key") key: String = BuildConfig.QWEATHER_API_KEY
     ) : QWeatherSearchResponse
 
