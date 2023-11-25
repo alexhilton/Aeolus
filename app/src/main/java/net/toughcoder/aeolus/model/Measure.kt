@@ -6,7 +6,7 @@ sealed class Measure(
     val speed: String,
     val pressure: String,
     val scale: String,
-    val percent: String
+    val percent: String = "%"
 )
 
 class Metric : Measure(
@@ -14,8 +14,7 @@ class Metric : Measure(
     "km",
     "km/h",
     "hPa",
-    "级",
-    "%"
+    "级"
 )
 
 class Imperial : Measure(
@@ -23,8 +22,7 @@ class Imperial : Measure(
     "mi",
     "mi/h",
     "hPa",
-    "Grade",
-    "%"
+    ""
 )
 
 val MEASURE_MAP = mapOf(
