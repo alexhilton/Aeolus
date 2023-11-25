@@ -3,7 +3,6 @@ package net.toughcoder.aeolus.data.weather
 import android.util.Log
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
-import net.toughcoder.aeolus.data.qweather.toModel
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.MEASURE_IMPERIAL

@@ -81,28 +81,6 @@ data class QWeatherDayDTO(
     @field:SerializedName("vis") val visibility: String
 )
 
-fun QWeatherDayDTO.toModel(measure: String): DailyWeather =
-    DailyWeather(
-        date = date,
-        tempHigh = tempHigh,
-        tempLow = tempLow,
-        sunrise = sunrise,
-        sunset = sunset,
-        iconDay = iconDay,
-        textDay = textDay,
-        uvIndex = uvIndex,
-        humidity = humidity,
-        visibility = visibility,
-        pressure = pressure,
-        windScale = windScaleDay,
-        windDir = windDirDay,
-        windDegree = windDegreeDay,
-        windSpeed = windSpeedDay,
-        textNight = textNight,
-        iconNight = iconNight,
-        measure = measure
-    )
-
 data class QWeatherHourlyResponse(
     @field:SerializedName("code") val code: String,
     @field:SerializedName("hourly") val hourList: List<QWeatherHourDTO>
