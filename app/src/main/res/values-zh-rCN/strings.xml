@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">猿天气</string>
+    <string name="app_description">A weather app by a developer and for developers!</string>
+
+    <string name="favorites_title">城市收藏</string>
+    <string name="empty_favorites">No favorites yet, go to Search page to add favorite city.</string>
+    <string name="search_title">搜索城市</string>
+    <string name="city_type_name">市</string>
+    <string name="hot_city_title">热门城市</string>
+    <string name="search_result_title">搜索结果</string>
+    <string name="search_placeholder">输入关键字来搜索城市</string>
+    <string name="empty_search_results">No results found, please try again later!</string>
+
+    <string name="today">今天</string>
+    <string name="tomorrow">明天</string>
+    <string name="day_after">后天</string>
+    <string name="uv_index_title">UV</string>
+    <string name="temp_high_title">最高</string>
+    <string name="temp_low_title">最低</string>
+    <string name="scale_title">风力</string>
+    <string name="speed_title">风速</string>
+    <string name="feelslike_title">体感</string>
+    <string name="humidity_title">温度</string>
+    <string name="pressure_title">气压</string>
+    <string name="visibility_title">能见度</string>
+    <string name="button_view_more">点击查看更多</string>
+    <string name="error_loading">Loading weather data, please wait!</string>
+    <string name="error_up_to_date">已经是最新的天气数据了，稍后再刷新吧！</string>
+    <string name="error_location">Failed to get location, please try again later!</string>
+    <string name="error_network">Something is wrong, please try again later!</string>
+
+    <string name="daily_screen_title">%1$s 7天预报</string>
+    <string name="daily_screen_placeholder">Daily weather shows here</string>
+    <string name="uv_index">UV %1$s</string>
+    <string name="humidity">温度 %1$s</string>
+    <string name="pressure">气压 %1$s</string>
+    <string name="visibility">能见度 %1$s</string>
+    <string name="weekday_0">周一</string>
+    <string name="weekday_1">周二</string>
+    <string name="weekday_2">周三</string>
+    <string name="weekday_3">周四</string>
+    <string name="weekday_4">周五</string>
+    <string name="weekday_5">周六</string>
+    <string name="weekday_6">周日</string>
+
+    <string name="settings_title">设置</string>
+    <string name="settings_entry_language_title">界面展示语言</string>
+    <string name="settings_entry_language_description">Select the display language used in screens.</string>
+    <string name="settings_entry_measure_title">测量单位系统</string>
+    <string name="settings_entry_measure_description">Select the measure system used in temperature and wind.</string>
+    <string name="settings_entry_lang_en">英文</string>
+    <string name="settings_entry_lang_zh">简体中文</string>
+    <string name="settings_entry_lang_auto">自动 (跟随系统)</string>
+    <string name="settings_entry_measure_metric">公制</string>
+    <string name="settings_entry_measure_imperial">英制</string>
+
+    <string name="description_manage_city">Go to manage cities</string>
+    <string name="description_back">Go back</string>
+    <string name="description_search">Search cities</string>
+    <string name="description_close">Close</string>
+    <string name="description_done">Done</string>
+    <string name="description_settings">Go to Settings</string>
+</resources>
