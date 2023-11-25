@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data
+package net.toughcoder.aeolus.model
 
 sealed class Measure(
     val temp: String,

@@ -20,7 +20,7 @@ import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherRepository
-import net.toughcoder.aeolus.data.unit
+import net.toughcoder.aeolus.model.unit
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.ui.CityState

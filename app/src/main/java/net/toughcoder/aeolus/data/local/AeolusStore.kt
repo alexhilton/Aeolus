@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data
+package net.toughcoder.aeolus.data.local
 
 import android.content.Context
 import android.util.Log

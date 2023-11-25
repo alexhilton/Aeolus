@@ -3,7 +3,7 @@ package net.toughcoder.aeolus.ui
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import net.toughcoder.aeolus.R
-import net.toughcoder.aeolus.data.unit
+import net.toughcoder.aeolus.model.unit
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.WeatherLocation
 import java.time.LocalDate

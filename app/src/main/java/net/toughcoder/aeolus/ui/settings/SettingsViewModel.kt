@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.toughcoder.aeolus.data.AeolusStore
+import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.model.KEY_LANGUAGE
 import net.toughcoder.aeolus.model.KEY_MEASURE
 import net.toughcoder.aeolus.model.LANGUAGE_ITEM

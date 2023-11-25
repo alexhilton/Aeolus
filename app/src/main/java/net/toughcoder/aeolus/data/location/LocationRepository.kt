@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
-import net.toughcoder.aeolus.data.AeolusStore
+import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.model.WeatherLocation
