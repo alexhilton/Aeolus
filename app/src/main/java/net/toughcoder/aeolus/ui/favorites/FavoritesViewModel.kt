@@ -21,7 +21,7 @@ class FavoritesViewModel(
         locationRepo.getDefaultCity()
             .collect { defaultCity ->
                 emit(
-                    locationRepo.loadAllFavoriteCities()
+                    locationRepo.loadFavoriteCities()
                         .map {
                             val weather = weatherRepo.fetchDayWeather(it)
                             FavoriteUiState(

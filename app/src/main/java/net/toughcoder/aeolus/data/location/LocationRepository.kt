@@ -57,7 +57,7 @@ class LocationRepository(
         }
     }
 
-    suspend fun loadAllFavoriteCities(): List<WeatherLocation> {
+    suspend fun loadFavoriteCities(): List<WeatherLocation> {
         return withContext(dispatcher) {
             val dao = database.locationDao()
             dao.getAllCities()
