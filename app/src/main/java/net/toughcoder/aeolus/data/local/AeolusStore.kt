@@ -2,6 +2,8 @@ package net.toughcoder.aeolus.data.local
 
 import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -15,6 +17,7 @@ import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
 import net.toughcoder.aeolus.model.DEFAULT_MEASURE
 import net.toughcoder.aeolus.model.KEY_LANGUAGE
 import net.toughcoder.aeolus.model.KEY_MEASURE
+import net.toughcoder.aeolus.model.LANGUAGE_AUTO
 import net.toughcoder.aeolus.model.WeatherLocation
 
 /**
@@ -87,6 +90,14 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
     }
 
     suspend fun persistLanguage(lang: String) {
+        val locale = if (lang == LANGUAGE_AUTO) {
+            LocaleListCompat.getEmptyLocaleList()
+        } else {
+            LocaleListCompat.forLanguageTags(lang)
+        }
+        Log.d(LOG_TAG, "set lang $locale")
+        AppCompatDelegate.setApplicationLocales(locale)
+
         withContext(Dispatchers.IO) {
             dataStore.edit { prefs ->
                 prefs[languageKey] = lang

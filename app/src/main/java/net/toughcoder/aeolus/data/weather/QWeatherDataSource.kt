@@ -1,13 +1,16 @@
 package net.toughcoder.aeolus.data.weather
 
 import android.util.Log
+import androidx.compose.ui.text.intl.Locale
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
+import net.toughcoder.aeolus.model.LANGUAGE_AUTO
 import net.toughcoder.aeolus.model.MEASURE_IMPERIAL
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.model.toModel
+import net.toughcoder.aeolus.model.toParamLang
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -20,7 +23,7 @@ class QWeatherDataSource(
     }
     override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): WeatherNow {
         try {
-            val response = api.fetchWeatherNow(loc.id, lang, toParamMeasure(measure))
+            val response = api.fetchWeatherNow(loc.id, toParamLang(lang), toParamMeasure(measure))
             return if (response.code == "200") {
                 with(response.now) {
                     WeatherNow(
@@ -58,7 +61,7 @@ class QWeatherDataSource(
 
     override suspend fun loadDailyWeather(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         try {
-            val response = api.fetchWeather3D(loc.id, lang, toParamMeasure(measure))
+            val response = api.fetchWeather3D(loc.id, toParamLang(lang), toParamMeasure(measure))
             return if (response.code == "200") {
                 response.dayList.map { it.toModel(measure) }
             } else {
@@ -72,7 +75,7 @@ class QWeatherDataSource(
 
     override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         try {
-            val response = api.fetchWeather7D(loc.id, lang, toParamMeasure(measure))
+            val response = api.fetchWeather7D(loc.id, toParamLang(lang), toParamMeasure(measure))
             return if (response.code == "200") {
                 response.dayList.map { it.toModel(measure) }
             } else {
@@ -97,7 +100,7 @@ class QWeatherDataSource(
 
     override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather> {
         try {
-            val response = api.fetchWeather24H(loc.id, lang, toParamMeasure(measure))
+            val response = api.fetchWeather24H(loc.id, toParamLang(lang), toParamMeasure(measure))
             return if (response.code == "200") {
                 response.hourList.map { it.toModel(measure) }
             } else {

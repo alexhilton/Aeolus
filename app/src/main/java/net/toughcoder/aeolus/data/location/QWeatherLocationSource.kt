@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.location
 import android.util.Log
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.GeoAPIService
+import net.toughcoder.aeolus.model.toParamLang
 
 class QWeatherLocationSource(
     private val api: GeoAPIService
@@ -13,7 +14,7 @@ class QWeatherLocationSource(
 
     override suspend fun searchHotCities(lang: String): List<WeatherLocation> {
         try {
-            val response = api.fetchTopCities(number = 20, lang = lang)
+            val response = api.fetchTopCities(number = 20, lang = toParamLang(lang))
             if (response.code == "200") {
                 return response.topCityList
                     .filter { it.rank > 1 && (it.name == it.admin1 || it.name == it.admin2) }
@@ -27,7 +28,7 @@ class QWeatherLocationSource(
 
     override suspend fun searchCity(query: String, lang: String): List<WeatherLocation> {
         try {
-            val response = api.searchCity(query = query, number = 20, lang = lang)
+            val response = api.searchCity(query = query, number = 20, lang = toParamLang(lang))
             if (response.code == "200") {
                 return response.cityList.filter { it.rank > 5 }
                     .map { WeatherLocation(it.qweatherId, it.name, it.admin1) }

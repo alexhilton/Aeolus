@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.model
 
+import androidx.compose.ui.text.intl.Locale
 import net.toughcoder.aeolus.data.room.LocationEntity
 
 data class WeatherLocation(
@@ -17,3 +18,6 @@ fun LocationEntity.asModel(): WeatherLocation {
         admin = admin
     )
 }
+
+fun toParamLang(lang: String) =
+    if (lang == LANGUAGE_AUTO) Locale.current.language else lang

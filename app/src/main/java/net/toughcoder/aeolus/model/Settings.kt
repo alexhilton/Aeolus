@@ -6,7 +6,10 @@ import net.toughcoder.aeolus.R
 const val KEY_LANGUAGE = "language"
 const val KEY_MEASURE = "measure"
 
-const val DEFAULT_LANGUAGE = "en"
+const val LANGUAGE_ENGLISH = "en"
+const val LANGUAGE_CHINESE = "zh"
+const val LANGUAGE_AUTO = "auto"
+const val DEFAULT_LANGUAGE = LANGUAGE_CHINESE
 
 const val MEASURE_METRIC = "metric"
 const val MEASURE_IMPERIAL = "imperial"
