@@ -10,11 +10,11 @@ interface WeatherDataSource {
 
     suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow)
 
-    suspend fun loadDailyWeather(loc: WeatherLocation): List<DailyWeather>
+    suspend fun loadDailyWeather(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather>
 
-    suspend fun load7DayWeathers(loc: WeatherLocation): List<DailyWeather>
+    suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather>
 
     suspend fun updateDailyWeather(loc: WeatherLocation, dailyWeathers: List<DailyWeather>)
 
-    suspend fun load24HourWeathers(loc: WeatherLocation): List<HourlyWeather>
+    suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather>
 }

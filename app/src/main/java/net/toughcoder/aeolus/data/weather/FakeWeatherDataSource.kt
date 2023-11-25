@@ -41,12 +41,12 @@ class FakeWeatherDataSource : WeatherDataSource {
         updateTime = SystemClock.uptimeMillis() / 1000L
     )
 
-    override suspend fun loadDailyWeather(loc: WeatherLocation): List<DailyWeather> {
+    override suspend fun loadDailyWeather(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         TODO("Not yet implemented")
     }
 
 
-    override suspend fun load7DayWeathers(loc: WeatherLocation): List<DailyWeather> {
+    override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         TODO("Not yet implemented")
     }
 
@@ -57,7 +57,7 @@ class FakeWeatherDataSource : WeatherDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun load24HourWeathers(loc: WeatherLocation): List<HourlyWeather> {
+    override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather> {
         TODO("Not yet implemented")
     }
 }

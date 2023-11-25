@@ -2,6 +2,7 @@ package net.toughcoder.aeolus.data.qweather
 
 import com.google.gson.annotations.SerializedName
 import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.Measure
 import retrofit2.http.Field
 
 data class QWeatherNowResponse(
@@ -80,7 +81,7 @@ data class QWeatherDayDTO(
     @field:SerializedName("vis") val visibility: String
 )
 
-fun QWeatherDayDTO.toModel(): DailyWeather =
+fun QWeatherDayDTO.toModel(measure: String): DailyWeather =
     DailyWeather(
         date = date,
         tempHigh = tempHigh,
@@ -98,7 +99,8 @@ fun QWeatherDayDTO.toModel(): DailyWeather =
         windDegree = windDegreeDay,
         windSpeed = windSpeedDay,
         textNight = textNight,
-        iconNight = iconNight
+        iconNight = iconNight,
+        measure = measure
     )
 
 data class QWeatherHourlyResponse(

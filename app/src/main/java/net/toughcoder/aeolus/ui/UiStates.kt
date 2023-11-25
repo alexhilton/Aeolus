@@ -3,9 +3,9 @@ package net.toughcoder.aeolus.ui
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import net.toughcoder.aeolus.R
-import net.toughcoder.aeolus.model.unit
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.WeatherLocation
+import net.toughcoder.aeolus.model.getMeasure
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -60,26 +60,28 @@ data class DailyUiState(
 }
 
 fun DailyWeather.asUiState(): DailyUiState =
-    DailyUiState(
-        date = date.substring(5),
-        tempHigh = "${tempHigh.formatTemp()}${unit().temp}",
-        tempLow = "${tempLow.formatTemp()}${unit().temp}",
-        sunrise = sunrise,
-        sunset = sunset,
-        iconDay = ICONS[iconDay]!!,
-        textDay = textDay,
-        uvIndex = uvIndex,
-        textNight = textNight,
-        iconNight = ICONS[iconNight]!!,
-        windDegree = windDegree.toWindDegree(),
-        windDir = windDir,
-        windScale = "$windScale${unit().scale}",
-        iconDir = R.drawable.ic_nav,
-        humidity = "$humidity${unit().percent}",
-        pressure = "$pressure${unit().pressure}",
-        visibility = "$visibility${unit().length}",
-        weekday = date.weekday()
-    )
+    getMeasure().let { it ->
+        DailyUiState(
+            date = date.substring(5),
+            tempHigh = "${tempHigh.formatTemp()}${it.temp}",
+            tempLow = "${tempLow.formatTemp()}${it.temp}",
+            sunrise = sunrise,
+            sunset = sunset,
+            iconDay = ICONS[iconDay]!!,
+            textDay = textDay,
+            uvIndex = uvIndex,
+            textNight = textNight,
+            iconNight = ICONS[iconNight]!!,
+            windDegree = windDegree.toWindDegree(),
+            windDir = windDir,
+            windScale = "$windScale${it.scale}",
+            iconDir = R.drawable.ic_nav,
+            humidity = "$humidity${it.percent}",
+            pressure = "$pressure${it.pressure}",
+            visibility = "$visibility${it.length}",
+            weekday = date.weekday()
+        )
+    }
 
 fun String.formatTemp(): String {
     val temp = this

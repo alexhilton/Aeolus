@@ -20,7 +20,6 @@ import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherRepository
-import net.toughcoder.aeolus.model.unit
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.getMeasure
@@ -242,15 +241,18 @@ data class HourlyUiState(
 )
 
 fun HourlyWeather.asUiState(): HourlyUiState =
-    HourlyUiState(
-        time = dateTime.smartHour(),
-        temp = "${temp.formatTemp()}${unit().temp}",
-        text = text,
-        icon = ICONS[icon]!!,
-        iconDir = R.drawable.ic_nav,
-        windScale = "$windScale${unit().scale}",
-        windDegree = windDegree.toWindDegree()
-    )
+    getMeasure().let {
+        HourlyUiState(
+            time = dateTime.smartHour(),
+            temp = "${temp.formatTemp()}${it.temp}",
+            text = text,
+            icon = ICONS[icon]!!,
+            iconDir = R.drawable.ic_nav,
+            windScale = "$windScale${it.scale}",
+            windDegree = windDegree.toWindDegree()
+        )
+    }
+
 
 fun String.smartHour(): String {
     val d = this.substring(5, 10)

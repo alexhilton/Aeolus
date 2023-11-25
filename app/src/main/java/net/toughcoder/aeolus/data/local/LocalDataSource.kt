@@ -43,13 +43,13 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         }
     }
 
-    override suspend fun loadDailyWeather(loc: WeatherLocation): List<DailyWeather> {
+    override suspend fun loadDailyWeather(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         val dao = database.dailyWeatherDao()
         val weathers = dao.getDailyWeathers(loc.id)
-        return weathers.map { it.toModel() }
+        return weathers.map { it.toModel(measure) }
     }
 
-    override suspend fun load7DayWeathers(loc: WeatherLocation): List<DailyWeather> {
+    override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         TODO("Not yet implemented")
     }
 
@@ -62,7 +62,7 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         dao.addDailyWeathers(weathers)
     }
 
-    override suspend fun load24HourWeathers(loc: WeatherLocation): List<HourlyWeather> {
+    override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather> {
         TODO("Not yet implemented")
     }
 }

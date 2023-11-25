@@ -37,4 +37,12 @@ fun WeatherNow.getMeasure(): Measure {
     return MEASURE_MAP[key]!!
 }
 
-fun unit(): Measure = Metric()
+fun DailyWeather.getMeasure(): Measure {
+    val key = if (measure in MEASURE_MAP) measure else MEASURE_METRIC
+    return MEASURE_MAP[key]!!
+}
+
+fun HourlyWeather.getMeasure(): Measure {
+    val key = if (measure in MEASURE_MAP) measure else MEASURE_METRIC
+    return MEASURE_MAP[key]!!
+}

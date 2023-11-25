@@ -21,8 +21,7 @@ class QWeatherDataSource(
     }
     override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): WeatherNow {
         try {
-            val qpm = if (measure == MEASURE_IMPERIAL) "i" else "m"
-            val response = api.fetchWeatherNow(loc.id, lang, qpm)
+            val response = api.fetchWeatherNow(loc.id, lang, toParamMeasure(measure))
             return if (response.code == "200") {
                 with(response.now) {
                     WeatherNow(
@@ -58,11 +57,11 @@ class QWeatherDataSource(
         return d.toEpochSecond(ZoneOffset.UTC)
     }
 
-    override suspend fun loadDailyWeather(loc: WeatherLocation): List<DailyWeather> {
+    override suspend fun loadDailyWeather(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         try {
-            val response = api.fetchWeather3D(loc.id)
+            val response = api.fetchWeather3D(loc.id, lang, toParamMeasure(measure))
             return if (response.code == "200") {
-                response.dayList.map { it.toModel() }
+                response.dayList.map { it.toModel(measure) }
             } else {
                 emptyList()
             }
@@ -72,11 +71,11 @@ class QWeatherDataSource(
         return emptyList()
     }
 
-    override suspend fun load7DayWeathers(loc: WeatherLocation): List<DailyWeather> {
+    override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         try {
-            val response = api.fetchWeather7D(loc.id)
+            val response = api.fetchWeather7D(loc.id, lang, toParamMeasure(measure))
             return if (response.code == "200") {
-                response.dayList.map { it.toModel() }
+                response.dayList.map { it.toModel(measure) }
             } else {
                 emptyList()
             }
@@ -97,15 +96,18 @@ class QWeatherDataSource(
         TODO("Not yet implemented")
     }
 
-    override suspend fun load24HourWeathers(loc: WeatherLocation): List<HourlyWeather> {
+    override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather> {
         try {
-            val response = api.fetchWeather24H(loc.id)
+            val response = api.fetchWeather24H(loc.id, lang, toParamMeasure(measure))
             return if (response.code == "200") {
-                response.hourList.map { it.toModel() }
+                response.hourList.map { it.toModel(measure) }
             } else {
                 emptyList()
             }
         } catch (exception: Exception) {}
         return emptyList()
     }
+
+    private fun toParamMeasure(measure: String) =
+        if (measure == MEASURE_IMPERIAL) "i" else "m"
 }
