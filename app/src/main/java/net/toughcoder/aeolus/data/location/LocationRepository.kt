@@ -15,6 +15,7 @@ import net.toughcoder.aeolus.model.asModel
 class LocationRepository(
     private val prefStore: AeolusStore,
     private val database: AeolusDatabase,
+    private val datasource: LocationDataSource,
     private val dispatcher: CoroutineDispatcher
 ) {
     companion object {
@@ -72,4 +73,14 @@ class LocationRepository(
         val dao = database.locationDao()
         emit(dao.getCity(cityId)?.asModel() ?: WeatherLocation())
     }.flowOn(dispatcher)
+
+    suspend fun getHotCities(): List<WeatherLocation> =
+        withContext(dispatcher) {
+            datasource.searchHotCities()
+        }
+
+    suspend fun searchCity(query: String): List<WeatherLocation> =
+        withContext(dispatcher) {
+            datasource.searchCity(query)
+        }
 }

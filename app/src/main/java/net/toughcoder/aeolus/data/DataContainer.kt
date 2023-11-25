@@ -11,7 +11,6 @@ import net.toughcoder.aeolus.data.local.LocalDataSource
 import net.toughcoder.aeolus.data.local.aeolusStore
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.location.QWeatherLocationSource
-import net.toughcoder.aeolus.data.location.SearchRepository
 import net.toughcoder.aeolus.data.weather.QWeatherDataSource
 import net.toughcoder.aeolus.data.weather.WeatherRepository
 
@@ -20,12 +19,16 @@ interface DataContainer {
     val weatherRepository: WeatherRepository
     val database: AeolusDatabase
     val datastore: AeolusStore
-    val searchRepository: SearchRepository
 }
 
 class DataContainerImpl(private val context: Context) : DataContainer {
     override val locationRepository: LocationRepository by lazy {
-        LocationRepository(datastore, database, Dispatchers.IO)
+        LocationRepository(
+            datastore,
+            database,
+            QWeatherLocationSource(QWeatherService.create(GeoAPIService.BASE_URL)),
+            Dispatchers.IO
+        )
     }
 
     override val weatherRepository: WeatherRepository by lazy {
@@ -44,12 +47,5 @@ class DataContainerImpl(private val context: Context) : DataContainer {
 
     override val datastore: AeolusStore by lazy {
         AeolusStore(context.aeolusStore)
-    }
-
-    override val searchRepository: SearchRepository by lazy {
-        SearchRepository(
-            QWeatherLocationSource(QWeatherService.create(GeoAPIService.BASE_URL)),
-            Dispatchers.IO
-        )
     }
 }

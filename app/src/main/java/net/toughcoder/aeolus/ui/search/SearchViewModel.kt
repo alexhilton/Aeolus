@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.data.location.LocationRepository
-import net.toughcoder.aeolus.data.location.SearchRepository
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.NO_ERROR
@@ -22,8 +21,7 @@ import net.toughcoder.aeolus.ui.asUiState
 
 class SearchViewModel(
     private val prefStore: AeolusStore,
-    private val locationRepo: LocationRepository,
-    private val searchRepo: SearchRepository
+    private val locationRepo: LocationRepository
 ) : ViewModel() {
 
     private val _searchResultState = MutableStateFlow(SearchResultUiState(false))
@@ -45,7 +43,7 @@ class SearchViewModel(
 
     fun getTopCities(): Flow<List<CityState>> = flow {
         emit(
-            searchRepo.getHotCities()
+            locationRepo.getHotCities()
                 .map { it.asUiState() }
                 .toList()
         )
@@ -54,7 +52,7 @@ class SearchViewModel(
     fun searchCity(query: String): Unit {
         _searchResultState.update { it.copy(loading = true) }
         viewModelScope.launch {
-            val result = searchRepo.searchCity(query)
+            val result = locationRepo.searchCity(query)
             val error = if (result.isEmpty()) R.string.empty_search_results else NO_ERROR
             val cities = result.map { it.asUiState() }
             _searchResultState.update { SearchResultUiState(false, error, cities) }
@@ -70,14 +68,13 @@ class SearchViewModel(
     companion object {
         fun providerFactory(
             prefStore: AeolusStore,
-            locationRepository: LocationRepository,
-            searchRepo: SearchRepository
+            locationRepository: LocationRepository
         )
                 : ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(prefStore, locationRepository, searchRepo) as T
+                    return SearchViewModel(prefStore, locationRepository) as T
                 }
             }
     }
