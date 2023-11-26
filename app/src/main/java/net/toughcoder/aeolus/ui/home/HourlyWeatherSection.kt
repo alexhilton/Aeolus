@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +19,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import net.toughcoder.aeolus.R
 
 @Composable
 fun HourlyWeatherSection(
@@ -43,12 +43,18 @@ fun HourlyWeatherList(
         color = MaterialTheme.colorScheme.secondaryContainer,
         shadowElevation = 6.dp
     ) {
-        LazyRow(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(hourlyList) {
-                HourlyListItem(modifier, it)
+            IconTitleInfo(Modifier.padding(8.dp), R.string.hourly_forecast_title)
+
+            LazyRow(
+                modifier = Modifier.padding(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(hourlyList) {
+                    HourlyListItem(modifier, it)
+                }
             }
         }
     }

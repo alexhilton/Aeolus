@@ -23,6 +23,8 @@
     <string name="humidity_title">温度</string>
     <string name="pressure_title">气压</string>
     <string name="visibility_title">能见度</string>
+    <string name="hourly_forecast_title">24小时天气预报</string>
+    <string name="daily_forecast_title">未来3日天气预报</string>
     <string name="button_view_more">点击查看更多</string>
     <string name="error_loading">Loading weather data, please wait!</string>
     <string name="error_up_to_date">已经是最新的天气数据了，稍后再刷新吧！</string>

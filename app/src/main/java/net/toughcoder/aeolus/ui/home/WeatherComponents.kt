@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.ui.home
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -266,6 +270,29 @@ fun GeneralText(
         style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.secondary
     )
+}
+
+@Composable
+fun IconTitleInfo(
+    modifier: Modifier = Modifier,
+    @StringRes text: Int
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Info,
+            tint = MaterialTheme.colorScheme.secondary,
+            contentDescription = null
+        )
+        Spacer(Modifier.width(4.dp))
+        Text(
+            text = stringResource(text),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.secondary
+        )
+    }
 }
 
 @Preview

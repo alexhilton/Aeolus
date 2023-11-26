@@ -51,13 +51,19 @@ fun DailyWeathersInfo(
     ) {
         Column(
             modifier = modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            IconTitleInfo(text = R.string.daily_forecast_title)
+
+            Spacer(Modifier.height(16.dp))
+
             DailyWeatherList(modifier, dailyWeathers)
 
             Spacer(Modifier.height(8.dp))
 
-            Button(onClick = onMoreClick) {
+            Button(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onClick = onMoreClick
+            ) {
                 Text(stringResource(R.string.button_view_more))
             }
         }
