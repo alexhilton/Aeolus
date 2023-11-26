@@ -3,8 +3,13 @@ package net.toughcoder.aeolus.ui.favorites
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.weather.WeatherRepository
@@ -17,11 +22,24 @@ class FavoritesViewModel(
     private val weatherRepo: WeatherRepository
 ) : ViewModel() {
 
-    fun getAllFavorites(): Flow<List<FavoriteUiState>> = flow {
-        locationRepo.getDefaultCity()
-            .collect { defaultCity ->
-                emit(
-                    locationRepo.loadFavoriteCities()
+    private val _uiState = MutableStateFlow(FavoriteScreenUiState())
+
+    val uiState = _uiState
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            _uiState.value
+        )
+
+    init {
+        getAllFavorites()
+    }
+
+    private fun getAllFavorites() {
+        viewModelScope.launch(Dispatchers.IO) {
+            locationRepo.getDefaultCity()
+                .collect { defaultCity ->
+                    val favorites = locationRepo.loadFavoriteCities()
                         .map {
                             val weather = weatherRepo.fetchDayWeather(it)
                             FavoriteUiState(
@@ -30,8 +48,9 @@ class FavoritesViewModel(
                                 selected = it.id == defaultCity.id
                             )
                         }
-                )
-            }
+                    _uiState.update { it.copy(loading = false, favorites = favorites) }
+                }
+        }
     }
 
     fun setDefaultCity(city: CityState) {
@@ -53,6 +72,11 @@ class FavoritesViewModel(
             }
     }
 }
+
+data class FavoriteScreenUiState(
+    val loading: Boolean = true,
+    val favorites: List<FavoriteUiState> = emptyList()
+)
 
 data class FavoriteUiState(
     val city: CityState,
