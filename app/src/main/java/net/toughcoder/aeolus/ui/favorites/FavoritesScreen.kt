@@ -55,7 +55,7 @@ fun FavoritesScreen(
     onBack: () -> Unit,
     onSearch: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.getAllFavorites().collectAsStateWithLifecycle(initialValue = FavoriteScreenUiState())
 
     Scaffold(
         modifier = modifier,
@@ -92,7 +92,9 @@ fun FavoritesScreen(
         }
     ) { it ->
         Box(
-            modifier = Modifier.padding(it).fillMaxSize(),
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Crossfade(
