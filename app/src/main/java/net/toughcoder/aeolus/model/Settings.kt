@@ -9,7 +9,7 @@ const val KEY_MEASURE = "measure"
 const val LANGUAGE_ENGLISH = "en"
 const val LANGUAGE_CHINESE = "zh"
 const val LANGUAGE_AUTO = "auto"
-const val DEFAULT_LANGUAGE = LANGUAGE_CHINESE
+const val DEFAULT_LANGUAGE = LANGUAGE_AUTO
 
 const val MEASURE_METRIC = "metric"
 const val MEASURE_IMPERIAL = "imperial"
@@ -30,7 +30,7 @@ val LANGUAGE_ITEM = SettingsItem(
     key = KEY_LANGUAGE,
     value = DEFAULT_LANGUAGE,
     defaultValue = DEFAULT_LANGUAGE,
-    options = listOf("en", "zh", "auto"),
+    options = listOf(LANGUAGE_ENGLISH, LANGUAGE_CHINESE, LANGUAGE_AUTO),
     optionsTitle = listOf(
             R.string.settings_entry_lang_en,
             R.string.settings_entry_lang_zh,

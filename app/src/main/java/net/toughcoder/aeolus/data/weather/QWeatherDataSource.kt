@@ -1,12 +1,10 @@
 package net.toughcoder.aeolus.data.weather
 
 import android.util.Log
-import androidx.compose.ui.text.intl.Locale
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
-import net.toughcoder.aeolus.model.LANGUAGE_AUTO
 import net.toughcoder.aeolus.model.MEASURE_IMPERIAL
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.model.toModel
@@ -45,10 +43,11 @@ class QWeatherDataSource(
                     )
                 }
             } else {
-                Log.d(LOG_TAG, "Error code: ${response.code}")
+                Log.d(LOG_TAG, "loadWeatherNow: Error code: ${response.code}")
                 WeatherNow(successful = false)
             }
         } catch (exception: Exception) {
+            Log.d(LOG_TAG, "Failed to load now weather ${exception.message}")
             return WeatherNow(successful = false)
         }
     }
@@ -65,6 +64,7 @@ class QWeatherDataSource(
             return if (response.code == "200") {
                 response.dayList.map { it.toModel(measure) }
             } else {
+                Log.d(LOG_TAG, "failed to loadDailyWeather: ${response.code}")
                 emptyList()
             }
         } catch(exception: Exception) {
@@ -79,6 +79,7 @@ class QWeatherDataSource(
             return if (response.code == "200") {
                 response.dayList.map { it.toModel(measure) }
             } else {
+                Log.d(LOG_TAG, "failed to load7DayWeathers: ${response.code}")
                 emptyList()
             }
         } catch(exception: Exception) {
@@ -104,9 +105,12 @@ class QWeatherDataSource(
             return if (response.code == "200") {
                 response.hourList.map { it.toModel(measure) }
             } else {
+                Log.d(LOG_TAG, "failed to load24HourWeathers: ${response.code}")
                 emptyList()
             }
-        } catch (exception: Exception) {}
+        } catch (exception: Exception) {
+            Log.d(LOG_TAG, "Failed to load 24 hour weather ${exception.message}")
+        }
         return emptyList()
     }
 
