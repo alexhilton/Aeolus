@@ -31,7 +31,7 @@
     <string name="error_location">Failed to get location, please try again later!</string>
     <string name="error_network">Something is wrong, please try again later!</string>
 
-    <string name="daily_screen_title">%1$s 7天预报</string>
+    <string name="daily_screen_title">%1$s7天预报</string>
     <string name="daily_screen_placeholder">Daily weather shows here</string>
     <string name="uv_index">UV %1$s</string>
     <string name="humidity">温度 %1$s</string>
