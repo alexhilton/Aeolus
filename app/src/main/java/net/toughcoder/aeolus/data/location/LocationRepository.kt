@@ -77,6 +77,9 @@ class LocationRepository(
     }
 
     suspend fun loadLocationInfo(cityId: String): WeatherLocation {
+        if (cityId.isEmpty() || cityId.isBlank()) {
+            return WeatherLocation()
+        }
         return withContext(dispatcher) {
             val lang = runBlocking { prefStore.getLanguage().first() }
             val city = datasource.loadCityInfo(cityId, lang)
@@ -89,8 +92,19 @@ class LocationRepository(
     }
 
     fun getLocationInfo(cityId: String): Flow<WeatherLocation> = flow {
+        val lang = runBlocking { prefStore.getLanguage().first() }
         val dao = database.locationDao()
-        emit(dao.getCity(cityId)?.asModel() ?: WeatherLocation())
+        val city = datasource.loadCityInfo(cityId, lang)
+        if (city.successful()) {
+            dao.update(city.asEntity())
+        }
+        emit(
+            if (city.successful()) {
+                city
+            } else {
+                dao.getCity(cityId)?.asModel() ?: WeatherLocation()
+            }
+        )
     }.flowOn(dispatcher)
 
     suspend fun getHotCities(): List<WeatherLocation> =
