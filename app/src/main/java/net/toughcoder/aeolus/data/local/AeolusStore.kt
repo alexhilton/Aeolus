@@ -101,7 +101,7 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
         withContext(Dispatchers.IO) {
             dataStore.edit { prefs ->
                 prefs[languageKey] = lang
-                Log.d(LOG_TAG, "persistMeasure $lang")
+                Log.d(LOG_TAG, "persistLang $lang")
             }
         }
     }
