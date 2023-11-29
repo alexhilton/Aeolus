@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface LocationDao {
@@ -21,4 +22,7 @@ interface LocationDao {
 
     @Delete
     fun delete(city: LocationEntity)
+
+    @Update
+    fun update(city: LocationEntity)
 }

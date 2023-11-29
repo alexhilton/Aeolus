@@ -38,4 +38,24 @@ class QWeatherLocationSource(
         }
         return listOf()
     }
+
+    override suspend fun loadCityInfo(cityId: String, lang: String): WeatherLocation {
+        try {
+            val response = api.searchCity(query = cityId, number = 1, lang = toParamLang(lang))
+            if (response.code == "200") {
+                return response.cityList[0].let {
+                    WeatherLocation(
+                        it.qweatherId,
+                        it.name,
+                        it.admin1
+                    )
+                }
+            } else {
+                Log.d(LOG_TAG, "laodCityInfo $cityId: ${response.code}")
+            }
+        } catch (exception: Exception) {
+            Log.d(LOG_TAG, "loadCityInfo: $cityId: ${exception.message}")
+        }
+        return WeatherLocation()
+    }
 }

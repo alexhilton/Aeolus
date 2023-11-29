@@ -7,10 +7,12 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -136,6 +138,8 @@ class HomeViewModel(
     private fun loadLocalWeather() {
         viewModelScope.launch {
             locationRepo.getDefaultCity()
+                .flowOn(Dispatchers.IO)
+                .map { locationRepo.loadLocationInfo(it.id) }
                 .collect { loc ->
                     weatherNowState = weatherRepo.weatherNowStream(loc)
                     dailyWeatherState = weatherRepo.dailyWeatherStream(loc)
