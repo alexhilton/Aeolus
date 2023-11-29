@@ -139,7 +139,10 @@ class HomeViewModel(
         viewModelScope.launch {
             locationRepo.getDefaultCity()
                 .flowOn(Dispatchers.IO)
-                .map { locationRepo.loadLocationInfo(it.id) }
+                .map {
+                    val newLoc = locationRepo.loadLocationInfo(it.id)
+                    return@map if (newLoc.successful()) newLoc else it
+                }
                 .collect { loc ->
                     weatherNowState = weatherRepo.weatherNowStream(loc)
                     dailyWeatherState = weatherRepo.dailyWeatherStream(loc)

@@ -67,9 +67,11 @@ class LocationRepository(
             dao.getAllCities()
                 .map {
                     val city = datasource.loadCityInfo(it.qid, lang)
-                    dao.update(city.asEntity())
-                    Log.d(LOG_TAG, "favorites: $it")
-                    return@map city
+                    if (city.successful()) {
+                        dao.update(city.asEntity())
+                    }
+                    Log.d(LOG_TAG, "favorites: old city -> $it, new city -> $city")
+                    return@map if (city.successful()) city else it.asModel()
                 }
         }
     }
@@ -78,8 +80,10 @@ class LocationRepository(
         return withContext(dispatcher) {
             val lang = runBlocking { prefStore.getLanguage().first() }
             val city = datasource.loadCityInfo(cityId, lang)
-            val dao = database.locationDao()
-            dao.update(city.asEntity())
+            if (city.successful()) {
+                val dao = database.locationDao()
+                dao.update(city.asEntity())
+            }
             city
         }
     }
