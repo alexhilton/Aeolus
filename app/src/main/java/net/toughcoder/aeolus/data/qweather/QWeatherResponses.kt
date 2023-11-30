@@ -70,3 +70,20 @@ data class QWeatherHourDTO(
     @field:SerializedName("windDir") val windDir: String,
     @field:SerializedName("windScale") val windScale: String
 )
+
+data class QWeatherAirNowResponses(
+    @field:SerializedName("code") val code: String,
+    @field:SerializedName("now") val now: QWeatherAirDTO
+)
+
+data class QWeatherAirDTO(
+    @field:SerializedName("aqi") val index: String,
+    @field:SerializedName("level") val level: String,
+    @field:SerializedName("category") val category: String,
+    @field:SerializedName("primary") val primary: String,
+)
+
+data class QWeatherAirDailyResponse(
+    @field:SerializedName("code") val code: String,
+    @field:SerializedName("daily") val dailyAirs: List<QWeatherAirDTO>
+)

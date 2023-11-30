@@ -7,12 +7,10 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -185,6 +183,7 @@ data class ViewModelState(
                 humidity = "${data.humidity} $percent",
                 pressure = "${data.airPressure} $pressure",
                 visibility = "${data.visibility} $length",
+                aqi = data.airQualityIndex,
                 dailyStates = dailyData.map { it.asUiState() },
                 hourlyStates = hourlyData.map {it.asUiState() },
                 errorMessage = error
@@ -214,6 +213,7 @@ sealed interface HomeUiState {
         val humidity: String,
         val pressure: String,
         val visibility: String,
+        val aqi: String,
         val dailyStates: List<DailyUiState>,
         val hourlyStates: List<HourlyUiState>,
         override val city: CityState?,

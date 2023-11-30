@@ -68,8 +68,8 @@ fun WeatherDetails(
         ) {
             SimpleInfo(uiState.text, uiState.icon, uiState.temp)
 
-            if (uiState.dailyStates.isNotEmpty()) {
-                GeneralInfo(modifier, uiState.dailyStates[0])
+            if (uiState.dailyStates.isNotEmpty() || uiState.aqi.isNotEmpty()) {
+                GeneralInfo(modifier, uiState.aqi, uiState.dailyStates[0])
                 Spacer(Modifier.height(8.dp))
             }
 
@@ -129,12 +129,20 @@ fun SimpleInfo(
 @Composable
 fun GeneralInfo(
     modifier: Modifier = Modifier,
+    aqi: String,
     info: DailyUiState
 ) {
     Row(
         modifier,
         horizontalArrangement = Arrangement.Center
     ) {
+        if (aqi.isNotEmpty()) {
+            TitleLabel(stringResource(R.string.aqi_title))
+            Spacer(Modifier.width(4.dp))
+            ValueLabel(aqi)
+            Spacer(Modifier.width(8.dp))
+        }
+
         TitleLabel(stringResource(R.string.uv_index_title))
         Spacer(Modifier.width(4.dp))
         ValueLabel(info.uvIndex)
@@ -298,7 +306,7 @@ fun IconTitleInfo(
 @Preview
 @Composable
 fun DailyInfoPreview() {
-    GeneralInfo(info = DailyUiState(
+    GeneralInfo(aqi = "30", info = DailyUiState(
         "2023-11-29",
         "19 \u2103",
         "1 \u2103",
@@ -326,6 +334,7 @@ fun DetailPreview() {
         humidity = "78 %",
         pressure = "1024 pa",
         visibility = "124 km",
+        aqi = "20",
         city = CityState("Nanjing", "123", "Jiang Su"),
         isLoading = false,
         dailyStates = listOf(

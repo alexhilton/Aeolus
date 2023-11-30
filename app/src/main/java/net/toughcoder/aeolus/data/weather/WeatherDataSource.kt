@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.data.weather
 
+import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.WeatherLocation
@@ -17,4 +18,6 @@ interface WeatherDataSource {
     suspend fun updateDailyWeather(loc: WeatherLocation, dailyWeathers: List<DailyWeather>)
 
     suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather>
+
+    suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): AirQuality
 }

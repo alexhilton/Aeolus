@@ -15,6 +15,7 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="day_after">Day after</string>
     <string name="uv_index_title">UV</string>
+    <string name="aqi_title">AQI</string>
     <string name="temp_high_title">High</string>
     <string name="temp_low_title">Low</string>
     <string name="scale_title">Scale</string>

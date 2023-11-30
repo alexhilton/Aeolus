@@ -19,7 +19,8 @@ data class WeatherNowEntity(
     @ColumnInfo(name = "wind_speed") val windSpeed: String,
     @ColumnInfo(name = "humidity") val humidity: String,
     @ColumnInfo(name = "pressure") val airPressure: String,
-    @ColumnInfo(name = "visibility") val visibility: String
+    @ColumnInfo(name = "visibility") val visibility: String,
+    @ColumnInfo(name = "aqi") val airQualityIndex: String
 )
 
 fun WeatherNow.asEntity(cityId: String): WeatherNowEntity = WeatherNowEntity(
@@ -35,5 +36,6 @@ fun WeatherNow.asEntity(cityId: String): WeatherNowEntity = WeatherNowEntity(
     windScale = windScale,
     humidity = humidity,
     airPressure = airPressure,
-    visibility = visibility
+    visibility = visibility,
+    airQualityIndex = airQualityIndex
 )

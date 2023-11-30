@@ -20,7 +20,9 @@ data class WeatherNow(
     val visibility: String = "",
     val cloud: String = "",
     val updateTime: Long = -1,
-    val measure: String = ""
+    val measure: String = "",
+    val airQualityIndex: String = ""
+
 )
 
 fun WeatherNowEntity.asModel(measure: String): WeatherNow = WeatherNow(
@@ -126,3 +128,12 @@ fun QWeatherHourDTO.toModel(measure: String): HourlyWeather =
         windScale = windScale,
         measure = measure
     )
+
+data class AirQuality(
+    val index: Int = -1,
+    val level: Int = -1,
+    val category: String = "",
+    val primary: String = ""
+) {
+    fun valid() = index >= 0 && level >= 0
+}

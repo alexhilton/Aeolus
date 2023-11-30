@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.weather
 import android.util.Log
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
+import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.MEASURE_IMPERIAL
@@ -21,9 +22,11 @@ class QWeatherDataSource(
     }
     override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): WeatherNow {
         try {
-            val response = api.fetchWeatherNow(loc.id, toParamLang(lang), toParamMeasure(measure))
-            return if (response.code == "200") {
-                with(response.now) {
+            val weatherResponsne = api.fetchWeatherNow(loc.id, toParamLang(lang), toParamMeasure(measure))
+            val airResponse = api.fetchAQINow(loc.id, toParamLang(lang))
+            val aqi = if (airResponse.code == "200") airResponse.now.index else ""
+            return if (weatherResponsne.code == "200") {
+                with(weatherResponsne.now) {
                     WeatherNow(
                         successful = true,
                         nowTemp = temp,
@@ -38,12 +41,13 @@ class QWeatherDataSource(
                         airPressure = pressure,
                         visibility = visibility,
                         cloud = cloud,
-                        updateTime = parseTime(response.updateTime),
-                        measure = measure
+                        updateTime = parseTime(weatherResponsne.updateTime),
+                        measure = measure,
+                        airQualityIndex = aqi
                     )
                 }
             } else {
-                Log.d(LOG_TAG, "loadWeatherNow: Error code: ${response.code}")
+                Log.d(LOG_TAG, "loadWeatherNow: Error code: ${weatherResponsne.code}")
                 WeatherNow(successful = false)
             }
         } catch (exception: Exception) {
@@ -112,6 +116,25 @@ class QWeatherDataSource(
             Log.d(LOG_TAG, "Failed to load 24 hour weather ${exception.message}")
         }
         return emptyList()
+    }
+
+    override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): AirQuality {
+        try {
+            val response = api.fetchAQINow(loc.id, toParamLang(lang))
+            if (response.code == "200") {
+                return with(response.now) {
+                    AirQuality(
+                        index = index.toInt(),
+                        level = level.toInt(),
+                        category = category,
+                        primary = primary
+                    )
+                }
+            }
+        } catch (excp: Exception) {
+            Log.d(LOG_TAG, "loadAirQualityNow: Exception: ${excp.message}")
+        }
+        return AirQuality()
     }
 
     private fun toParamMeasure(measure: String) =

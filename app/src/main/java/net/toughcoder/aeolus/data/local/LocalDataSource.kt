@@ -6,6 +6,7 @@ import net.toughcoder.aeolus.data.room.toEntity
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherDataSource
+import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.asModel
@@ -63,6 +64,10 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
     }
 
     override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): AirQuality {
         TODO("Not yet implemented")
     }
 }

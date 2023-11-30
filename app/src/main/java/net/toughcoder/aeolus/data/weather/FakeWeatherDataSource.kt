@@ -2,6 +2,7 @@ package net.toughcoder.aeolus.data.weather
 
 import android.os.SystemClock
 import kotlinx.coroutines.delay
+import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.WeatherLocation
@@ -58,6 +59,10 @@ class FakeWeatherDataSource : WeatherDataSource {
     }
 
     override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): AirQuality {
         TODO("Not yet implemented")
     }
 }
