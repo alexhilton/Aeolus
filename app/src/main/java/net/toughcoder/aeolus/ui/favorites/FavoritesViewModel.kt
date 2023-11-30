@@ -18,8 +18,8 @@ class FavoritesViewModel(
 ) : ViewModel() {
 
     fun getAllFavorites(): Flow<FavoriteScreenUiState> = flow {
-        locationRepo.getDefaultCity()
-            .collect { defaultCity ->
+        locationRepo.getDefaultCityId()
+            .collect { defaultCityId ->
                 emit(
                     FavoriteScreenUiState(
                         loading = false,
@@ -29,7 +29,7 @@ class FavoritesViewModel(
                                 FavoriteUiState(
                                     city = it.asUiState(),
                                     snapshot = weather.asUiState(),
-                                    selected = it.id == defaultCity.id
+                                    selected = it.id == defaultCityId
                                 )
                             }
                     )

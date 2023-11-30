@@ -72,7 +72,6 @@ class HomeViewModel(
 
     init {
         loadLocalWeather()
-        refresh()
     }
 
     fun refresh() {
@@ -138,19 +137,17 @@ class HomeViewModel(
     private fun loadLocalWeather() {
         viewModelScope.launch {
             locationRepo.getDefaultCity()
-                .flowOn(Dispatchers.IO)
-                .map {
-                    val newLoc = locationRepo.loadLocationInfo(it.id)
-                    return@map if (newLoc.successful()) newLoc else it
-                }
                 .collect { loc ->
                     weatherNowState = weatherRepo.weatherNowStream(loc)
                     dailyWeatherState = weatherRepo.dailyWeatherStream(loc)
                     hourlyWeatherState = weatherRepo.hourlyWeatherStream(loc)
                     Log.d(LOG_TAG, "from locals: location $loc")
                     locationState.update { loc }
+
+                    updateState()
+
+                    refresh()
                 }
-            updateState()
         }
     }
 }

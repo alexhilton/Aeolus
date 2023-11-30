@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
@@ -25,7 +26,25 @@ class LocationRepository(
         const val LOG_TAG = "LocationRepo"
     }
 
-    fun getDefaultCity() = prefStore.getDefaultCity()
+    fun getDefaultCityId(): Flow<String> =
+        prefStore.getDefaultCity()
+            .map { it.id }
+
+    fun getDefaultCity(): Flow<WeatherLocation> =
+        prefStore.getDefaultCity()
+            .map {
+                if (!it.successful()) {
+                    return@map it
+                }
+                val lang = runBlocking { prefStore.getLanguage().first() }
+                val city = datasource.loadCityInfo(it.id, lang)
+                if (city.successful()) {
+                    val dao = database.locationDao()
+                    dao.update(city.asEntity())
+                    return@map city
+                }
+                return@map it
+            }.flowOn(dispatcher)
 
     suspend fun setDefaultCity(city: WeatherLocation) {
         prefStore.persistCity(city)
@@ -73,21 +92,6 @@ class LocationRepository(
                     Log.d(LOG_TAG, "favorites: old city -> $it, new city -> $city")
                     return@map if (city.successful()) city else it.asModel()
                 }
-        }
-    }
-
-    suspend fun loadLocationInfo(cityId: String): WeatherLocation {
-        if (cityId.isEmpty() || cityId.isBlank()) {
-            return WeatherLocation()
-        }
-        return withContext(dispatcher) {
-            val lang = runBlocking { prefStore.getLanguage().first() }
-            val city = datasource.loadCityInfo(cityId, lang)
-            if (city.successful()) {
-                val dao = database.locationDao()
-                dao.update(city.asEntity())
-            }
-            city
         }
     }
 
