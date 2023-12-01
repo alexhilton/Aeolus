@@ -25,7 +25,8 @@ data class DailyWeatherEntity(
     @ColumnInfo(name = "wind_dir") val windDir: String,
     @ColumnInfo(name = "wind_speed") val windSpeed: String,
     @ColumnInfo(name = "icon_night") val iconNight: String,
-    @ColumnInfo(name = "text_night") val textNight: String
+    @ColumnInfo(name = "text_night") val textNight: String,
+    @ColumnInfo(name = "aqi") val aqi: String
 )
 
 fun DailyWeather.toEntity(cityId: String, index: Int): DailyWeatherEntity =
@@ -48,5 +49,6 @@ fun DailyWeather.toEntity(cityId: String, index: Int): DailyWeatherEntity =
         windDir,
         windSpeed,
         iconNight,
-        textNight
+        textNight,
+        aqi = airQualityIndex
     )

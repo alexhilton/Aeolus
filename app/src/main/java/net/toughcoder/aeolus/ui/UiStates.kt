@@ -54,7 +54,8 @@ data class DailyUiState(
     val humidity: String = "",
     val pressure: String = "",
     val visibility: String = "",
-    @StringRes val weekday: Int = 0
+    @StringRes val weekday: Int = 0,
+    val aqi: String = ""
 ) {
     fun isEmpty() = textDay.isEmpty()
 }
@@ -79,7 +80,8 @@ fun DailyWeather.asUiState(): DailyUiState =
             humidity = "$humidity${it.percent}",
             pressure = "$pressure${it.pressure}",
             visibility = "$visibility${it.length}",
-            weekday = date.weekday()
+            weekday = date.weekday(),
+            aqi = airQualityIndex
         )
     }
 

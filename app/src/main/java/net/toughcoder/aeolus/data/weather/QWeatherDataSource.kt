@@ -64,11 +64,15 @@ class QWeatherDataSource(
 
     override suspend fun loadDailyWeather(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         try {
-            val response = api.fetchWeather3D(loc.id, toParamLang(lang), toParamMeasure(measure))
-            return if (response.code == "200") {
-                response.dayList.map { it.toModel(measure) }
+            val weather = api.fetchWeather3D(loc.id, toParamLang(lang), toParamMeasure(measure))
+            val airResponse = api.fetchAQIDaily(loc.id, toParamLang(lang))
+            val airList = if (airResponse.code == "200") airResponse.dailyAirs else emptyList()
+            return if (weather.code == "200") {
+                weather.dayList.zip(airList) { w, air ->
+                    w.toModel(measure, air.index)
+                }
             } else {
-                Log.d(LOG_TAG, "failed to loadDailyWeather: ${response.code}")
+                Log.d(LOG_TAG, "failed to loadDailyWeather: ${weather.code}")
                 emptyList()
             }
         } catch(exception: Exception) {
@@ -79,11 +83,15 @@ class QWeatherDataSource(
 
     override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         try {
-            val response = api.fetchWeather7D(loc.id, toParamLang(lang), toParamMeasure(measure))
-            return if (response.code == "200") {
-                response.dayList.map { it.toModel(measure) }
+            val weather = api.fetchWeather7D(loc.id, toParamLang(lang), toParamMeasure(measure))
+            val airResponse = api.fetchAQIDaily(loc.id, toParamLang(lang))
+            val airList = if (airResponse.code == "200") airResponse.dailyAirs else emptyList()
+            return if (weather.code == "200") {
+                weather.dayList.mapIndexed{ idx, dw ->
+                    dw.toModel(measure, if (idx < airList.size) airList[idx].index else "")
+                }
             } else {
-                Log.d(LOG_TAG, "failed to load7DayWeathers: ${response.code}")
+                Log.d(LOG_TAG, "failed to load7DayWeathers: ${weather.code}")
                 emptyList()
             }
         } catch(exception: Exception) {

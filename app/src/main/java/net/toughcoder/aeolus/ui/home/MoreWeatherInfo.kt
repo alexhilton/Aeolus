@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -99,20 +98,12 @@ fun DailyWeatherItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             GeneralText(text = title)
-
-            Spacer(Modifier.width(6.dp))
-
             GeneralText(text = weather.date)
-
-            Spacer(Modifier.width(16.dp))
-
             GeneralText(text = weather.textDay)
-
-            Spacer(Modifier.width(16.dp))
-
             Image(
                 modifier = Modifier
                     .size(36.dp),
@@ -122,7 +113,13 @@ fun DailyWeatherItem(
             )
         }
 
-        GeneralText(text = "${weather.tempHigh} / ${weather.tempLow}")
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            GeneralText(text = stringResource(R.string.aqi, weather.aqi))
+            GeneralText(text = "${weather.tempHigh} / ${weather.tempLow}")
+        }
     }
 }
 

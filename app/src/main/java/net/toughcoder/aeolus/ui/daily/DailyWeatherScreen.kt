@@ -150,6 +150,13 @@ fun DailyDetailItem(
             )
             GeneralText(weather.windScale)
             GeneralText(stringResource(R.string.uv_index, weather.uvIndex))
+            GeneralText(
+                if (weather.aqi.isEmpty()) {
+                    "    "
+                } else {
+                stringResource(R.string.aqi, weather.aqi)
+                }
+            )
             GeneralText(stringResource(R.string.humidity, weather.humidity))
             GeneralText(stringResource(R.string.pressure, weather.pressure))
             GeneralText(stringResource(R.string.visibility, weather.visibility))

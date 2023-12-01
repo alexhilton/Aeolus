@@ -34,6 +34,7 @@
 
     <string name="daily_screen_title">%1$s 7 days forecast</string>
     <string name="daily_screen_placeholder">Daily weather shows here</string>
+    <string name="aqi">AQI %1$s</string>
     <string name="uv_index">UV %1$s</string>
     <string name="humidity">Humidity %1$s</string>
     <string name="pressure">Pressure %1$s</string>
