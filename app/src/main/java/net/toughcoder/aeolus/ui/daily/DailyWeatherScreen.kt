@@ -152,7 +152,7 @@ fun DailyDetailItem(
             GeneralText(stringResource(R.string.uv_index, weather.uvIndex))
             GeneralText(
                 if (weather.aqi.isEmpty()) {
-                    "    "
+                    " "
                 } else {
                 stringResource(R.string.aqi, weather.aqi)
                 }
