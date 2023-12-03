@@ -87,3 +87,17 @@ data class QWeatherAirDailyResponse(
     @field:SerializedName("code") val code: String,
     @field:SerializedName("daily") val dailyAirs: List<QWeatherAirDTO>
 )
+
+data class QWeatherIndexResponse(
+    @field:SerializedName("code") val code: String,
+    @field:SerializedName("daily") val indexList: List<QWeatherIndexDTO>
+)
+
+data class QWeatherIndexDTO(
+    @field:SerializedName("date") val date: String,
+    @field:SerializedName("type") val type: String,
+    @field:SerializedName("name") val name: String,
+    @field:SerializedName("level") val level: String,
+    @field:SerializedName("category") val category: String,
+    @field:SerializedName("text") val text: String
+)

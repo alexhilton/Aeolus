@@ -7,6 +7,7 @@ import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.MEASURE_IMPERIAL
+import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.model.toModel
 import net.toughcoder.aeolus.model.toParamLang
@@ -147,4 +148,40 @@ class QWeatherDataSource(
 
     private fun toParamMeasure(measure: String) =
         if (measure == MEASURE_IMPERIAL) "i" else "m"
+
+    override suspend fun loadWeatherIndices(
+        loc: WeatherLocation,
+        type: List<Int>,
+        lang: String
+    ): List<WeatherIndex> {
+        try {
+            val response =
+                api.fetchWeatherIndices(loc.id, type.joinToString(","), toParamLang(lang))
+            Log.d(LOG_TAG, "WeatherIndex: res code: ${response.code}")
+            if (response.code == "200") {
+                return response.indexList.map { it.toModel() }
+            }
+        } catch (excep: Exception) {
+            Log.d(LOG_TAG, "WeatherIndex: excep: ${excep.message}")
+        }
+        return emptyList()
+    }
+
+    override suspend fun load3DWeatherIndices(
+        loc: WeatherLocation,
+        type: List<Int>,
+        lang: String
+    ): List<WeatherIndex> {
+        try {
+            val response =
+                api.fetch3DWeatherIndices(loc.id, type.joinToString(","), toParamLang(lang))
+            Log.d(LOG_TAG, "3DWeatherIndex: res code: ${response.code}")
+            if (response.code == "200") {
+                return response.indexList.map { it.toModel() }
+            }
+        } catch (excep: Exception) {
+            Log.d(LOG_TAG, "3DWeatherIndex: excep: ${excep.message}")
+        }
+        return emptyList()
+    }
 }

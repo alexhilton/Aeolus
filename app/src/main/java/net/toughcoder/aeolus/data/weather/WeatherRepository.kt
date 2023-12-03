@@ -15,6 +15,7 @@ import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
 import net.toughcoder.aeolus.model.DEFAULT_MEASURE
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
+import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.WeatherNow
 
 class WeatherRepository(
@@ -27,6 +28,7 @@ class WeatherRepository(
     private lateinit var dailyWeatherStream: MutableStateFlow<List<DailyWeather>>
     private lateinit var weatherSnapshotStream: MutableStateFlow<DailyWeather>
     private lateinit var hourlyWeatherStream: MutableStateFlow<List<HourlyWeather>>
+    private lateinit var weatherIndexStream: MutableStateFlow<List<WeatherIndex>>
 
     suspend fun getWeatherNow(location: WeatherLocation): WeatherNow {
         return withContext(dispatcher) {
@@ -151,6 +153,24 @@ class WeatherRepository(
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             hourlyWeatherStream.update { network.load24HourWeathers(location, lang, measure) }
+        }
+    }
+
+    suspend fun weatherIndexStream(location: WeatherLocation): Flow<List<WeatherIndex>> {
+        return withContext(dispatcher) {
+            weatherIndexStream = MutableStateFlow(emptyList())
+            weatherIndexStream
+        }
+    }
+
+    suspend fun refreshWeatherIndices(location: WeatherLocation) {
+        withContext(dispatcher) {
+            val lang = runBlocking { store.getLanguage().first() }
+            val types = listOf(1, 2, 3, 5, 7, 9)
+            val list = network.loadWeatherIndices(location, types, lang)
+            if (list.isNotEmpty()) {
+                weatherIndexStream.update { list }
+            }
         }
     }
 }

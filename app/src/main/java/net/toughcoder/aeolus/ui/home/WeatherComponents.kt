@@ -48,6 +48,8 @@ fun WeatherScreen(
         HourlyWeatherSection(modifier, uiState.hourlyStates)
 
         DailyWeatherSection(modifier, dailyWeathers = uiState.dailyStates, gotoDaily)
+
+        WeatherIndexSection(modifier, uiState.weatherIndices)
     }
 }
 
@@ -303,6 +305,21 @@ fun IconTitleInfo(
     }
 }
 
+@Composable
+fun WeatherSection(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        shadowElevation = 6.dp
+    ) {
+        content()
+    }
+}
+
 @Preview
 @Composable
 fun DailyInfoPreview() {
@@ -350,6 +367,7 @@ fun DetailPreview() {
             )
         ),
         hourlyStates = emptyList(),
+        weatherIndices = emptyList(),
         errorMessage = NO_ERROR
     )
     WeatherDetails(

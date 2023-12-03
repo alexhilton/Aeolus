@@ -2,6 +2,7 @@ package net.toughcoder.aeolus.model
 
 import net.toughcoder.aeolus.data.qweather.QWeatherDayDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
+import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 
@@ -140,3 +141,22 @@ data class AirQuality(
 ) {
     fun valid() = index >= 0 && level >= 0
 }
+
+data class WeatherIndex(
+    val date: String,
+    val type: Int,
+    val name: String,
+    val level: String,
+    val category: String,
+    val text: String
+)
+
+fun QWeatherIndexDTO.toModel(): WeatherIndex =
+    WeatherIndex(
+        date = date,
+        type = type.toInt(),
+        name = name,
+        level = level,
+        category = category,
+        text = text
+    )

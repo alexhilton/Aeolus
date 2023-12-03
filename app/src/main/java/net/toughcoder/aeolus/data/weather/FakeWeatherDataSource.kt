@@ -5,6 +5,7 @@ import kotlinx.coroutines.delay
 import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
+import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import kotlin.random.Random
@@ -63,6 +64,22 @@ class FakeWeatherDataSource : WeatherDataSource {
     }
 
     override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): AirQuality {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadWeatherIndices(
+        loc: WeatherLocation,
+        type: List<Int>,
+        lang: String
+    ): List<WeatherIndex> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun load3DWeatherIndices(
+        loc: WeatherLocation,
+        type: List<Int>,
+        lang: String
+    ): List<WeatherIndex> {
         TODO("Not yet implemented")
     }
 }

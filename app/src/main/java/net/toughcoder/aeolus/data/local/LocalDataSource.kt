@@ -9,6 +9,7 @@ import net.toughcoder.aeolus.data.weather.WeatherDataSource
 import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
+import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.asModel
 import net.toughcoder.aeolus.model.toModel
 
@@ -68,6 +69,22 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
     }
 
     override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): AirQuality {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadWeatherIndices(
+        loc: WeatherLocation,
+        type: List<Int>,
+        lang: String
+    ): List<WeatherIndex> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun load3DWeatherIndices(
+        loc: WeatherLocation,
+        type: List<Int>,
+        lang: String
+    ): List<WeatherIndex> {
         TODO("Not yet implemented")
     }
 }

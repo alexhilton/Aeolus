@@ -4,6 +4,7 @@ import android.os.SystemClock
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.material.icons.Icons
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -22,6 +23,7 @@ import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherRepository
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
+import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.getMeasure
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
@@ -52,6 +54,7 @@ class HomeViewModel(
     private lateinit var weatherNowState: Flow<WeatherNow>
     private lateinit var dailyWeatherState: Flow<List<DailyWeather>>
     private lateinit var hourlyWeatherState: Flow<List<HourlyWeather>>
+    private lateinit var weatherIndexState: Flow<List<WeatherIndex>>
 
     private val viewModelState = MutableStateFlow(
         ViewModelState(
@@ -95,6 +98,7 @@ class HomeViewModel(
                         weatherRepo.refreshWeatherNow(loc)
                         weatherRepo.fetch3DayWeathers(loc)
                         weatherRepo.fetchHourlyWeathers(loc)
+                        weatherRepo.refreshWeatherIndices(loc)
                         updateState()
                     }
                 }
@@ -104,8 +108,8 @@ class HomeViewModel(
     private fun updateState() {
         viewModelScope.launch {
             combine(
-                locationState, weatherNowState, dailyWeatherState, hourlyWeatherState
-            ) { loc, now, dailyWeathers, hourlyWeathers ->
+                locationState, weatherNowState, dailyWeatherState, hourlyWeatherState, weatherIndexState
+            ) { loc, now, dailyWeathers, hourlyWeathers, weatherIndices ->
                 val error = if (!loc.successful()) {
                     R.string.error_location
                 } else if (!now.successful) {
@@ -117,12 +121,14 @@ class HomeViewModel(
                 val updateTime = if (now.successful) SystemClock.uptimeMillis() else viewModelState.value.updateTime
                 val daily = dailyWeathers.ifEmpty { viewModelState.value.dailyData }
                 val hourly = hourlyWeathers.ifEmpty { viewModelState.value.hourlyData }
+                val indices = weatherIndices.ifEmpty { viewModelState.value.indexData }
                 return@combine ViewModelState(
                     loading = false,
                     city = loc,
                     weatherData = weather,
                     dailyData = daily,
                     hourlyData = hourly,
+                    indexData = indices,
                     error = error,
                     updateTime = updateTime
                 )
@@ -139,6 +145,7 @@ class HomeViewModel(
                     weatherNowState = weatherRepo.weatherNowStream(loc)
                     dailyWeatherState = weatherRepo.dailyWeatherStream(loc)
                     hourlyWeatherState = weatherRepo.hourlyWeatherStream(loc)
+                    weatherIndexState = weatherRepo.weatherIndexStream(loc)
                     Log.d(LOG_TAG, "from locals: location $loc")
                     locationState.update { loc }
 
@@ -156,6 +163,7 @@ data class ViewModelState(
     var weatherData: WeatherNow? = null,
     val dailyData: List<DailyWeather> = emptyList(),
     val hourlyData: List<HourlyWeather> = emptyList(),
+    val indexData: List<WeatherIndex> = emptyList(),
     @StringRes var error: Int = NO_ERROR,
     var updateTime: Long = -1
 ) {
@@ -186,9 +194,34 @@ data class ViewModelState(
                 aqi = data.airQualityIndex,
                 dailyStates = dailyData.map { it.asUiState() },
                 hourlyStates = hourlyData.map {it.asUiState() },
+                weatherIndices = convertIndices(),
                 errorMessage = error
             )
         }
+
+    private fun convertIndices(): List<IndexUiState> {
+        if (indexData.isEmpty()) {
+            return emptyList()
+        }
+        val order = listOf(3, 9, 5, 7, 1, 2)
+        val icons = listOf(
+            R.drawable.ic_index_clothes,
+            R.drawable.ic_index_cold,
+            R.drawable.ic_index_uv,
+            R.drawable.ic_index_allege,
+            R.drawable.ic_index_sports,
+            R.drawable.ic_index_car_wash
+        )
+        return order.mapIndexed { idx, t ->
+            var item = indexData[0]
+            for (x in indexData) {
+                if (x.type == t) {
+                    item = x
+                }
+            }
+            return@mapIndexed item.asUiState(icons[idx])
+        }
+    }
 }
 
 sealed interface HomeUiState {
@@ -216,6 +249,7 @@ sealed interface HomeUiState {
         val aqi: String,
         val dailyStates: List<DailyUiState>,
         val hourlyStates: List<HourlyUiState>,
+        val weatherIndices: List<IndexUiState>,
         override val city: CityState?,
         override val isLoading: Boolean,
         @StringRes override val errorMessage: Int
@@ -263,3 +297,20 @@ fun String.smartHour(): String {
     val t = this.substring(11, 16)
     return if (t == "00:00") d else t
 }
+
+data class IndexUiState(
+    val type: Int,
+    @DrawableRes val icon: Int,
+    val name: String,
+    val category: String,
+    val text: String
+)
+
+fun WeatherIndex.asUiState(icon: Int): IndexUiState =
+    IndexUiState(
+        type = type,
+        icon = icon,
+        name = name,
+        category = category,
+        text = text
+    )
