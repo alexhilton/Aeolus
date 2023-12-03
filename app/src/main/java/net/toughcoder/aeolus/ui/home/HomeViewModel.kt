@@ -4,7 +4,6 @@ import android.os.SystemClock
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -205,7 +204,7 @@ data class ViewModelState(
         }
         val order = listOf(3, 9, 5, 7, 1, 2)
         val icons = listOf(
-            R.drawable.ic_index_clothes,
+            R.drawable.ic_index_cloth,
             R.drawable.ic_index_cold,
             R.drawable.ic_index_uv,
             R.drawable.ic_index_allege,
