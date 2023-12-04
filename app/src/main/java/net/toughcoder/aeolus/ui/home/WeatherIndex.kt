@@ -22,7 +22,7 @@ fun WeatherIndexSection(
     indices: List<IndexUiState>
 ) {
     if (indices.isNotEmpty()) {
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(16.dp))
 
         WeatherSectionContainer(modifier, R.string.weather_index_title) {
             WeatherIndexRow(left = indices[0], right = indices[1])
@@ -52,7 +52,7 @@ fun WeatherIndexItem(
 ) {
     Column(modifier.padding(6.dp)) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
