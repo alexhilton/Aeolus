@@ -10,6 +10,12 @@ android {
     namespace = "net.toughcoder.aeolus"
     compileSdk = 34
 
+    sourceSets {
+        getByName("main") {
+            res.srcDirs(listOf("qweather_icons"))
+        }
+    }
+
     defaultConfig {
         applicationId = "net.toughcoder.aeolus"
         minSdk = 28
