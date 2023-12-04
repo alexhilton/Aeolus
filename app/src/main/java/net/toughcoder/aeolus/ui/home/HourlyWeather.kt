@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,30 +27,12 @@ fun HourlyWeatherSection(
     if (hourlyUiStates.isNotEmpty()) {
         Spacer(Modifier.height(16.dp))
 
-        HourlyWeatherList(modifier, hourlyUiStates)
-    }
-}
-
-@Composable
-fun HourlyWeatherList(
-    modifier: Modifier = Modifier,
-    hourlyList: List<HourlyUiState>
-) {
-    Surface(
-        shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        shadowElevation = 6.dp
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            IconTitleInfo(Modifier.padding(8.dp), R.string.hourly_forecast_title)
-
+        WeatherSectionContainer(modifier, R.string.hourly_forecast_title) {
             LazyRow(
                 modifier = Modifier.padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(hourlyList) {
+                items(hourlyUiStates) {
                     HourlyListItem(modifier, it)
                 }
             }

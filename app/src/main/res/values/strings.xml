@@ -27,6 +27,7 @@
     <string name="hourly_forecast_title">24 Hour forecasts</string>
     <string name="daily_forecast_title">3 days forecasts</string>
     <string name="button_view_more">Click to view more</string>
+    <string name="weather_index_title">Weather life indices</string>
     <string name="error_loading">Loading weather data, please wait!</string>
     <string name="error_up_to_date">Weather data is already up-to-date!</string>
     <string name="error_location">Failed to get location, please try again later!</string>

@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,36 +30,12 @@ fun DailyWeatherSection(
     if (dailyWeathers.isNotEmpty() && dailyWeathers.size >= 3) {
         Spacer(Modifier.height(16.dp))
 
-        DailyWeathersInfo(modifier, dailyWeathers, gotoMore)
-    }
-}
-
-@Composable
-fun DailyWeathersInfo(
-    modifier: Modifier = Modifier,
-    dailyWeathers: List<DailyUiState>,
-    onMoreClick: () -> Unit
-) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        shadowElevation = 6.dp
-    ) {
-        Column(
-            modifier = modifier.fillMaxWidth(),
-        ) {
-            IconTitleInfo(text = R.string.daily_forecast_title)
-
-            Spacer(Modifier.height(16.dp))
-
+        WeatherSectionContainer(modifier, R.string.daily_forecast_title) {
             DailyWeatherList(modifier, dailyWeathers)
-
-            Spacer(Modifier.height(8.dp))
 
             Button(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = onMoreClick
+                onClick = gotoMore
             ) {
                 Text(stringResource(R.string.button_view_more))
             }
@@ -75,7 +49,7 @@ fun DailyWeatherList(
     dailyWeathers: List<DailyUiState>
 ) {
     Column(
-        Modifier.fillMaxWidth(),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         DailyWeatherItem(modifier, stringResource(R.string.today), dailyWeathers[0])

@@ -3,11 +3,15 @@ package net.toughcoder.aeolus.ui.home
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
@@ -138,9 +142,10 @@ fun IconTitleInfo(
 }
 
 @Composable
-fun WeatherSection(
+fun WeatherSectionContainer(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    @StringRes title: Int = 0,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -148,7 +153,16 @@ fun WeatherSection(
         color = MaterialTheme.colorScheme.secondaryContainer,
         shadowElevation = 6.dp
     ) {
-        content()
+        Column(
+            modifier = Modifier.padding(4.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            if (title != 0) {
+                IconTitleInfo(Modifier.padding(8.dp), title)
+            }
+
+            content()
+        }
     }
 }
 
