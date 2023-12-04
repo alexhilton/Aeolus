@@ -61,7 +61,9 @@ data class DailyWeather(
     val iconNight: String = "",
     val textNight: String = "",
     val measure: String = "",
-    val airQualityIndex: String = ""
+    val airQualityIndex: String = "",
+    val clothIndex: String = "",
+    val coldIndex: String = ""
 )
 
 fun DailyWeatherEntity.toModel(measure: String): DailyWeather =
@@ -87,7 +89,7 @@ fun DailyWeatherEntity.toModel(measure: String): DailyWeather =
         airQualityIndex = aqi
     )
 
-fun QWeatherDayDTO.toModel(measure: String, aqi: String): DailyWeather =
+fun QWeatherDayDTO.toModel(measure: String, aqi: String, cloth: String = "", cold: String = ""): DailyWeather =
     DailyWeather(
         date = date,
         tempHigh = tempHigh,
@@ -107,7 +109,9 @@ fun QWeatherDayDTO.toModel(measure: String, aqi: String): DailyWeather =
         textNight = textNight,
         iconNight = iconNight,
         measure = measure,
-        airQualityIndex = aqi
+        airQualityIndex = aqi,
+        clothIndex = cloth,
+        coldIndex = cold
     )
 
 data class HourlyWeather(
@@ -160,3 +164,8 @@ fun QWeatherIndexDTO.toModel(): WeatherIndex =
         category = category,
         text = text
     )
+
+data class DailyWeatherIndex(
+    val date: String,
+    val indices: List<WeatherIndex>
+)

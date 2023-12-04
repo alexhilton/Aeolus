@@ -56,7 +56,11 @@ data class DailyUiState(
     val pressure: String = "",
     val visibility: String = "",
     @StringRes val weekday: Int = 0,
-    val aqi: String = ""
+    val aqi: String = "",
+    @DrawableRes val clothIcon: Int = 0,
+    val clothIndex: String = "",
+    @DrawableRes val coldIcon: Int = 0,
+    val coldIndex: String = "",
 ) {
     fun isEmpty() = textDay.isEmpty()
 }
@@ -82,7 +86,11 @@ fun DailyWeather.asUiState(): DailyUiState =
             pressure = "$pressure${it.pressure}",
             visibility = "$visibility${it.length}",
             weekday = date.weekday(),
-            aqi = airQualityIndex
+            aqi = airQualityIndex,
+            clothIcon = R.drawable.ic_index_cloth,
+            clothIndex = clothIndex,
+            coldIcon = R.drawable.ic_index_cold,
+            coldIndex = coldIndex
         )
     }
 

@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.ui.daily
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -154,12 +155,34 @@ fun DailyDetailItem(
                 if (weather.aqi.isEmpty()) {
                     " "
                 } else {
-                stringResource(R.string.aqi, weather.aqi)
+                    stringResource(R.string.aqi, weather.aqi)
                 }
             )
+            EmptyIconTitle(weather.clothIcon, weather.clothIndex)
+            EmptyIconTitle(weather.coldIcon, weather.coldIndex)
             GeneralText(stringResource(R.string.humidity, weather.humidity))
             GeneralText(stringResource(R.string.pressure, weather.pressure))
             GeneralText(stringResource(R.string.visibility, weather.visibility))
         }
+    }
+}
+
+@Composable
+fun EmptyIconTitle(
+    @DrawableRes icon: Int,
+    title: String
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        if (title.isNotEmpty() && icon != 0) {
+            Image(
+                modifier = Modifier.size(24.dp),
+                painter = painterResource(icon),
+                contentDescription = null
+            )
+        }
+        GeneralText(title)
     }
 }

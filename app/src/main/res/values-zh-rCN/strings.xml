@@ -37,7 +37,7 @@
     <string name="daily_screen_placeholder">Daily weather shows here</string>
     <string name="aqi">AQI %1$s</string>
     <string name="uv_index">UV %1$s</string>
-    <string name="humidity">温度 %1$s</string>
+    <string name="humidity">湿度 %1$s</string>
     <string name="pressure">气压 %1$s</string>
     <string name="visibility">能见度 %1$s</string>
     <string name="weekday_0">周一</string>

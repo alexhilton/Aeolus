@@ -5,6 +5,7 @@ import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.DailyWeatherIndex
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.MEASURE_IMPERIAL
 import net.toughcoder.aeolus.model.WeatherIndex
@@ -82,14 +83,42 @@ class QWeatherDataSource(
         return emptyList()
     }
 
-    override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
+    override suspend fun load7DayWeathers(
+        loc: WeatherLocation, lang: String, measure: String, types: List<Int>
+    ): List<DailyWeather> {
         try {
             val weather = api.fetchWeather7D(loc.id, toParamLang(lang), toParamMeasure(measure))
             val airResponse = api.fetchAQIDaily(loc.id, toParamLang(lang))
+            val indexResponse = api.fetch3DWeatherIndices(loc.id, types.joinToString(","), toParamLang(lang))
+            val indexMap = if (indexResponse.code == "200") {
+                indexResponse.indexList
+                    .map { it.toModel() }
+                    .groupBy { it.date }
+            } else {
+                emptyMap()
+            }
             val airList = if (airResponse.code == "200") airResponse.dailyAirs else emptyList()
             return if (weather.code == "200") {
                 weather.dayList.mapIndexed{ idx, dw ->
-                    dw.toModel(measure, if (idx < airList.size) airList[idx].index else "")
+                    var clothIndex = ""
+                    var coldIndex = ""
+                    val indices = indexMap[dw.date]
+                    if (indices != null) {
+                        for (idx in indices) {
+                            if (idx.type == 3) {
+                                clothIndex = idx.category
+                            }
+                            if (idx.type == 9) {
+                                coldIndex = idx.category
+                            }
+                        }
+                    }
+                    dw.toModel(
+                        measure = measure,
+                        aqi = if (idx < airList.size) airList[idx].index else "",
+                        cloth = clothIndex,
+                        cold = coldIndex
+                    )
                 }
             } else {
                 Log.d(LOG_TAG, "failed to load7DayWeathers: ${weather.code}")
@@ -171,13 +200,18 @@ class QWeatherDataSource(
         loc: WeatherLocation,
         type: List<Int>,
         lang: String
-    ): List<WeatherIndex> {
+    ): List<DailyWeatherIndex> {
         try {
             val response =
                 api.fetch3DWeatherIndices(loc.id, type.joinToString(","), toParamLang(lang))
             Log.d(LOG_TAG, "3DWeatherIndex: res code: ${response.code}")
             if (response.code == "200") {
-                return response.indexList.map { it.toModel() }
+                val rawList = response.indexList.map { it.toModel() }
+                return rawList.groupBy { it.date }
+                            .map { entry ->
+                                DailyWeatherIndex(entry.key, entry.value.sortedBy { it.date })
+                            }.toList()
+                            .sortedBy { it.date }
             }
         } catch (excep: Exception) {
             Log.d(LOG_TAG, "3DWeatherIndex: excep: ${excep.message}")

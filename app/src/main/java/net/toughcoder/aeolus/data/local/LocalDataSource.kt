@@ -8,6 +8,7 @@ import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherDataSource
 import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.DailyWeatherIndex
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.asModel
@@ -51,7 +52,7 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         return weathers.map { it.toModel(measure) }
     }
 
-    override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
+    override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String, types: List<Int>): List<DailyWeather> {
         TODO("Not yet implemented")
     }
 
@@ -84,7 +85,7 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         loc: WeatherLocation,
         type: List<Int>,
         lang: String
-    ): List<WeatherIndex> {
+    ): List<DailyWeatherIndex> {
         TODO("Not yet implemented")
     }
 }

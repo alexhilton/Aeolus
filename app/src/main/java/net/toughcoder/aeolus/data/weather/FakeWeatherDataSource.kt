@@ -4,6 +4,7 @@ import android.os.SystemClock
 import kotlinx.coroutines.delay
 import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.DailyWeatherIndex
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.WeatherLocation
@@ -48,7 +49,7 @@ class FakeWeatherDataSource : WeatherDataSource {
     }
 
 
-    override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
+    override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String, types: List<Int>): List<DailyWeather> {
         TODO("Not yet implemented")
     }
 
@@ -79,7 +80,7 @@ class FakeWeatherDataSource : WeatherDataSource {
         loc: WeatherLocation,
         type: List<Int>,
         lang: String
-    ): List<WeatherIndex> {
+    ): List<DailyWeatherIndex> {
         TODO("Not yet implemented")
     }
 }

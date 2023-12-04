@@ -96,7 +96,8 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val bundle = network.load7DayWeathers(location, lang, measure)
+            val types = listOf(1, 2, 3, 5, 7, 9)
+            val bundle = network.load7DayWeathers(location, lang, measure, types)
             if (bundle.isNotEmpty()) {
                 local.updateDailyWeather(location, bundle)
                 dailyWeatherStream.update { bundle }
