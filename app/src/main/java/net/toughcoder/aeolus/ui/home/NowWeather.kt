@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,44 +27,36 @@ fun NowWeatherSection(
     modifier: Modifier = Modifier,
     uiState: HomeUiState.WeatherUiState
 ) {
-    Surface(
+    WeatherSectionContainer(
         modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        shadowElevation = 6.dp
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        SimpleInfo(uiState.text, uiState.icon, uiState.temp)
+
+        if (uiState.dailyStates.isNotEmpty() || uiState.aqi.isNotEmpty()) {
+            GeneralInfo(uiState.aqi, uiState.dailyStates[0])
+            Spacer(Modifier.height(8.dp))
+        }
+
+        Row(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            SimpleInfo(uiState.text, uiState.icon, uiState.temp)
+            WindInfo(
+                modifier = Modifier.weight(1f),
+                wind = uiState.windDir,
+                dir = uiState.windDegree,
+                iconDir = uiState.iconDir,
+                scale = uiState.windScale,
+                speed = uiState.windSpeed
+            )
 
-            if (uiState.dailyStates.isNotEmpty() || uiState.aqi.isNotEmpty()) {
-                GeneralInfo(modifier, uiState.aqi, uiState.dailyStates[0])
-                Spacer(Modifier.height(8.dp))
-            }
-
-            Row(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                WindInfo(
-                    modifier = Modifier.weight(1f),
-                    wind = uiState.windDir,
-                    dir = uiState.windDegree,
-                    iconDir = uiState.iconDir,
-                    scale = uiState.windScale,
-                    speed = uiState.windSpeed
-                )
-
-                OtherInfo(
-                    modifier = Modifier.weight(1f),
-                    feelsLike = uiState.feelsLike,
-                    humidity = uiState.humidity,
-                    pressure = uiState.pressure,
-                    visibility = uiState.visibility
-                )
-            }
+            OtherInfo(
+                modifier = Modifier.weight(1f),
+                feelsLike = uiState.feelsLike,
+                humidity = uiState.humidity,
+                pressure = uiState.pressure,
+                visibility = uiState.visibility
+            )
         }
     }
 }
@@ -78,7 +68,7 @@ fun SimpleInfo(
     temp: String
 ) {
     Column(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -101,12 +91,11 @@ fun SimpleInfo(
 
 @Composable
 fun GeneralInfo(
-    modifier: Modifier = Modifier,
     aqi: String,
     info: DailyUiState
 ) {
     Row(
-        modifier,
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
         if (aqi.isNotEmpty()) {
