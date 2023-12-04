@@ -10,12 +10,6 @@ android {
     namespace = "net.toughcoder.aeolus"
     compileSdk = 34
 
-    sourceSets {
-        getByName("main") {
-            res.srcDirs(listOf("qweather_icons"))
-        }
-    }
-
     defaultConfig {
         applicationId = "net.toughcoder.aeolus"
         minSdk = 28
@@ -62,6 +56,9 @@ android {
 }
 
 dependencies {
+    // Modules in our project
+    implementation(project(":qweather"))
+
     // Jetpack
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

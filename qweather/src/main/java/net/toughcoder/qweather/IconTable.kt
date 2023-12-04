@@ -1,6 +1,4 @@
-package net.toughcoder.aeolus.ui
-
-import net.toughcoder.aeolus.R
+package net.toughcoder.qweather
 
 val ICONS = mapOf(
         "9998" to R.drawable.ic_9998,

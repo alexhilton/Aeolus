@@ -161,7 +161,7 @@ fun DailyInfoPreview() {
         "1 \u2103",
         "05:00",
         "18:00",
-        R.drawable.ic_101,
+        net.toughcoder.qweather.R.drawable.ic_101,
         "Good",
         "1"
     ))
@@ -173,7 +173,7 @@ fun DetailPreview() {
     val state = HomeUiState.WeatherUiState(
         temp = "25 \u2103",
         feelsLike = "28 \u2103",
-        icon = R.drawable.ic_101,
+        icon = net.toughcoder.qweather.R.drawable.ic_101,
         text = "Cloudy",
         windDegree = 128f,
         iconDir = R.drawable.ic_nav,
@@ -193,7 +193,7 @@ fun DetailPreview() {
                 "1 \u2103",
                 "05:00",
                 "18:00",
-                iconDay = R.drawable.ic_1001,
+                iconDay = net.toughcoder.qweather.R.drawable.ic_1001,
                 textDay = "Good",
                 uvIndex = "1"
             )

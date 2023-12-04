@@ -135,7 +135,7 @@ fun DailyWeatherItemPreview() {
             "4",
             "07:21",
             "17:32",
-            R.drawable.ic_1002,
+            net.toughcoder.qweather.R.drawable.ic_1002,
             "Cloudy", "13"
         )
     )

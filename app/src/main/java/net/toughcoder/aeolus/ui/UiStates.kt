@@ -6,6 +6,7 @@ import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.getMeasure
+import net.toughcoder.qweather.ICONS
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale

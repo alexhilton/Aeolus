@@ -26,7 +26,7 @@ import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.getMeasure
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
-import net.toughcoder.aeolus.ui.ICONS
+import net.toughcoder.qweather.ICONS
 import net.toughcoder.aeolus.ui.NO_ERROR
 import net.toughcoder.aeolus.ui.asUiState
 import net.toughcoder.aeolus.ui.formatTemp
