@@ -242,9 +242,14 @@ fun SearchResultComponent(
     result: SearchResultUiState,
     onResultClick: (CityState) -> Unit
 ) {
+    val align = if (result.loading || result.error != NO_ERROR) {
+        Alignment.Center
+    } else {
+        Alignment.TopStart
+    }
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = align
     ) {
         if (result.loading) {
             CircularProgressIndicator(
