@@ -95,7 +95,7 @@ fun FavoritesScreen(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = if (uiState.loading) Alignment.Center else Alignment.TopStart
         ) {
             Crossfade(
                 modifier = modifier,
