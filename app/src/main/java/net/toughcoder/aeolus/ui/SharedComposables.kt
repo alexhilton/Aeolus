@@ -28,8 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import net.toughcoder.aeolus.R
-import net.toughcoder.aeolus.ui.favorites.FavoriteList
 
 @Composable
 fun WeatherSectionContainer(
@@ -67,7 +65,7 @@ fun CenteredLoadingContainer(
         contentAlignment = if (loading) Alignment.Center else Alignment.TopStart
     ) {
         Crossfade(
-            modifier = modifier,
+            modifier = Modifier,
             targetState = loading,
             label = "crossfade"
         ) { loading ->

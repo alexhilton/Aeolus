@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.toughcoder.aeolus.R
+import net.toughcoder.aeolus.ui.CenteredLoadingContainer
 import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.GeneralText
 
@@ -74,14 +75,19 @@ fun DailyWeatherScreen(
                 }
             )
         }
-    ) {
-        if (uiState.dailyWeathers.isEmpty()) {
-            Text(
-                modifier = Modifier.padding(it),
-                text = stringResource(R.string.daily_screen_placeholder)
-            )
-        } else {
-            DailyHorizontalList(modifier.padding(it), uiState.dailyWeathers)
+    ) { padding ->
+        CenteredLoadingContainer(
+            Modifier.padding(padding),
+            loading = uiState.loading
+        ) {
+            if (uiState.dailyWeathers.isEmpty()) {
+                Text(
+                    modifier = Modifier.padding(padding),
+                    text = stringResource(R.string.daily_screen_placeholder)
+                )
+            } else {
+                DailyHorizontalList(Modifier, uiState.dailyWeathers)
+            }
         }
     }
 }
