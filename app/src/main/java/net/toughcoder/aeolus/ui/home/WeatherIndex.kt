@@ -15,6 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import net.toughcoder.aeolus.R
+import net.toughcoder.aeolus.ui.GeneralText
+import net.toughcoder.aeolus.ui.TitleLabel
+import net.toughcoder.aeolus.ui.ValueLabel
+import net.toughcoder.aeolus.ui.WeatherSectionContainer
 
 @Composable
 fun WeatherIndexSection(

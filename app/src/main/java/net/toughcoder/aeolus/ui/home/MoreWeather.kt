@@ -20,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.ui.DailyUiState
+import net.toughcoder.aeolus.ui.GeneralText
+import net.toughcoder.aeolus.ui.WeatherSectionContainer
 
 @Composable
 fun DailyWeatherSection(

@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.ui.DailyUiState
-import net.toughcoder.aeolus.ui.home.GeneralText
+import net.toughcoder.aeolus.ui.GeneralText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

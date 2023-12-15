@@ -53,7 +53,7 @@ class DailyWeatherViewModel(
                     weatherStream
                 }.collect { weathers ->
                     viewModelState.update {
-                        it.copy(dailyWeathers = weathers.map { item -> item.asUiState() })
+                        it.copy(loading = false, dailyWeathers = weathers.map { item -> item.asUiState() })
                     }
                 }
 
@@ -83,6 +83,7 @@ class DailyWeatherViewModel(
 }
 
 data class DailyScreenUiState(
+    val loading: Boolean = true,
     val city: CityState? = null,
     val dailyWeathers: List<DailyUiState> = emptyList()
 )
