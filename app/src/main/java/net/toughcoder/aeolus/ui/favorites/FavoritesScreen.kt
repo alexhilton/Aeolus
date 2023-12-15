@@ -1,15 +1,12 @@
 package net.toughcoder.aeolus.ui.favorites
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,7 +19,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.toughcoder.aeolus.R
+import net.toughcoder.aeolus.ui.CenteredLoadingContainer
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
 
@@ -91,30 +88,20 @@ fun FavoritesScreen(
             )
         }
     ) { it ->
-        Box(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxSize(),
-            contentAlignment = if (uiState.loading) Alignment.Center else Alignment.TopStart
+        CenteredLoadingContainer(
+            modifier = Modifier.padding(it),
+            uiState.loading
         ) {
-            Crossfade(
-                modifier = modifier,
-                targetState = uiState.loading,
-                label = "crossfade"
-            ) { loading ->
-                if (loading) {
-                    CircularProgressIndicator(Modifier.size(88.dp))
-                } else if (uiState.favorites.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.empty_favorites),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                } else {
-                    FavoriteList(favorites = uiState.favorites) { city ->
-                        viewModel.setDefaultCity(city)
-                        onBack()
-                    }
+            if (uiState.favorites.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.empty_favorites),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            } else {
+                FavoriteList(favorites = uiState.favorites) { city ->
+                    viewModel.setDefaultCity(city)
+                    onBack()
                 }
             }
         }
