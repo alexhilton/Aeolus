@@ -20,7 +20,6 @@ fun LocationEntity.asModel(): WeatherLocation {
     )
 }
 
-
 fun QWeatherCityDTO.toModel(): WeatherLocation {
     val admin = if (name == admin2) admin1 else admin2
     return WeatherLocation(qweatherId, name, admin)
