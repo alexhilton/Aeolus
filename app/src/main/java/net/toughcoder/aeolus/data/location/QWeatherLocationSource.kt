@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.location
 import android.util.Log
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.GeoAPIService
+import net.toughcoder.aeolus.model.toModel
 import net.toughcoder.aeolus.model.toParamLang
 
 class QWeatherLocationSource(
@@ -18,7 +19,7 @@ class QWeatherLocationSource(
             if (response.code == "200") {
                 return response.topCityList
                     .filter { it.rank > 1 && (it.name == it.admin1 || it.name == it.admin2) }
-                    .map { WeatherLocation(it.qweatherId, it.name, it.admin1) }
+                    .map { it.toModel() }
             }
         } catch (exception: Exception) {
             Log.d(LOG_TAG, "searchHotCities: Error: ${exception.message}")
@@ -31,7 +32,7 @@ class QWeatherLocationSource(
             val response = api.searchCity(query = query, number = 20, lang = toParamLang(lang))
             if (response.code == "200") {
                 return response.cityList.filter { it.rank > 5 }
-                    .map { WeatherLocation(it.qweatherId, it.name, it.admin1) }
+                    .map { it.toModel() }
             }
         } catch (exception: Exception) {
             Log.d(LOG_TAG, "searchCity: Error: ${exception.message}")
@@ -43,15 +44,9 @@ class QWeatherLocationSource(
         try {
             val response = api.searchCity(query = cityId, number = 1, lang = toParamLang(lang))
             if (response.code == "200") {
-                return response.cityList[0].let {
-                    WeatherLocation(
-                        it.qweatherId,
-                        it.name,
-                        it.admin1
-                    )
-                }
+                return response.cityList[0].let { it.toModel() }
             } else {
-                Log.d(LOG_TAG, "laodCityInfo $cityId: ${response.code}")
+                Log.d(LOG_TAG, "loadCityInfo $cityId: ${response.code}")
             }
         } catch (exception: Exception) {
             Log.d(LOG_TAG, "loadCityInfo: $cityId: ${exception.message}")

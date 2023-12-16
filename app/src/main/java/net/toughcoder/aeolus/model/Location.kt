@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.model
 
 import androidx.compose.ui.text.intl.Locale
+import net.toughcoder.aeolus.data.qweather.QWeatherCityDTO
 import net.toughcoder.aeolus.data.room.LocationEntity
 
 data class WeatherLocation(
@@ -17,6 +18,12 @@ fun LocationEntity.asModel(): WeatherLocation {
         name = name,
         admin = admin
     )
+}
+
+
+fun QWeatherCityDTO.toModel(): WeatherLocation {
+    val admin = if (name == admin2) admin1 else admin2
+    return WeatherLocation(qweatherId, name, admin)
 }
 
 fun toParamLang(lang: String) =
