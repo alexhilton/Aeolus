@@ -59,6 +59,11 @@
     <string name="settings_entry_measure_metric">Metric</string>
     <string name="settings_entry_measure_imperial">Imperial</string>
 
+    <string name="missing_perm_title">Missing location permission</string>
+    <string name="missing_perm_message">Location permission is required by this app. Denial of location permission results in unable to find current location..</string>
+    <string name="understood">Understood</string>
+    <string name="goto_settings">Goto Settings</string>
+
     <string name="description_manage_city">Go to manage cities</string>
     <string name="description_back">Go back</string>
     <string name="description_search">Search cities</string>

@@ -57,6 +57,11 @@
     <string name="settings_entry_measure_metric">公制</string>
     <string name="settings_entry_measure_imperial">英制</string>
 
+    <string name="missing_perm_title">位置权限缺失</string>
+    <string name="missing_perm_message">这个应用需要位置权限才能运行。拒绝授杼位置权限会导致无法获得当前的位置信息。</string>
+    <string name="understood">好的，了解了</string>
+    <string name="goto_settings">去设置</string>
+
     <string name="description_manage_city">Go to manage cities</string>
     <string name="description_back">Go back</string>
     <string name="description_search">Search cities</string>

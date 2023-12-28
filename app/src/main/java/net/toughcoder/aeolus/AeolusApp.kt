@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import net.toughcoder.aeolus.data.DataContainer
 import net.toughcoder.aeolus.ui.AeolusNavGraph
+import net.toughcoder.aeolus.ui.CurrentLocationPermission
 import net.toughcoder.aeolus.ui.theme.AeolusTheme
 
 @Composable
@@ -19,7 +20,9 @@ fun AeolusApp(
             modifier = modifier,
             color = MaterialTheme.colorScheme.background
         ) {
-            AeolusNavGraph(appContainer = dataContainer)
+            CurrentLocationPermission {
+                AeolusNavGraph(appContainer = dataContainer)
+            }
         }
     }
 }
