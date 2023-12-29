@@ -53,4 +53,18 @@ class QWeatherLocationSource(
         }
         return WeatherLocation()
     }
+
+    override suspend fun searchByGeo(lat: Double, log: Double, lang: String): WeatherLocation {
+        try {
+            val response = api.searchCity(query = "$lat,$log", number = 1, lang = toParamLang(lang))
+            if (response.code == "200") {
+                return response.cityList[0].let { it.toModel() }
+            } else {
+                Log.d(LOG_TAG, "searchByGeo failed: ${response.code}")
+            }
+        } catch (e: Exception) {
+            Log.d(LOG_TAG, "searchByGeo exception: ${e.message}")
+        }
+        return WeatherLocation()
+    }
 }

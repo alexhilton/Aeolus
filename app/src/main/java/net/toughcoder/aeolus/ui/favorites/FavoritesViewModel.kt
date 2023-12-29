@@ -3,11 +3,14 @@ package net.toughcoder.aeolus.ui.favorites
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.weather.WeatherRepository
+import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.asUiState
@@ -17,25 +20,28 @@ class FavoritesViewModel(
     private val weatherRepo: WeatherRepository
 ) : ViewModel() {
 
-    fun getAllFavorites(): Flow<FavoriteScreenUiState> = flow {
-        locationRepo.getDefaultCityId()
-            .collect { defaultCityId ->
-                emit(
-                    FavoriteScreenUiState(
-                        loading = false,
-                        favorites = locationRepo.loadFavoriteCities()
-                            .map {
-                                val weather = weatherRepo.fetchDayWeather(it)
-                                FavoriteUiState(
-                                    city = it.asUiState(),
-                                    snapshot = weather.asUiState(),
-                                    selected = it.id == defaultCityId
-                                )
-                            }
-                    )
-                )
+    fun getAllFavorites(): Flow<FavoriteScreenUiState> =
+        combine(locationRepo.getDefaultCityId(), locationRepo.getCurrentCity()) { defaultCityId, currentCity ->
+            val favorites = locationRepo.loadFavoriteCities()
+            val allCities = mutableListOf<WeatherLocation>()
+            if (currentCity.successful()) {
+                allCities.add(currentCity)
             }
-    }
+            allCities.addAll(favorites)
+
+            return@combine FavoriteScreenUiState(
+                loading = false,
+                favorites = allCities.mapIndexed { idx, city ->
+                    val weather = weatherRepo.fetchDayWeather(city)
+                    return@mapIndexed FavoriteUiState(
+                        city = city.asUiState(),
+                        snapshot = weather.asUiState(),
+                        selected = city.id == defaultCityId,
+                        current = currentCity.successful() && idx == 0
+                    )
+                }
+            )
+        }.flowOn(Dispatchers.IO)
 
     fun setDefaultCity(city: CityState) {
         viewModelScope.launch {
@@ -65,5 +71,6 @@ data class FavoriteScreenUiState(
 data class FavoriteUiState(
     val city: CityState,
     val snapshot: DailyUiState,
-    val selected: Boolean = false
+    val selected: Boolean = false,
+    val current: Boolean = false
 )

@@ -8,4 +8,6 @@ interface LocationDataSource {
     suspend fun searchCity(query: String, lang: String): List<WeatherLocation>
 
     suspend fun loadCityInfo(cityId: String, lang: String): WeatherLocation
+
+    suspend fun searchByGeo(lat: Double, log: Double, lang: String): WeatherLocation
 }

@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.location
 import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -18,6 +19,7 @@ import net.toughcoder.aeolus.model.asModel
 class LocationRepository(
     private val prefStore: AeolusStore,
     private val database: AeolusDatabase,
+    private val locationProvider: LocationProvider,
     private val datasource: LocationDataSource,
     private val dispatcher: CoroutineDispatcher
 ) {
@@ -122,4 +124,12 @@ class LocationRepository(
             val lang = runBlocking { prefStore.getLanguage().first() }
             datasource.searchCity(query, lang)
         }
+
+    fun getCurrentCity(): Flow<WeatherLocation> =
+        combine(prefStore.getLanguage(), locationProvider.getLocation()) { lang, loc ->
+            if (loc.isEmpty() || lang.isEmpty()) {
+                return@combine WeatherLocation()
+            }
+            return@combine datasource.searchByGeo(loc.latitude, loc.longitude, lang)
+        }.flowOn(dispatcher)
 }
