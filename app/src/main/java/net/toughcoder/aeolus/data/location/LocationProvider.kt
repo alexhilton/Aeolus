@@ -1,9 +1,40 @@
 package net.toughcoder.aeolus.data.location
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.Flow
 
-interface LocationProvider {
-    fun getLocation(): Flow<MyLocation>
+abstract class LocationProvider(
+    private val context: Context
+) {
+    abstract fun getLocation(): Flow<MyLocation>
+
+    fun missingPermission(): Boolean {
+        val coarsed = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val fined = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        return !coarsed || !fined
+    }
+
+    fun toMyLocation(loc: Location): MyLocation {
+        return MyLocation(loc.latitude, loc.longitude)
+    }
+
+    companion object {
+        const val LOG_TAG = "LocationClient"
+        const val ERROR_NO_PERM = -1.0
+        const val ERROR_NO_LOCATION = -2.0
+        const val ERROR_FAILURE = -3.0
+    }
 }
 
 data class MyLocation(
