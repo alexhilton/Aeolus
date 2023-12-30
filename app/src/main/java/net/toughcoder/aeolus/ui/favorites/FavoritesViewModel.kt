@@ -27,7 +27,11 @@ class FavoritesViewModel(
             if (currentCity.successful()) {
                 allCities.add(currentCity)
             }
-            allCities.addAll(favorites)
+            for (fc in favorites) {
+                if (fc.id != currentCity.id) {
+                    allCities.add(fc)
+                }
+            }
 
             return@combine FavoriteScreenUiState(
                 loading = false,
