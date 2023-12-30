@@ -41,5 +41,5 @@ data class MyLocation(
     val latitude: Double,
     val longitude: Double
 ) {
-    fun isEmpty() = latitude > 0 && longitude > 0
+    fun isEmpty() = latitude <= 0 || longitude <= 0
 }

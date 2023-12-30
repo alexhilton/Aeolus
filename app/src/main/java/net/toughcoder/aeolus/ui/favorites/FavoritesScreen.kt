@@ -163,6 +163,8 @@ fun FavoriteItem(
                     imageVector = Icons.Default.LocationOn,
                     contentDescription = null
                 )
+                
+                Spacer(modifier = Modifier.width(16.dp))
             }
 
             if (item.selected) {
