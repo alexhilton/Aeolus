@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.Flow
 
 abstract class LocationProvider(
-    private val context: Context
+    val context: Context
 ) {
     abstract fun getLocation(): Flow<MyLocation>
 
@@ -28,6 +28,8 @@ abstract class LocationProvider(
     fun toMyLocation(loc: Location): MyLocation {
         return MyLocation(loc.latitude, loc.longitude)
     }
+
+    fun emptyLocation(error: Double) = MyLocation(error, error)
 
     companion object {
         const val LOG_TAG = "LocationClient"

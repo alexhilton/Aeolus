@@ -130,6 +130,6 @@ class LocationRepository(
             if (loc.isEmpty() || lang.isEmpty()) {
                 return@combine WeatherLocation()
             }
-            return@combine datasource.searchByGeo(loc.latitude, loc.longitude, lang)
+            return@combine datasource.searchByGeo(loc.longitude, loc.latitude, lang)
         }.flowOn(dispatcher)
 }

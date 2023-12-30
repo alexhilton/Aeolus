@@ -9,6 +9,7 @@ import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.local.LocalDataSource
 import net.toughcoder.aeolus.data.local.aeolusStore
+import net.toughcoder.aeolus.data.location.AndroidLocationClient
 import net.toughcoder.aeolus.data.location.FakeLocationClient
 import net.toughcoder.aeolus.data.location.FusedLocationClient
 import net.toughcoder.aeolus.data.location.LocationProvider
@@ -56,6 +57,7 @@ class DataContainerImpl(private val context: Context) : DataContainer {
 
     override val locationClient: LocationProvider by lazy {
 //        FusedLocationClient(context)
-        FakeLocationClient(context)
+//        FakeLocationClient(context)
+        AndroidLocationClient(context)
     }
 }
