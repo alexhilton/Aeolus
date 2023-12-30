@@ -19,7 +19,7 @@ class FusedLocationClient(
     @SuppressLint("MissingPermission")
     override fun getLocation(): Flow<MyLocation> = callbackFlow {
         if (missingPermission()) {
-            send(MyLocation(ERROR_NO_PERM, ERROR_NO_PERM))
+            send(emptyLocation(ERROR_NO_PERM))
             return@callbackFlow
         }
 
@@ -27,13 +27,13 @@ class FusedLocationClient(
         fusedClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, token.token)
             .addOnSuccessListener { location: Location? ->
                 if (location == null) {
-                    launch { send(MyLocation(ERROR_NO_LOCATION, ERROR_NO_LOCATION)) }
+                    launch { send(emptyLocation(ERROR_NO_LOCATION)) }
                 } else {
                     launch { send(toMyLocation(location)) }
                 }
             }
             .addOnFailureListener {
-                launch { send(MyLocation(ERROR_FAILURE, ERROR_FAILURE)) }
+                launch { send(emptyLocation(ERROR_FAILURE)) }
             }
         awaitClose {}
     }
