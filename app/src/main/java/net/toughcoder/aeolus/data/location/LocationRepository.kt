@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
+import net.toughcoder.aeolus.model.TYPE_CURRENT
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.asModel
 
@@ -30,26 +31,31 @@ class LocationRepository(
 
     fun getDefaultCityId(): Flow<String> =
         prefStore.getDefaultCity()
-            .map { it.id }
+            .map { it.first.id }
 
     fun getDefaultCity(): Flow<WeatherLocation> =
         prefStore.getDefaultCity()
             .map {
-                if (!it.successful()) {
-                    return@map it
+                val type = it.second
+                if (type == TYPE_CURRENT) {
+//                    return getCurrentCity()
+                }
+                val dc = it.first
+                if (!dc.successful()) {
+                    return@map dc
                 }
                 val lang = runBlocking { prefStore.getLanguage().first() }
-                val city = datasource.loadCityInfo(it.id, lang)
+                val city = datasource.loadCityInfo(dc.id, lang)
                 if (city.successful()) {
                     val dao = database.locationDao()
                     dao.update(city.asEntity())
                     return@map city
                 }
-                return@map it
+                return@map dc
             }.flowOn(dispatcher)
 
-    suspend fun setDefaultCity(city: WeatherLocation) {
-        prefStore.persistCity(city)
+    suspend fun setDefaultCity(city: WeatherLocation, type: Int) {
+        prefStore.persistCity(city, type)
     }
 
     suspend fun favoriteCity(city: WeatherLocation) {

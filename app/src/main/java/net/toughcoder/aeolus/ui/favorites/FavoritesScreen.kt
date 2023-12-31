@@ -100,8 +100,8 @@ fun FavoritesScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
             } else {
-                FavoriteList(favorites = uiState.favorites) { city ->
-                    viewModel.setDefaultCity(city)
+                FavoriteList(favorites = uiState.favorites) { city, current ->
+                    viewModel.setDefaultCity(city, current)
                     onBack()
                 }
             }
@@ -113,7 +113,7 @@ fun FavoritesScreen(
 fun FavoriteList(
     modifier: Modifier = Modifier,
     favorites: List<FavoriteUiState>,
-    onFavoriteClick: (CityState) -> Unit
+    onFavoriteClick: (CityState, Boolean) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -130,12 +130,12 @@ fun FavoriteList(
 fun FavoriteItem(
     modifier: Modifier = Modifier,
     item: FavoriteUiState,
-    onClick: (CityState) -> Unit
+    onClick: (CityState, Boolean) -> Unit
 ) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick(item.city) },
+            .clickable { onClick(item.city, item.current) },
         shape = MaterialTheme.shapes.extraSmall,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
@@ -258,5 +258,5 @@ fun FavoriteItemPreview() {
                 R.drawable.ic_nav, 123f, "South", "1"
             )
         )
-    ) {}
+    ) { _, _ -> 3}
 }

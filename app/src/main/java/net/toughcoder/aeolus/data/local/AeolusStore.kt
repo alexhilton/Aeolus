@@ -18,6 +18,7 @@ import net.toughcoder.aeolus.model.DEFAULT_MEASURE
 import net.toughcoder.aeolus.model.KEY_LANGUAGE
 import net.toughcoder.aeolus.model.KEY_MEASURE
 import net.toughcoder.aeolus.model.LANGUAGE_AUTO
+import net.toughcoder.aeolus.model.TYPE_NORMAL
 import net.toughcoder.aeolus.model.WeatherLocation
 
 /**
@@ -63,22 +64,23 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
         }
     }
 
-    suspend fun persistCity(city: WeatherLocation) {
+    suspend fun persistCity(city: WeatherLocation, type: Int) {
         withContext(Dispatchers.IO) {
             dataStore.edit { prefs ->
-                prefs[defaultCityKey] = "${city.id};${city.name};${city.admin}"
+                prefs[defaultCityKey] = "${city.id};${city.name};${city.admin};$type"
             }
         }
     }
 
-    fun getDefaultCity(): Flow<WeatherLocation> {
+    fun getDefaultCity(): Flow<Pair<WeatherLocation, Int>> {
         return dataStore.data.map { prefs ->
             val bundle = prefs[defaultCityKey]
             if (bundle.isNullOrEmpty()) {
-                WeatherLocation()
+                Pair(WeatherLocation(), TYPE_NORMAL)
             } else {
                 val parts = bundle.split(";")
-                WeatherLocation(id = parts[0], name = parts[1], admin = parts[2])
+                val type = if (parts.size > 3) parts[3].toInt() else TYPE_NORMAL
+                Pair(WeatherLocation(id = parts[0], name = parts[1], admin = parts[2]), type)
             }
         }
     }

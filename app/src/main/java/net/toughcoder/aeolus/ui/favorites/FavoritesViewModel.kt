@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.weather.WeatherRepository
+import net.toughcoder.aeolus.model.TYPE_CURRENT
+import net.toughcoder.aeolus.model.TYPE_NORMAL
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
@@ -47,9 +49,9 @@ class FavoritesViewModel(
             )
         }.flowOn(Dispatchers.IO)
 
-    fun setDefaultCity(city: CityState) {
+    fun setDefaultCity(city: CityState, current: Boolean) {
         viewModelScope.launch {
-            locationRepo.setDefaultCity(city.toModel())
+            locationRepo.setDefaultCity(city.toModel(), if (current) TYPE_CURRENT else TYPE_NORMAL)
         }
     }
 

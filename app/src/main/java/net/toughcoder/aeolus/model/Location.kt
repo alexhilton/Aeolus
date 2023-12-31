@@ -27,3 +27,6 @@ fun QWeatherCityDTO.toModel(): WeatherLocation {
 
 fun toParamLang(lang: String) =
     if (lang == LANGUAGE_AUTO) Locale.current.language else lang
+
+const val TYPE_CURRENT = 1
+const val TYPE_NORMAL = 2
