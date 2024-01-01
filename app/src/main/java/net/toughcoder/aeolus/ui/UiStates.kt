@@ -4,6 +4,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.TYPE_CURRENT
+import net.toughcoder.aeolus.model.TYPE_NORMAL
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.getMeasure
 import net.toughcoder.qweather.ICONS
@@ -16,25 +18,35 @@ const val NO_ERROR = 0
 data class CityState(
     val name: String,
     val id: String = "",
-    val admin: String = ""
+    val admin: String = "",
+    val type: Int = TYPE_NORMAL
 ) {
     fun isEmpty() = name.isEmpty() || id.isEmpty()
 
-    fun fullname() = "$name, $admin"
+    fun fullname() = "$name, $admin${label()}"
 
     fun toModel(): WeatherLocation =
         WeatherLocation(
             id = id,
             name = name,
-            admin = admin
+            admin = admin,
+            type = type
         )
+
+    private fun label() =
+        if (type == TYPE_CURRENT) {
+            " \uD83D\uDCCD"
+        } else {
+            ""
+        }
 }
 
 fun WeatherLocation.asUiState(): CityState =
     CityState(
         name = name,
         id = id,
-        admin = admin
+        admin = admin,
+        type = type
     )
 
 data class DailyUiState(

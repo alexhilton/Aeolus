@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.location
 import android.util.Log
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.GeoAPIService
+import net.toughcoder.aeolus.model.TYPE_CURRENT
 import net.toughcoder.aeolus.model.toModel
 import net.toughcoder.aeolus.model.toParamLang
 
@@ -58,13 +59,13 @@ class QWeatherLocationSource(
         try {
             val response = api.searchCity(query = "$lat,$log", number = 1, lang = toParamLang(lang))
             if (response.code == "200") {
-                return response.cityList[0].let { it.toModel() }
+                return response.cityList[0].let { it.toModel(TYPE_CURRENT) }
             } else {
                 Log.d(LOG_TAG, "searchByGeo failed: ${response.code}")
             }
         } catch (e: Exception) {
             Log.d(LOG_TAG, "searchByGeo exception: ${e.message}")
         }
-        return WeatherLocation()
+        return WeatherLocation(type = TYPE_CURRENT)
     }
 }

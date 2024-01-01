@@ -31,31 +31,30 @@ class LocationRepository(
 
     fun getDefaultCityId(): Flow<String> =
         prefStore.getDefaultCity()
-            .map { it.first.id }
+            .map { it.id }
 
     fun getDefaultCity(): Flow<WeatherLocation> =
         prefStore.getDefaultCity()
             .map {
-                val type = it.second
-                if (type == TYPE_CURRENT) {
-//                    return getCurrentCity()
-                }
-                val dc = it.first
-                if (!dc.successful()) {
-                    return@map dc
-                }
                 val lang = runBlocking { prefStore.getLanguage().first() }
-                val city = datasource.loadCityInfo(dc.id, lang)
+                if (it.type == TYPE_CURRENT) {
+                    val loc = runBlocking { locationProvider.getLocation().first() }
+                    if (loc.isEmpty() || lang.isEmpty()) {
+                        return@map WeatherLocation()
+                    }
+                    return@map datasource.searchByGeo(loc.longitude, loc.latitude, lang)
+                }
+                val city = datasource.loadCityInfo(it.id, lang)
                 if (city.successful()) {
                     val dao = database.locationDao()
                     dao.update(city.asEntity())
                     return@map city
                 }
-                return@map dc
+                return@map it
             }.flowOn(dispatcher)
 
-    suspend fun setDefaultCity(city: WeatherLocation, type: Int) {
-        prefStore.persistCity(city, type)
+    suspend fun setDefaultCity(city: WeatherLocation) {
+        prefStore.persistCity(city)
     }
 
     suspend fun favoriteCity(city: WeatherLocation) {
@@ -134,7 +133,7 @@ class LocationRepository(
     fun getCurrentCity(): Flow<WeatherLocation> =
         combine(prefStore.getLanguage(), locationProvider.getLocation()) { lang, loc ->
             if (loc.isEmpty() || lang.isEmpty()) {
-                return@combine WeatherLocation()
+                return@combine WeatherLocation(type = TYPE_CURRENT)
             }
             return@combine datasource.searchByGeo(loc.longitude, loc.latitude, lang)
         }.flowOn(dispatcher)

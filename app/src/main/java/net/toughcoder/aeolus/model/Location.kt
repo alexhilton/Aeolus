@@ -7,7 +7,8 @@ import net.toughcoder.aeolus.data.room.LocationEntity
 data class WeatherLocation(
     val id: String = "",
     val name: String = "",
-    val admin: String = ""
+    val admin: String = "",
+    val type: Int = TYPE_NORMAL
 ) {
     fun successful() = id.isNotEmpty() && name.isNotEmpty()
 }
@@ -20,9 +21,9 @@ fun LocationEntity.asModel(): WeatherLocation {
     )
 }
 
-fun QWeatherCityDTO.toModel(): WeatherLocation {
+fun QWeatherCityDTO.toModel(type: Int = TYPE_NORMAL): WeatherLocation {
     val admin = if (name == admin2) admin1 else admin2
-    return WeatherLocation(qweatherId, name, admin)
+    return WeatherLocation(qweatherId, name, admin, type)
 }
 
 fun toParamLang(lang: String) =

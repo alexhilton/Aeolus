@@ -12,6 +12,6 @@ class FakeLocationClient(
     override fun getLocation(): Flow<MyLocation> = flow {
         delay((2000f * Random.nextFloat()).toLong())
 
-        emit(MyLocation(116.41, 39.92))
+        emit(MyLocation(39.92, 116.41))
     }
 }

@@ -64,23 +64,23 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
         }
     }
 
-    suspend fun persistCity(city: WeatherLocation, type: Int) {
+    suspend fun persistCity(city: WeatherLocation) {
         withContext(Dispatchers.IO) {
             dataStore.edit { prefs ->
-                prefs[defaultCityKey] = "${city.id};${city.name};${city.admin};$type"
+                prefs[defaultCityKey] = "${city.id};${city.name};${city.admin};${city.type}"
             }
         }
     }
 
-    fun getDefaultCity(): Flow<Pair<WeatherLocation, Int>> {
+    fun getDefaultCity(): Flow<WeatherLocation> {
         return dataStore.data.map { prefs ->
             val bundle = prefs[defaultCityKey]
             if (bundle.isNullOrEmpty()) {
-                Pair(WeatherLocation(), TYPE_NORMAL)
+                WeatherLocation()
             } else {
                 val parts = bundle.split(";")
                 val type = if (parts.size > 3) parts[3].toInt() else TYPE_NORMAL
-                Pair(WeatherLocation(id = parts[0], name = parts[1], admin = parts[2]), type)
+                WeatherLocation(id = parts[0], name = parts[1], admin = parts[2], type = type)
             }
         }
     }
