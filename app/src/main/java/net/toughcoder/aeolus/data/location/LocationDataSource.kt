@@ -9,5 +9,5 @@ interface LocationDataSource {
 
     suspend fun loadCityInfo(cityId: String, lang: String): WeatherLocation
 
-    suspend fun searchByGeo(lat: Double, log: Double, lang: String): WeatherLocation
+    suspend fun searchByGeo(longitude: Double, latitude: Double, lang: String): WeatherLocation
 }
