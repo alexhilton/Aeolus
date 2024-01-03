@@ -45,7 +45,7 @@ class QWeatherLocationSource(
         try {
             val response = api.searchCity(query = cityId, number = 1, lang = toParamLang(lang))
             if (response.code == "200") {
-                return response.cityList[0].let { it.toModel() }
+                return response.cityList[0].toModel()
             } else {
                 Log.d(LOG_TAG, "loadCityInfo $cityId: ${response.code}")
             }
@@ -59,7 +59,7 @@ class QWeatherLocationSource(
         try {
             val response = api.searchCity(query = "$longitude,$latitude", number = 1, lang = toParamLang(lang))
             if (response.code == "200") {
-                return response.cityList[0].let { it.toModel(TYPE_CURRENT) }
+                return response.cityList[0].toModel(TYPE_CURRENT)
             } else {
                 Log.d(LOG_TAG, "searchByGeo failed: ${response.code}")
             }
