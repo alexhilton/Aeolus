@@ -57,7 +57,7 @@ class DataContainerImpl(private val context: Context) : DataContainer {
 
     override val locationClient: LocationProvider by lazy {
 //        FusedLocationClient(context)
-        FakeLocationClient(context)
-//        AndroidLocationClient(context)
+//        FakeLocationClient(context)
+        AndroidLocationClient(context)
     }
 }

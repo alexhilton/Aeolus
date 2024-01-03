@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -38,8 +39,8 @@ class LocationRepository(
             .map {
                 val lang = runBlocking { prefStore.getLanguage().first() }
                 if (it.type == TYPE_CURRENT) {
-                    val loc = runBlocking { locationProvider.getLocation().first() }
-                    if (loc.isEmpty() || lang.isEmpty()) {
+                    val loc = runBlocking { locationProvider.getLocation().firstOrNull() }
+                    if (loc == null || loc.isEmpty() || lang.isEmpty()) {
                         return@map WeatherLocation()
                     }
                     return@map datasource.searchByGeo(loc.longitude, loc.latitude, lang)

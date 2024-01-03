@@ -2,8 +2,10 @@ package net.toughcoder.aeolus.data.location
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Criteria
+import android.location.Location
 import android.location.LocationManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -12,26 +14,37 @@ import kotlinx.coroutines.flow.flowOn
 class AndroidLocationClient(
     context: Context
 ) : LocationProvider(context) {
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("MissingPermission")
     override fun getLocation(): Flow<MyLocation> = flow {
         if (missingPermission()) {
             emit(emptyLocation(ERROR_NO_PERM))
             return@flow
         }
-        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val criteria = Criteria()
-        criteria.accuracy = Criteria.NO_REQUIREMENT
-        criteria.isCostAllowed = true
-        criteria.powerRequirement = Criteria.POWER_LOW
-        criteria.isAltitudeRequired = false
-        criteria.isBearingRequired = false
 
-        val provider = locationManager.getBestProvider(criteria, true)
-        val location = provider?.let { locationManager.getLastKnownLocation(it) }
-        if (location == null) {
-            emit(emptyLocation(ERROR_NO_LOCATION))
-        } else {
-            emit(MyLocation(location.latitude, location.longitude))
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val locations = mutableListOf<Location>()
+        val fromGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        if (fromGps != null) {
+            locations.add(fromGps)
         }
+        val fromNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        if (fromNetwork != null) {
+            locations.add(fromNetwork)
+        }
+        val fromFused = locationManager.getLastKnownLocation(LocationManager.FUSED_PROVIDER)
+        if (fromFused != null) {
+            locations.add(fromFused)
+        }
+        val fromPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
+        if (fromPassive != null) {
+            locations.add(fromPassive)
+        }
+        if (locations.isEmpty()) {
+            emit(emptyLocation(ERROR_NO_LOCATION))
+        }
+        locations.sortBy { it.accuracy }
+        emit(MyLocation(locations[0].latitude, locations[0].longitude))
     }.flowOn(Dispatchers.IO)
 }
