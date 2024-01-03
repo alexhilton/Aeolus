@@ -81,7 +81,8 @@ class HomeViewModel(
         // Step #2: Quit earlier if not need to update
         val now = SystemClock.uptimeMillis()
         Log.d(LOG_TAG, "now $now, last ${viewModelState.value.updateTime}")
-        if (now - viewModelState.value.updateTime < 120 * 1000L) {
+        val cityChanged = locationState.value != viewModelState.value.city
+        if (!cityChanged && now - viewModelState.value.updateTime < 120 * 1000L) {
             viewModelState.update {
                 it.copy(loading = false, error = R.string.error_up_to_date)
             }
