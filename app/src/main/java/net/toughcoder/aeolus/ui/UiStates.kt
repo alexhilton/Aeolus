@@ -23,7 +23,7 @@ data class CityState(
 ) {
     fun isEmpty() = name.isEmpty() || id.isEmpty()
 
-    fun fullname() = "$name, $admin${label()}"
+    fun fullname() = "$name, $admin"
 
     fun toModel(): WeatherLocation =
         WeatherLocation(
@@ -33,9 +33,12 @@ data class CityState(
             type = type
         )
 
+    fun current() = type == TYPE_CURRENT
+
     private fun label() =
         if (type == TYPE_CURRENT) {
-            " \uD83D\uDCCD"
+//            " \uD83D\uDCCD"
+            " \u2316"
         } else {
             ""
         }
