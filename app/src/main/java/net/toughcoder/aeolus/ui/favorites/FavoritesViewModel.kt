@@ -77,5 +77,5 @@ data class FavoriteUiState(
     val snapshot: DailyUiState,
     val selected: Boolean = false,
 ) {
-    fun current() = city.type == TYPE_CURRENT
+    fun current() = city.current()
 }

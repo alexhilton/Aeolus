@@ -145,26 +145,34 @@ fun FavoriteItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier.padding(8.dp)) {
-                Text(
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    text = item.city.fullname()
-                )
+                if (item.current()) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = null
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            text = item.city.fullname()
+                        )
+                    }
+                } else {
+                    Text(
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        text = item.city.fullname()
+                    )
+                }
 
                 if (!item.snapshot.isEmpty()) {
                     Spacer(Modifier.height(8.dp))
 
                     WeatherSnapshot(modifier, item.snapshot)
                 }
-            }
-
-            if (item.current()) {
-                Icon(
-                    imageVector = Icons.Default.LocationOn,
-                    contentDescription = null
-                )
-                
-                Spacer(modifier = Modifier.width(16.dp))
             }
 
             if (item.selected) {
