@@ -14,6 +14,9 @@ import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
+import net.toughcoder.aeolus.model.ERROR_NONE
+import net.toughcoder.aeolus.model.ERROR_NO_LOCATION
+import net.toughcoder.aeolus.model.ERROR_NO_PERM
 import net.toughcoder.aeolus.model.TYPE_CURRENT
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.asModel
@@ -42,7 +45,12 @@ class LocationRepository(
                 if (!it.successful() || it.type == TYPE_CURRENT) {
                     val loc = runBlocking { locationProvider.getLocation().firstOrNull() }
                     if (loc == null || loc.isEmpty() || lang.isEmpty()) {
-                        return@map WeatherLocation(type = TYPE_CURRENT)
+                        val error = if (loc!!.latitude == LocationProvider.ERROR_NO_PERM) {
+                            ERROR_NO_PERM
+                        } else {
+                            ERROR_NO_LOCATION
+                        }
+                        return@map WeatherLocation(type = TYPE_CURRENT, error = error)
                     }
                     return@map datasource.searchByGeo(loc.longitude, loc.latitude, lang)
                 }

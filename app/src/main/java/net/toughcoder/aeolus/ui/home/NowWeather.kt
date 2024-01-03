@@ -39,7 +39,7 @@ fun NowWeatherSection(
     ) {
         SimpleInfo(uiState.text, uiState.icon, uiState.temp)
 
-        if (uiState.dailyStates.isNotEmpty() || uiState.aqi.isNotEmpty()) {
+        if (uiState.dailyStates.isNotEmpty()) {
             GeneralInfo(uiState.aqi, uiState.dailyStates[0])
             Spacer(Modifier.height(8.dp))
         }

@@ -28,9 +28,12 @@
     <string name="daily_forecast_title">3 days forecasts</string>
     <string name="button_view_more">Click to view more</string>
     <string name="weather_index_title">Weather life indices</string>
+
     <string name="error_loading">Loading weather data, please wait!</string>
     <string name="error_up_to_date">Weather data is already up-to-date!</string>
-    <string name="error_location">Failed to get location, please try again later!</string>
+    <string name="error_permission">Location permission is required to obtain current location. Please grant permission!</string>
+    <string name="error_location">Failed to obtain current location, please try again later!\nOr you can search a city.</string>
+    <string name="error_city">Failed to get city info, please try again later!</string>
     <string name="error_network">Something is wrong, please try again later!</string>
 
     <string name="daily_screen_title">%1$s 7 days forecast</string>

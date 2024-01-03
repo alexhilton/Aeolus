@@ -8,9 +8,12 @@ data class WeatherLocation(
     val id: String = "",
     val name: String = "",
     val admin: String = "",
-    val type: Int = TYPE_NORMAL
+    val type: Int = TYPE_NORMAL,
+    val error: Int = ERROR_NONE
 ) {
     fun successful() = id.isNotEmpty() && name.isNotEmpty()
+
+    fun current() = type == TYPE_CURRENT
 }
 
 fun LocationEntity.asModel(): WeatherLocation {
@@ -31,3 +34,8 @@ fun toParamLang(lang: String) =
 
 const val TYPE_CURRENT = 1
 const val TYPE_NORMAL = 2
+
+const val ERROR_NONE = 0
+const val ERROR_NO_PERM = 1
+const val ERROR_NO_LOCATION = 2
+const val ERROR_NO_CITY = 3

@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.location
 import android.util.Log
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.GeoAPIService
+import net.toughcoder.aeolus.model.ERROR_NO_CITY
 import net.toughcoder.aeolus.model.TYPE_CURRENT
 import net.toughcoder.aeolus.model.toModel
 import net.toughcoder.aeolus.model.toParamLang
@@ -52,7 +53,7 @@ class QWeatherLocationSource(
         } catch (exception: Exception) {
             Log.d(LOG_TAG, "loadCityInfo: $cityId: ${exception.message}")
         }
-        return WeatherLocation()
+        return WeatherLocation(error = ERROR_NO_CITY)
     }
 
     override suspend fun searchByGeo(longitude: Double, latitude: Double, lang: String): WeatherLocation {
@@ -66,6 +67,6 @@ class QWeatherLocationSource(
         } catch (e: Exception) {
             Log.d(LOG_TAG, "searchByGeo exception: ${e.message}")
         }
-        return WeatherLocation(type = TYPE_CURRENT)
+        return WeatherLocation(type = TYPE_CURRENT, error = ERROR_NO_CITY)
     }
 }

@@ -21,6 +21,9 @@ import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherRepository
 import net.toughcoder.aeolus.model.DailyWeather
+import net.toughcoder.aeolus.model.ERROR_NO_CITY
+import net.toughcoder.aeolus.model.ERROR_NO_LOCATION
+import net.toughcoder.aeolus.model.ERROR_NO_PERM
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.getMeasure
@@ -111,7 +114,12 @@ class HomeViewModel(
                 locationState, weatherNowState, dailyWeatherState, hourlyWeatherState, weatherIndexState
             ) { loc, now, dailyWeathers, hourlyWeathers, weatherIndices ->
                 val error = if (!loc.successful()) {
-                    R.string.error_location
+                    when (loc.error) {
+                        ERROR_NO_PERM -> R.string.error_location
+                        ERROR_NO_LOCATION -> R.string.error_location
+                        ERROR_NO_CITY -> R.string.error_city
+                        else -> NO_ERROR
+                    }
                 } else if (!now.successful) {
                     R.string.error_network
                 } else {

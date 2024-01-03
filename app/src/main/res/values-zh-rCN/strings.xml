@@ -28,10 +28,13 @@
     <string name="daily_forecast_title">未来3日天气预报</string>
     <string name="button_view_more">点击查看更多</string>
     <string name="weather_index_title">天气生活指数</string>
-    <string name="error_loading">Loading weather data, please wait!</string>
+
+    <string name="error_loading">玩命加载中，请稍候！</string>
     <string name="error_up_to_date">已经是最新的天气数据了，稍后再刷新吧！</string>
-    <string name="error_location">Failed to get location, please try again later!</string>
-    <string name="error_network">Something is wrong, please try again later!</string>
+    <string name="error_permission">获得定位权限后，才能成功得到当前位置信息，请授予定位权限后再试！</string>
+    <string name="error_location">无法获得当前位置信息，请稍候再试！</string>
+    <string name="error_city">无法获得当前城市信息，请稍后再试！</string>
+    <string name="error_network">服务器开个小差，暂无法获得天气信息，请稍候再试！</string>
 
     <string name="daily_screen_title">%1$s7天预报</string>
     <string name="daily_screen_placeholder">Daily weather shows here</string>
