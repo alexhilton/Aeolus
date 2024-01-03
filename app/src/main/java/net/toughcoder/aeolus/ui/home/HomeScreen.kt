@@ -74,6 +74,7 @@ fun HomeScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Default.LocationOn,
+                                tint = colorResource(R.color.teal_700),
                                 contentDescription = ""
                             )
                             Spacer(Modifier.width(8.dp))
