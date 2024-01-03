@@ -38,10 +38,11 @@ class LocationRepository(
         prefStore.getDefaultCity()
             .map {
                 val lang = runBlocking { prefStore.getLanguage().first() }
-                if (it.type == TYPE_CURRENT) {
+                // When there is no default city, use current location.
+                if (!it.successful() || it.type == TYPE_CURRENT) {
                     val loc = runBlocking { locationProvider.getLocation().firstOrNull() }
                     if (loc == null || loc.isEmpty() || lang.isEmpty()) {
-                        return@map WeatherLocation()
+                        return@map WeatherLocation(type = TYPE_CURRENT)
                     }
                     return@map datasource.searchByGeo(loc.longitude, loc.latitude, lang)
                 }
