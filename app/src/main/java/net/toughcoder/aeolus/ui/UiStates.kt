@@ -83,16 +83,16 @@ data class DailyUiState(
 fun DailyWeather.asUiState(): DailyUiState =
     getMeasure().let { it ->
         DailyUiState(
-            date = date.substring(5),
+            date = if (date.isEmpty()) date else date.substring(5),
             tempHigh = "${tempHigh.formatTemp()}${it.temp}",
             tempLow = "${tempLow.formatTemp()}${it.temp}",
             sunrise = sunrise,
             sunset = sunset,
-            iconDay = ICONS[iconDay]!!,
+            iconDay = if (iconDay.isEmpty()) 0 else ICONS[iconDay]!!,
             textDay = textDay,
             uvIndex = uvIndex,
             textNight = textNight,
-            iconNight = ICONS[iconNight]!!,
+            iconNight = if (iconNight.isEmpty()) 0 else ICONS[iconNight]!!,
             windDegree = windDegree.toWindDegree(),
             windDir = windDir,
             windScale = "$windScale${it.scale}",
@@ -120,13 +120,14 @@ fun String.formatTemp(): String {
 }
 
 fun String.toWindDegree(): Float {
+    if (this.isEmpty()) {
+        return 0f
+    }
     return (this.toFloat() + 180f) % 360f
 }
 
 @StringRes
 fun String.weekday(): Int {
-    val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA)
-    val d = LocalDate.parse(this, fmt)
     val w = listOf(
         R.string.weekday_0,
         R.string.weekday_1,
@@ -136,5 +137,10 @@ fun String.weekday(): Int {
         R.string.weekday_5,
         R.string.weekday_6,
     )
+    if (this.isEmpty()) {
+        return w[0]
+    }
+    val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.CHINA)
+    val d = LocalDate.parse(this, fmt)
     return w[d.dayOfWeek.value - 1]
 }

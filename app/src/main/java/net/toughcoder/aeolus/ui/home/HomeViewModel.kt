@@ -279,6 +279,7 @@ sealed interface HomeUiState {
 data class HourlyUiState(
     val time: String,
     val temp: String,
+    val tempValue: Float,
     val text: String,
     @DrawableRes val icon: Int,
     @DrawableRes val iconDir: Int,
@@ -291,6 +292,7 @@ fun HourlyWeather.asUiState(): HourlyUiState =
         HourlyUiState(
             time = dateTime.smartHour(),
             temp = "${temp.formatTemp()}${it.temp}",
+            tempValue = temp.toFloat(),
             text = text,
             icon = ICONS[icon]!!,
             iconDir = R.drawable.ic_nav,
