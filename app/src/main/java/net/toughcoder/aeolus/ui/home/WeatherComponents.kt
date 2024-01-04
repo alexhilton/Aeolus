@@ -35,7 +35,9 @@ fun DailyInfoPreview() {
     GeneralInfo(aqi = "30", info = DailyUiState(
         "2023-11-29",
         "19 \u2103",
+        19f,
         "1 \u2103",
+        1f,
         "05:00",
         "18:00",
         net.toughcoder.qweather.R.drawable.ic_101,
@@ -67,7 +69,9 @@ fun DetailPreview() {
             DailyUiState(
                 "2023-11-18",
                 "29 \u2103",
+                29f,
                 "1 \u2103",
+                1f,
                 "05:00",
                 "18:00",
                 iconDay = net.toughcoder.qweather.R.drawable.ic_1001,

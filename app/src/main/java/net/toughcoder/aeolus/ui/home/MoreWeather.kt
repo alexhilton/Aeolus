@@ -108,7 +108,9 @@ fun DailyWeatherItemPreview() {
         DailyUiState(
             "2023-11-09",
             "29",
+            29f,
             "4",
+            4f,
             "07:21",
             "17:32",
             net.toughcoder.qweather.R.drawable.ic_1002,

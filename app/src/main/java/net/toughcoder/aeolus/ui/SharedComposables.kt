@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
@@ -32,7 +34,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -159,6 +167,65 @@ fun ValueLabel(
         textAlign = TextAlign.End
     )
 }
+
+@Composable
+fun TempBar(
+    modifier: Modifier = Modifier,
+    max: Float,
+    min: Float,
+    high: Float,
+    low: Float,
+    textHigh: String,
+    textLow: String = ""
+) {
+    val height = (high - low) / (max - min) * HEIGHT
+    val y0 = (max - high) / (max - min) * HEIGHT
+    val cw = with(LocalDensity.current) {
+        WIDTH.toDp()
+    }
+    val ch = with(LocalDensity.current) {
+        height.toDp()
+    }
+    val margin = with(LocalDensity.current) {
+        y0.toDp()
+    }
+    val columnHeight = with(LocalDensity.current) {
+        HEIGHT.toDp()
+    }
+    val multiplier = if (textLow.isNotEmpty()) 2.384f else 1.618f
+    Column(
+        modifier = Modifier.height(columnHeight.times(multiplier)),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(Modifier.height(margin))
+
+        GeneralText(textHigh)
+
+        Canvas(
+            modifier = Modifier
+                .width(cw)
+                .height(ch)
+                .align(Alignment.CenterHorizontally),
+            onDraw = {
+                drawRoundRect(
+                    brush = brush,
+                    topLeft = Offset((size.width - WIDTH) / 2f, 0f),
+                    size = Size(WIDTH, height),
+                    cornerRadius = CornerRadius(8.dp.value, 8.dp.value)
+                )
+            }
+        )
+
+        if (textLow.isNotEmpty()) {
+            GeneralText(textLow)
+        }
+    }
+}
+val brush = Brush.verticalGradient(
+    colors = listOf(Color.Green, Color.Blue),
+)
+const val WIDTH = 40f
+const val HEIGHT = 120f
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

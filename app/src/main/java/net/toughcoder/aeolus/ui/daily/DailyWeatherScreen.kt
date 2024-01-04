@@ -37,6 +37,7 @@ import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.ui.CenteredLoadingContainer
 import net.toughcoder.aeolus.ui.DailyUiState
 import net.toughcoder.aeolus.ui.GeneralText
+import net.toughcoder.aeolus.ui.TempBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,6 +98,9 @@ fun DailyHorizontalList(
     modifier: Modifier = Modifier,
     weathers: List<DailyUiState>
 ) {
+    val max = weathers.maxOfOrNull { it.highValue }
+    val min = weathers.maxOfOrNull { it.lowValue }
+
     Row(
         modifier = modifier
             .padding(16.dp)
@@ -104,7 +108,7 @@ fun DailyHorizontalList(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         weathers.forEach {
-            DailyDetailItem(weather = it)
+            DailyDetailItem(weather = it, max = max!!, min = min!!)
         }
     }
 }
@@ -112,7 +116,9 @@ fun DailyHorizontalList(
 @Composable
 fun DailyDetailItem(
     modifier: Modifier = Modifier,
-    weather: DailyUiState
+    weather: DailyUiState,
+    max: Float,
+    min: Float
 ) {
     Surface(
         shape = MaterialTheme.shapes.medium,
@@ -133,11 +139,16 @@ fun DailyDetailItem(
                 contentDescription = ""
             )
             GeneralText(weather.textDay)
-            GeneralText(weather.tempHigh)
 
-            Spacer(Modifier.height(36.dp))
+            TempBar(
+                max = max,
+                min = min,
+                high = weather.highValue,
+                low = weather.lowValue,
+                textHigh = weather.tempHigh,
+                textLow = weather.tempLow
+            )
 
-            GeneralText(weather.tempLow)
             Image(
                 modifier = Modifier
                     .size(36.dp),

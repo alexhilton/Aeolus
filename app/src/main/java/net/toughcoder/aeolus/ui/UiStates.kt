@@ -55,7 +55,9 @@ fun WeatherLocation.asUiState(): CityState =
 data class DailyUiState(
     val date: String,
     val tempHigh: String,
+    val highValue: Float,
     val tempLow: String,
+    val lowValue: Float,
     val sunrise: String = "",
     val sunset: String = "",
     @DrawableRes val iconDay: Int,
@@ -85,7 +87,9 @@ fun DailyWeather.asUiState(): DailyUiState =
         DailyUiState(
             date = if (date.isEmpty()) date else date.substring(5),
             tempHigh = "${tempHigh.formatTemp()}${it.temp}",
+            highValue = if (tempHigh.isEmpty()) 0f else tempHigh.toFloat(),
             tempLow = "${tempLow.formatTemp()}${it.temp}",
+            lowValue = if (tempLow.isEmpty()) 0f else tempLow.toFloat(),
             sunrise = sunrise,
             sunset = sunset,
             iconDay = if (iconDay.isEmpty()) 0 else ICONS[iconDay]!!,

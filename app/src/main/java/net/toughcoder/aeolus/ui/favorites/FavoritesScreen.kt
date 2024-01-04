@@ -262,7 +262,8 @@ fun FavoriteItemPreview() {
         FavoriteUiState(
             CityState("Beijing", "", "China"),
             DailyUiState(
-                "2023-11-19", "19", "1", "06:07", "18:00",
+                "2023-11-19", "19", 19f,
+                "1", 1f,"06:07", "18:00",
                 net.toughcoder.qweather.R.drawable.ic_100, "Cloudy",
                 "12", "Sun",
                 R.drawable.ic_nav, 123f, "South", "1"
