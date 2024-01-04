@@ -229,6 +229,6 @@ fun CurrentLocationPermission(
 fun gotoSettings(context: Context) {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
     val uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-    intent.setData(uri)
+    intent.data = uri
     context.startActivity(intent)
 }
