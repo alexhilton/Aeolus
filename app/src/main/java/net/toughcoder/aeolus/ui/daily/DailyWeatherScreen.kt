@@ -99,7 +99,7 @@ fun DailyHorizontalList(
     weathers: List<DailyUiState>
 ) {
     val max = weathers.maxOfOrNull { it.highValue }
-    val min = weathers.maxOfOrNull { it.lowValue }
+    val min = weathers.minOfOrNull { it.lowValue }
 
     Row(
         modifier = modifier

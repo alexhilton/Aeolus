@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -178,7 +180,7 @@ fun TempBar(
     textHigh: String,
     textLow: String = ""
 ) {
-    val height = (high - low) / (max - min) * HEIGHT
+    val height = ((high - low) / (max - min) * HEIGHT).coerceAtLeast(0.1f)
     val y0 = (max - high) / (max - min) * HEIGHT
     val cw = with(LocalDensity.current) {
         WIDTH.toDp()
@@ -189,12 +191,13 @@ fun TempBar(
     val margin = with(LocalDensity.current) {
         y0.toDp()
     }
+    val textHeightDp = if (textLow.isNotEmpty()) TEXT_HEIGHT.times(2f) else TEXT_HEIGHT
     val columnHeight = with(LocalDensity.current) {
         HEIGHT.toDp()
-    }
-    val multiplier = if (textLow.isNotEmpty()) 2.384f else 1.618f
+    }.plus(textHeightDp)
     Column(
-        modifier = Modifier.height(columnHeight.times(multiplier)),
+        modifier = Modifier
+            .height(columnHeight),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(margin))
@@ -221,11 +224,13 @@ fun TempBar(
         }
     }
 }
+
 val brush = Brush.verticalGradient(
     colors = listOf(Color.Green, Color.Blue),
 )
 const val WIDTH = 40f
 const val HEIGHT = 120f
+val TEXT_HEIGHT = 22.dp
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

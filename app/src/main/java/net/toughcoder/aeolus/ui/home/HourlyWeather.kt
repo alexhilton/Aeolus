@@ -69,8 +69,8 @@ fun HourlyListItem(
             textHigh = hourlyItem.temp,
             max = max,
             min = min,
-            high = hourlyItem.tempValue.coerceAtLeast(0f),
-            low = hourlyItem.tempValue.coerceAtMost(0f)
+            high = hourlyItem.tempValue,
+            low = min
         )
 
         Row(
