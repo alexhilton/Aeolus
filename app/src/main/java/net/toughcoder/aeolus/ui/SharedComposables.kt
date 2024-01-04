@@ -180,7 +180,7 @@ fun TempBar(
     textHigh: String,
     textLow: String = ""
 ) {
-    val height = ((high - low) / (max - min) * HEIGHT).coerceAtLeast(0.1f)
+    val height = ((high - low) / (max - min) * HEIGHT).coerceAtLeast(3f)
     val y0 = (max - high) / (max - min) * HEIGHT
     val cw = with(LocalDensity.current) {
         WIDTH.toDp()
