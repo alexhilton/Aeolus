@@ -195,6 +195,15 @@ fun TempBar(
     val columnHeight = with(LocalDensity.current) {
         HEIGHT.toDp()
     }.plus(textHeightDp)
+    val colors = mutableListOf<Color>()
+    if (high >= 25f) {
+        colors.add(Color.Red)
+    }
+    colors.add(Color.Green)
+    colors.add(Color.Cyan)
+    if (low <= 2f) {
+        colors.add(Color.Blue)
+    }
     Column(
         modifier = Modifier
             .height(columnHeight),
@@ -208,16 +217,17 @@ fun TempBar(
             modifier = Modifier
                 .width(cw)
                 .height(ch)
-                .align(Alignment.CenterHorizontally),
-            onDraw = {
-                drawRoundRect(
-                    brush = brush,
-                    topLeft = Offset((size.width - WIDTH) / 2f, 0f),
-                    size = Size(WIDTH, height),
-                    cornerRadius = CornerRadius(8.dp.value, 8.dp.value)
-                )
-            }
-        )
+                .align(Alignment.CenterHorizontally)
+        ) {
+            drawRoundRect(
+                brush = Brush.verticalGradient(
+                    colors = colors
+                ),
+                topLeft = Offset((size.width - WIDTH) / 2f, 0f),
+                size = Size(WIDTH, height),
+                cornerRadius = CornerRadius(8.dp.value, 8.dp.value)
+            )
+        }
 
         if (textLow.isNotEmpty()) {
             GeneralText(textLow)
@@ -225,9 +235,6 @@ fun TempBar(
     }
 }
 
-val brush = Brush.verticalGradient(
-    colors = listOf(Color.Green, Color.Blue),
-)
 const val WIDTH = 40f
 const val HEIGHT = 120f
 val TEXT_HEIGHT = 22.dp
