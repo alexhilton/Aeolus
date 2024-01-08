@@ -36,9 +36,9 @@ class FavoritesViewModel(
 
             return@combine FavoriteScreenUiState(
                 loading = false,
-                favorites = allCities.mapIndexed { idx, city ->
+                favorites = allCities.map { city ->
                     val weather = weatherRepo.fetchDayWeather(city)
-                    return@mapIndexed FavoriteUiState(
+                    return@map FavoriteUiState(
                         city = city.asUiState(),
                         snapshot = weather.asUiState(),
                         selected = city.id == defaultCityId,
