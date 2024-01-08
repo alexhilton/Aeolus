@@ -79,71 +79,80 @@ class HomeViewModel(
     }
 
     fun refresh() {
+        viewModelScope.launch {
+            doRefresh()
+        }
+    }
+
+    private suspend fun doRefresh() {
         // Step #1: Mark as loading
         viewModelState.update { it.copy(loading = true) }
 
         // Step #2: Quit earlier if not need to update
         val now = SystemClock.uptimeMillis()
-        Log.d(LOG_TAG, "now $now, last ${viewModelState.value.updateTime}")
+        Log.d(LOG_TAG, "doRefresh now $now, last ${viewModelState.value.updateTime}")
         val cityChanged = locationState.value != viewModelState.value.city
         if (!cityChanged && now - viewModelState.value.updateTime < 120 * 1000L) {
             viewModelState.update {
                 it.copy(loading = false, error = R.string.error_up_to_date)
             }
+            Log.d(LOG_TAG, "doRefresh, weather data is up-to-date, do nothing.")
             return
         }
 
         // Step #3: Get latest location, then load new weather data based on the location
-        viewModelScope.launch {
-            locationRepo.getDefaultCity()
-                .collect { loc ->
-                    if (loc.successful()) {
-                        locationState.update { loc }
-                        weatherRepo.refreshWeatherNow(loc)
-                        weatherRepo.fetch3DayWeathers(loc)
-                        weatherRepo.fetchHourlyWeathers(loc)
-                        weatherRepo.refreshWeatherIndices(loc)
+        locationRepo.getDefaultCity()
+            .collect { loc ->
+                Log.d(LOG_TAG, "doRefresh new loc $loc")
+                if (loc.successful()) {
+                    locationState.update { loc }
+                    weatherRepo.refreshWeatherNow(loc)
+                    weatherRepo.fetch3DayWeathers(loc)
+                    weatherRepo.fetchHourlyWeathers(loc)
+                    weatherRepo.refreshWeatherIndices(loc)
+
+                    viewModelScope.launch {
                         updateState()
                     }
                 }
-        }
+            }
     }
 
-    private fun updateState(forceLoading: Boolean = false) {
-        viewModelScope.launch {
-            combine(
-                locationState, weatherNowState, dailyWeatherState, hourlyWeatherState, weatherIndexState
-            ) { loc, now, dailyWeathers, hourlyWeathers, weatherIndices ->
-                val error = if (!loc.successful()) {
-                    when (loc.error) {
-                        ERROR_NO_PERM -> R.string.error_location
-                        ERROR_NO_LOCATION -> R.string.error_location
-                        ERROR_NO_CITY -> R.string.error_city
-                        else -> NO_ERROR
-                    }
-                } else if (!now.successful) {
-                    R.string.error_network
-                } else {
-                    NO_ERROR
+    private suspend fun updateState(forceLoading: Boolean = false) {
+        combine(
+            locationState, weatherNowState, dailyWeatherState, hourlyWeatherState, weatherIndexState
+        ) { loc, now, dailyWeathers, hourlyWeathers, weatherIndices ->
+            val error = if (!loc.successful()) {
+                when (loc.error) {
+                    ERROR_NO_PERM -> R.string.error_location
+                    ERROR_NO_LOCATION -> R.string.error_location
+                    ERROR_NO_CITY -> R.string.error_city
+                    else -> NO_ERROR
                 }
-                val weather = if (now.successful) now else viewModelState.value.weatherData
-                val updateTime = if (now.successful) SystemClock.uptimeMillis() else viewModelState.value.updateTime
-                val daily = dailyWeathers.ifEmpty { viewModelState.value.dailyData }
-                val hourly = hourlyWeathers.ifEmpty { viewModelState.value.hourlyData }
-                val indices = weatherIndices.ifEmpty { viewModelState.value.indexData }
-                return@combine ViewModelState(
-                    loading = forceLoading,
-                    city = loc,
-                    weatherData = weather,
-                    dailyData = daily,
-                    hourlyData = hourly,
-                    indexData = indices,
-                    error = error,
-                    updateTime = updateTime
-                )
-            }.collect { state ->
-                viewModelState.update { state }
+            } else if (forceLoading) {
+                R.string.error_loading
+            } else if (!now.successful) {
+                R.string.error_network
+            } else {
+                NO_ERROR
             }
+            val weather = if (now.successful) now else viewModelState.value.weatherData
+            val updateTime = if (now.successful) SystemClock.uptimeMillis() else viewModelState.value.updateTime
+            val daily = dailyWeathers.ifEmpty { viewModelState.value.dailyData }
+            val hourly = hourlyWeathers.ifEmpty { viewModelState.value.hourlyData }
+            val indices = weatherIndices.ifEmpty { viewModelState.value.indexData }
+            return@combine ViewModelState(
+                loading = forceLoading,
+                city = loc,
+                weatherData = weather,
+                dailyData = daily,
+                hourlyData = hourly,
+                indexData = indices,
+                error = error,
+                updateTime = updateTime
+            )
+        }.collect { state ->
+            viewModelState.update { state }
         }
     }
 
@@ -158,9 +167,11 @@ class HomeViewModel(
                     Log.d(LOG_TAG, "from locals: location $loc")
                     locationState.update { loc }
 
-                    updateState(true)
+                    viewModelScope.launch {
+                        updateState(true)
+                    }
 
-                    refresh()
+                    doRefresh()
                 }
         }
     }
