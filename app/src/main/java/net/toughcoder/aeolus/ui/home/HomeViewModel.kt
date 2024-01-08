@@ -52,7 +52,8 @@ class HomeViewModel(
         }
     }
 
-    private val locationState = MutableStateFlow(WeatherLocation())
+    private val locationState = MutableStateFlow(WeatherLocation(error = ERROR_NO_CITY))
+
     private lateinit var weatherNowState: Flow<WeatherNow>
     private lateinit var dailyWeatherState: Flow<List<DailyWeather>>
     private lateinit var hourlyWeatherState: Flow<List<HourlyWeather>>
@@ -108,7 +109,7 @@ class HomeViewModel(
         }
     }
 
-    private fun updateState() {
+    private fun updateState(forceLoading: Boolean = false) {
         viewModelScope.launch {
             combine(
                 locationState, weatherNowState, dailyWeatherState, hourlyWeatherState, weatherIndexState
@@ -131,7 +132,7 @@ class HomeViewModel(
                 val hourly = hourlyWeathers.ifEmpty { viewModelState.value.hourlyData }
                 val indices = weatherIndices.ifEmpty { viewModelState.value.indexData }
                 return@combine ViewModelState(
-                    loading = false,
+                    loading = forceLoading,
                     city = loc,
                     weatherData = weather,
                     dailyData = daily,
@@ -157,7 +158,7 @@ class HomeViewModel(
                     Log.d(LOG_TAG, "from locals: location $loc")
                     locationState.update { loc }
 
-                    updateState()
+                    updateState(true)
 
                     refresh()
                 }
