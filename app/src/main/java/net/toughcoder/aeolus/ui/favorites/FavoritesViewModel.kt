@@ -23,7 +23,7 @@ class FavoritesViewModel(
 
     fun getAllFavorites(): Flow<FavoriteScreenUiState> =
         combine(locationRepo.getDefaultCityId(), locationRepo.getCurrentCity()) { defaultCityId, currentCity ->
-            val favorites = locationRepo.loadFavoriteCities()
+            val favorites = locationRepo.loadFavoriteCitiesFromLocal()
             val allCities = mutableListOf<WeatherLocation>()
             if (currentCity.successful()) {
                 allCities.add(currentCity)

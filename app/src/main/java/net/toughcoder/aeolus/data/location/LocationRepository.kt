@@ -96,6 +96,13 @@ class LocationRepository(
         }
     }
 
+    suspend fun loadFavoriteCitiesFromLocal(): List<WeatherLocation> {
+        return withContext(dispatcher) {
+            val dao = database.locationDao()
+            return@withContext dao.getAllCities().map { it.asModel() }
+        }
+    }
+
     suspend fun loadFavoriteCities(): List<WeatherLocation> {
         return withContext(dispatcher) {
             val lang = runBlocking { prefStore.getLanguage().first() }
