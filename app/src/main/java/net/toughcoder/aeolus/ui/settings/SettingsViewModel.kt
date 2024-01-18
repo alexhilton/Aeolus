@@ -1,6 +1,5 @@
 package net.toughcoder.aeolus.ui.settings
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.local.AeolusStore
+import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.KEY_LANGUAGE
 import net.toughcoder.aeolus.model.KEY_MEASURE
 import net.toughcoder.aeolus.model.LANGUAGE_ITEM
@@ -62,7 +62,7 @@ class SettingsViewModel(
         combine(store.getLanguage(), store.getMeasure()) { lang, measure ->
             val entryLang = LANGUAGE_ITEM.toUiState(lang)
             val entryMeasure = MEASURE_ITEM.toUiState(measure)
-            Log.d(LOG_TAG, "refresh language = $lang, measure = $measure")
+            logd(LOG_TAG, "refresh language = $lang, measure = $measure")
             viewModelState.update { SettingsUiState(entryLang, entryMeasure) }
         }.launchIn(viewModelScope)
     }

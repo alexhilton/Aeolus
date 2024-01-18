@@ -2,7 +2,6 @@ package net.toughcoder.aeolus.ui.daily
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -18,6 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.weather.WeatherRepository
+import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
@@ -43,7 +43,7 @@ class DailyWeatherViewModel(
         )
 
     init {
-        Log.d(LOG_TAG, "cityId is $cityId")
+        logd(LOG_TAG, "cityId is $cityId")
         viewModelScope.launch {
             locationRepo.getLocationInfo(cityId)
                 .flatMapMerge { loc ->

@@ -1,7 +1,6 @@
 package net.toughcoder.aeolus.data.local
 
 import android.content.Context
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
@@ -13,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
 import net.toughcoder.aeolus.model.DEFAULT_MEASURE
 import net.toughcoder.aeolus.model.KEY_LANGUAGE
@@ -97,13 +97,13 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
         } else {
             LocaleListCompat.forLanguageTags(lang)
         }
-        Log.d(LOG_TAG, "set lang $locale")
+        logd(LOG_TAG, "set lang $locale")
         AppCompatDelegate.setApplicationLocales(locale)
 
         withContext(Dispatchers.IO) {
             dataStore.edit { prefs ->
                 prefs[languageKey] = lang
-                Log.d(LOG_TAG, "persistLang $lang")
+                logd(LOG_TAG, "persistLang $lang")
             }
         }
     }
@@ -118,7 +118,7 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
         withContext(Dispatchers.IO) {
             dataStore.edit { prefs ->
                 prefs[measureKey] = measure
-                Log.d(LOG_TAG, "persistMeasure $measure")
+                logd(LOG_TAG, "persistMeasure $measure")
             }
         }
     }

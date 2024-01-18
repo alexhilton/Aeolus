@@ -9,6 +9,9 @@ class AeolusAndroidApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        System.setProperty("kotlinx.coroutines.debug", if (BuildConfig.DEBUG) "on" else "off")
+
         dataContainer = DataContainerImpl(this)
     }
 }

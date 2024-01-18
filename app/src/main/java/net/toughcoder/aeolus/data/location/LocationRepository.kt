@@ -1,6 +1,5 @@
 package net.toughcoder.aeolus.data.location
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -14,7 +13,7 @@ import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
-import net.toughcoder.aeolus.model.ERROR_NONE
+import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.ERROR_NO_LOCATION
 import net.toughcoder.aeolus.model.ERROR_NO_PERM
 import net.toughcoder.aeolus.model.TYPE_CURRENT
@@ -113,7 +112,7 @@ class LocationRepository(
                     if (city.successful()) {
                         dao.update(city.asEntity())
                     }
-                    Log.d(LOG_TAG, "favorites: old city -> $it, new city -> $city")
+                    logd(LOG_TAG, "favorites: old city -> $it, new city -> $city")
                     return@map if (city.successful()) city else it.asModel()
                 }
         }

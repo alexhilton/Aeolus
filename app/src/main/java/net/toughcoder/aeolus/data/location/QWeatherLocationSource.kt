@@ -1,8 +1,8 @@
 package net.toughcoder.aeolus.data.location
 
-import android.util.Log
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.GeoAPIService
+import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.ERROR_NO_CITY
 import net.toughcoder.aeolus.model.TYPE_CURRENT
 import net.toughcoder.aeolus.model.toModel
@@ -24,7 +24,7 @@ class QWeatherLocationSource(
                     .map { it.toModel() }
             }
         } catch (exception: Exception) {
-            Log.d(LOG_TAG, "searchHotCities: Error: ${exception.message}")
+            logd(LOG_TAG, "searchHotCities: Error: ${exception.message}")
         }
         return listOf()
     }
@@ -37,7 +37,7 @@ class QWeatherLocationSource(
                     .map { it.toModel() }
             }
         } catch (exception: Exception) {
-            Log.d(LOG_TAG, "searchCity: Error: ${exception.message}")
+            logd(LOG_TAG, "searchCity: Error: ${exception.message}")
         }
         return listOf()
     }
@@ -48,10 +48,10 @@ class QWeatherLocationSource(
             if (response.code == "200") {
                 return response.cityList[0].toModel()
             } else {
-                Log.d(LOG_TAG, "loadCityInfo $cityId: ${response.code}")
+                logd(LOG_TAG, "loadCityInfo $cityId: ${response.code}")
             }
         } catch (exception: Exception) {
-            Log.d(LOG_TAG, "loadCityInfo: $cityId: ${exception.message}")
+            logd(LOG_TAG, "loadCityInfo: $cityId: ${exception.message}")
         }
         return WeatherLocation(error = ERROR_NO_CITY)
     }
@@ -62,10 +62,10 @@ class QWeatherLocationSource(
             if (response.code == "200") {
                 return response.cityList[0].toModel(TYPE_CURRENT)
             } else {
-                Log.d(LOG_TAG, "searchByGeo failed: ${response.code}")
+                logd(LOG_TAG, "searchByGeo failed: ${response.code}")
             }
         } catch (e: Exception) {
-            Log.d(LOG_TAG, "searchByGeo exception: ${e.message}")
+            logd(LOG_TAG, "searchByGeo exception: ${e.message}")
         }
         return WeatherLocation(type = TYPE_CURRENT, error = ERROR_NO_CITY)
     }

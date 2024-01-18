@@ -1,8 +1,8 @@
 package net.toughcoder.aeolus.data.weather
 
-import android.util.Log
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
+import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.DailyWeatherIndex
@@ -49,18 +49,18 @@ class QWeatherDataSource(
                     )
                 }
             } else {
-                Log.d(LOG_TAG, "loadWeatherNow: Error code: ${weatherResponsne.code}")
+                logd(LOG_TAG, "loadWeatherNow: Error code: ${weatherResponsne.code}")
                 WeatherNow(successful = false)
             }
         } catch (exception: Exception) {
-            Log.d(LOG_TAG, "Failed to load now weather ${exception.message}")
+            logd(LOG_TAG, "Failed to load now weather ${exception.message}")
             return WeatherNow(successful = false)
         }
     }
 
     private fun parseTime(t: String): Long {
         val d = LocalDateTime.parse(t, DateTimeFormatter.ISO_DATE_TIME)
-        Log.d(LOG_TAG, "parseTime $t -> $d, long ${d.toEpochSecond(ZoneOffset.UTC)}")
+        logd(LOG_TAG, "parseTime $t -> $d, long ${d.toEpochSecond(ZoneOffset.UTC)}")
         return d.toEpochSecond(ZoneOffset.UTC)
     }
 
@@ -74,11 +74,11 @@ class QWeatherDataSource(
                     w.toModel(measure, air.index)
                 }
             } else {
-                Log.d(LOG_TAG, "failed to loadDailyWeather: ${weather.code}")
+                logd(LOG_TAG, "failed to loadDailyWeather: ${weather.code}")
                 emptyList()
             }
         } catch(exception: Exception) {
-            Log.d(LOG_TAG, "Failed to load daily weather ${exception.message}")
+            logd(LOG_TAG, "Failed to load daily weather ${exception.message}")
         }
         return emptyList()
     }
@@ -121,11 +121,11 @@ class QWeatherDataSource(
                     )
                 }
             } else {
-                Log.d(LOG_TAG, "failed to load7DayWeathers: ${weather.code}")
+                logd(LOG_TAG, "failed to load7DayWeathers: ${weather.code}")
                 emptyList()
             }
         } catch(exception: Exception) {
-            Log.d(LOG_TAG, "Failed to load 7 days weather ${exception.message}")
+            logd(LOG_TAG, "Failed to load 7 days weather ${exception.message}")
         }
         return emptyList()
     }
@@ -147,11 +147,11 @@ class QWeatherDataSource(
             return if (response.code == "200") {
                 response.hourList.map { it.toModel(measure) }
             } else {
-                Log.d(LOG_TAG, "failed to load24HourWeathers: ${response.code}")
+                logd(LOG_TAG, "failed to load24HourWeathers: ${response.code}")
                 emptyList()
             }
         } catch (exception: Exception) {
-            Log.d(LOG_TAG, "Failed to load 24 hour weather ${exception.message}")
+            logd(LOG_TAG, "Failed to load 24 hour weather ${exception.message}")
         }
         return emptyList()
     }
@@ -170,7 +170,7 @@ class QWeatherDataSource(
                 }
             }
         } catch (excp: Exception) {
-            Log.d(LOG_TAG, "loadAirQualityNow: Exception: ${excp.message}")
+            logd(LOG_TAG, "loadAirQualityNow: Exception: ${excp.message}")
         }
         return AirQuality()
     }
@@ -186,12 +186,12 @@ class QWeatherDataSource(
         try {
             val response =
                 api.fetchWeatherIndices(loc.id, type.joinToString(","), toParamLang(lang))
-            Log.d(LOG_TAG, "WeatherIndex: res code: ${response.code}")
+            logd(LOG_TAG, "WeatherIndex: res code: ${response.code}")
             if (response.code == "200") {
                 return response.indexList.map { it.toModel() }
             }
         } catch (excep: Exception) {
-            Log.d(LOG_TAG, "WeatherIndex: excep: ${excep.message}")
+            logd(LOG_TAG, "WeatherIndex: excep: ${excep.message}")
         }
         return emptyList()
     }
@@ -204,7 +204,7 @@ class QWeatherDataSource(
         try {
             val response =
                 api.fetch3DWeatherIndices(loc.id, type.joinToString(","), toParamLang(lang))
-            Log.d(LOG_TAG, "3DWeatherIndex: res code: ${response.code}")
+            logd(LOG_TAG, "3DWeatherIndex: res code: ${response.code}")
             if (response.code == "200") {
                 val rawList = response.indexList.map { it.toModel() }
                 return rawList.groupBy { it.date }
@@ -214,7 +214,7 @@ class QWeatherDataSource(
                             .sortedBy { it.date }
             }
         } catch (excep: Exception) {
-            Log.d(LOG_TAG, "3DWeatherIndex: excep: ${excep.message}")
+            logd(LOG_TAG, "3DWeatherIndex: excep: ${excep.message}")
         }
         return emptyList()
     }

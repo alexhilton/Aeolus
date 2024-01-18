@@ -1,7 +1,6 @@
 package net.toughcoder.aeolus.ui.home
 
 import android.os.SystemClock
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
@@ -20,6 +19,7 @@ import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherRepository
+import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.ERROR_NO_CITY
 import net.toughcoder.aeolus.model.ERROR_NO_LOCATION
@@ -90,20 +90,20 @@ class HomeViewModel(
 
         // Step #2: Quit earlier if not need to update
         val now = SystemClock.uptimeMillis()
-        Log.d(LOG_TAG, "doRefresh now $now, last ${viewModelState.value.updateTime}")
+        logd(LOG_TAG, "doRefresh now $now, last ${viewModelState.value.updateTime}")
         val cityChanged = locationState.value != viewModelState.value.city
         if (!cityChanged && now - viewModelState.value.updateTime < 120 * 1000L) {
             viewModelState.update {
                 it.copy(loading = false, error = R.string.error_up_to_date)
             }
-            Log.d(LOG_TAG, "doRefresh, weather data is up-to-date, do nothing.")
+            logd(LOG_TAG, "doRefresh, weather data is up-to-date, do nothing.")
             return
         }
 
         // Step #3: Get latest location, then load new weather data based on the location
         locationRepo.getDefaultCity()
             .collect { loc ->
-                Log.d(LOG_TAG, "doRefresh new loc $loc")
+                logd(LOG_TAG, "doRefresh new loc $loc")
                 if (loc.successful()) {
                     locationState.update { loc }
                     weatherRepo.refreshWeatherNow(loc)
@@ -164,7 +164,7 @@ class HomeViewModel(
                     dailyWeatherState = weatherRepo.dailyWeatherStream(loc)
                     hourlyWeatherState = weatherRepo.hourlyWeatherStream(loc)
                     weatherIndexState = weatherRepo.weatherIndexStream(loc)
-                    Log.d(LOG_TAG, "from locals: location $loc")
+                    logd(LOG_TAG, "from locals: location $loc")
                     locationState.update { loc }
 
                     viewModelScope.launch {
