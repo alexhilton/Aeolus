@@ -55,6 +55,7 @@ class AndroidLocationClient(
         } else {
             val builder = LocationRequest.Builder(500)
                 .setDurationMillis(60 * 1000) // Stop requesting after 1 min.
+                .setMaxUpdates(1)
 
             flowOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER, LocationManager.FUSED_PROVIDER)
                 .flatMapLatest { current(it, locationManager, builder.build(), context.mainExecutor) }
