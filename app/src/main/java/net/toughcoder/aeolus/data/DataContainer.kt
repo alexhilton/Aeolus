@@ -15,6 +15,7 @@ import net.toughcoder.aeolus.data.location.FusedLocationClient
 import net.toughcoder.aeolus.data.location.LocationProvider
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.location.NoLocationClient
+import net.toughcoder.aeolus.data.location.NoPermLocationClient
 import net.toughcoder.aeolus.data.location.QWeatherLocationSource
 import net.toughcoder.aeolus.data.weather.QWeatherDataSource
 import net.toughcoder.aeolus.data.weather.WeatherRepository
@@ -61,5 +62,6 @@ class DataContainerImpl(private val context: Context) : DataContainer {
 //        FakeLocationClient(context)
         AndroidLocationClient(context)
 //        NoLocationClient(context)
+//        NoPermLocationClient(context)
     }
 }

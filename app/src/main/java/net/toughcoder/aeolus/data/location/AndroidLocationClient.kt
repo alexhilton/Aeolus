@@ -43,8 +43,9 @@ class AndroidLocationClient(
         }
         if (locations.isEmpty()) {
             emit(emptyLocation(ERROR_NO_LOCATION))
+        } else {
+            locations.sortByDescending { it.time }
+            emit(MyLocation(locations[0].latitude, locations[0].longitude))
         }
-        locations.sortByDescending { it.time }
-        emit(MyLocation(locations[0].latitude, locations[0].longitude))
     }.flowOn(Dispatchers.IO)
 }

@@ -124,7 +124,7 @@ class HomeViewModel(
         ) { loc, now, dailyWeathers, hourlyWeathers, weatherIndices ->
             val error = if (!loc.successful()) {
                 when (loc.error) {
-                    ERROR_NO_PERM -> R.string.error_location
+                    ERROR_NO_PERM -> R.string.error_permission
                     ERROR_NO_LOCATION -> R.string.error_location
                     ERROR_NO_CITY -> R.string.error_city
                     else -> NO_ERROR
