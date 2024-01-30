@@ -12,11 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import net.toughcoder.aeolus.logd
 import java.util.concurrent.Executor
 
 class AndroidLocationClient(
@@ -32,35 +34,30 @@ class AndroidLocationClient(
         }
 
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val providers = listOf(
+            LocationManager.GPS_PROVIDER,
+            LocationManager.NETWORK_PROVIDER,
+            LocationManager.FUSED_PROVIDER,
+            LocationManager.PASSIVE_PROVIDER
+        )
+        val locations = providers
+            .mapNotNull { locationManager.getLastKnownLocation(it) }
+            .filter(::upToDate)
 
-        val locations = mutableListOf<Location>()
-        val fromGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        if (fromGps != null && upToDate(fromGps)) {
-            locations.add(fromGps)
-        }
-        val fromNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-        if (fromNetwork != null && upToDate(fromNetwork)) {
-            locations.add(fromNetwork)
-        }
-        val fromFused = locationManager.getLastKnownLocation(LocationManager.FUSED_PROVIDER)
-        if (fromFused != null && upToDate(fromFused)) {
-            locations.add(fromFused)
-        }
-        val fromPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
-        if (fromPassive != null && upToDate(fromPassive)) {
-            locations.add(fromPassive)
-        }
         if (locations.isNotEmpty()) {
-            locations.sortByDescending { it.elapsedRealtimeMillis }
-            emit(MyLocation(locations[0].latitude, locations[0].longitude))
+            val loc = locations.maxByOrNull { it.elapsedRealtimeMillis }
+            loc?.also {
+                logd(LOG_TAG, "Get cached location from last known!")
+            }?.let { emit(MyLocation(it.latitude, it.longitude)) }
         } else {
             val builder = LocationRequest.Builder(500)
                 .setDurationMillis(60 * 1000) // Stop requesting after 1 min.
                 .setMaxUpdates(1)
 
-            flowOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER, LocationManager.FUSED_PROVIDER)
+            providers.asFlow()
                 .flatMapLatest { current(it, locationManager, builder.build(), context.mainExecutor) }
                 .collect {
+                    logd(LOG_TAG, "Get current location fix!")
                     emit(MyLocation(it.latitude, it.longitude))
                 }
         }
