@@ -36,6 +36,7 @@ abstract class LocationProvider(
         const val ERROR_NO_PERM = -1.0
         const val ERROR_NO_LOCATION = -2.0
         const val ERROR_FAILURE = -3.0
+        const val TIMEOUT = 5 * 60 * 1000 // 5 minutes
     }
 }
 

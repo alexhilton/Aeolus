@@ -6,6 +6,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.location.LocationRequest
 import android.os.Build
+import android.os.SystemClock
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,23 +35,23 @@ class AndroidLocationClient(
 
         val locations = mutableListOf<Location>()
         val fromGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        if (fromGps != null) {
+        if (fromGps != null && upToDate(fromGps)) {
             locations.add(fromGps)
         }
         val fromNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-        if (fromNetwork != null) {
+        if (fromNetwork != null && upToDate(fromNetwork)) {
             locations.add(fromNetwork)
         }
         val fromFused = locationManager.getLastKnownLocation(LocationManager.FUSED_PROVIDER)
-        if (fromFused != null) {
+        if (fromFused != null && upToDate(fromFused)) {
             locations.add(fromFused)
         }
         val fromPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
-        if (fromPassive != null) {
+        if (fromPassive != null && upToDate(fromPassive)) {
             locations.add(fromPassive)
         }
         if (locations.isNotEmpty()) {
-            locations.sortByDescending { it.time }
+            locations.sortByDescending { it.elapsedRealtimeMillis }
             emit(MyLocation(locations[0].latitude, locations[0].longitude))
         } else {
             val builder = LocationRequest.Builder(500)
@@ -64,6 +65,11 @@ class AndroidLocationClient(
                 }
         }
     }.flowOn(Dispatchers.IO)
+
+    private fun upToDate(loc: Location): Boolean {
+        val now = SystemClock.elapsedRealtime()
+        return now - loc.elapsedRealtimeMillis <= TIMEOUT
+    }
 
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("MissingPermission")
