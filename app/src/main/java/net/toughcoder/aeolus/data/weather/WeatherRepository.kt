@@ -30,14 +30,13 @@ class WeatherRepository(
     private lateinit var hourlyWeatherStream: MutableStateFlow<List<HourlyWeather>>
     private lateinit var weatherIndexStream: MutableStateFlow<List<WeatherIndex>>
 
-    suspend fun getWeatherNow(location: WeatherLocation): WeatherNow {
-        return withContext(dispatcher) {
+    suspend fun getWeatherNow(location: WeatherLocation): WeatherNow =
+        withContext(dispatcher) {
             local.loadWeatherNow(location, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
         }
-    }
 
-    suspend fun fetchWeatherNow(location: WeatherLocation): WeatherNow {
-        return withContext(dispatcher) {
+    suspend fun fetchWeatherNow(location: WeatherLocation): WeatherNow =
+        withContext(dispatcher) {
             val bundle = network.loadWeatherNow(location, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
             if (bundle.successful) {
                 // Update database
@@ -45,17 +44,15 @@ class WeatherRepository(
             }
             bundle
         }
-    }
 
-    suspend fun weatherNowStream(location: WeatherLocation): Flow<WeatherNow> {
-        return withContext(dispatcher) {
+    suspend fun weatherNowStream(location: WeatherLocation): Flow<WeatherNow> =
+        withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val localNow = local.loadWeatherNow(location, lang, measure)
             nowWeatherStream = MutableStateFlow(localNow)
             nowWeatherStream.asStateFlow()
         }
-    }
 
     suspend fun refreshWeatherNow(location: WeatherLocation) {
         withContext(dispatcher) {
@@ -69,15 +66,14 @@ class WeatherRepository(
         }
     }
 
-    suspend fun dailyWeatherStream(location: WeatherLocation): Flow<List<DailyWeather>> {
-        return withContext(dispatcher) {
+    suspend fun dailyWeatherStream(location: WeatherLocation): Flow<List<DailyWeather>> =
+        withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val fromLocal = local.loadDailyWeather(location, lang, measure)
             dailyWeatherStream = MutableStateFlow(fromLocal)
             dailyWeatherStream.asStateFlow()
         }
-    }
 
     suspend fun fetch3DayWeathers(location: WeatherLocation) {
         withContext(dispatcher) {
@@ -105,8 +101,8 @@ class WeatherRepository(
         }
     }
 
-    suspend fun getWeatherSnapshotStream(location: WeatherLocation): Flow<DailyWeather> {
-        return withContext(dispatcher) {
+    suspend fun getWeatherSnapshotStream(location: WeatherLocation): Flow<DailyWeather> =
+        withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val weatherList = local.loadDailyWeather(location, lang, measure)
@@ -114,10 +110,9 @@ class WeatherRepository(
             weatherSnapshotStream = MutableStateFlow(fromLocal)
             weatherSnapshotStream.asStateFlow()
         }
-    }
 
-    suspend fun loadWeatherSnapshot(location: WeatherLocation) {
-        return withContext(dispatcher) {
+    suspend fun loadWeatherSnapshot(location: WeatherLocation) =
+        withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val weatherList = network.loadDailyWeather(location, lang, measure)
@@ -126,10 +121,9 @@ class WeatherRepository(
                 weatherSnapshotStream.update { weatherList[0] }
             }
         }
-    }
 
-    suspend fun fetchDayWeather(location: WeatherLocation): DailyWeather {
-        return withContext(dispatcher) {
+    suspend fun fetchDayWeather(location: WeatherLocation): DailyWeather =
+        withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val weatherList = network.loadDailyWeather(location, lang, measure)
@@ -140,14 +134,12 @@ class WeatherRepository(
                 DailyWeather()
             }
         }
-    }
 
-    suspend fun hourlyWeatherStream(location: WeatherLocation): Flow<List<HourlyWeather>> {
-        return withContext(dispatcher) {
+    suspend fun hourlyWeatherStream(location: WeatherLocation): Flow<List<HourlyWeather>> =
+        withContext(dispatcher) {
             hourlyWeatherStream = MutableStateFlow(emptyList())
             hourlyWeatherStream.asStateFlow()
         }
-    }
 
     suspend fun fetchHourlyWeathers(location: WeatherLocation) {
         withContext(dispatcher) {
@@ -157,12 +149,11 @@ class WeatherRepository(
         }
     }
 
-    suspend fun weatherIndexStream(location: WeatherLocation): Flow<List<WeatherIndex>> {
-        return withContext(dispatcher) {
+    suspend fun weatherIndexStream(location: WeatherLocation): Flow<List<WeatherIndex>> =
+        withContext(dispatcher) {
             weatherIndexStream = MutableStateFlow(emptyList())
             weatherIndexStream
         }
-    }
 
     suspend fun refreshWeatherIndices(location: WeatherLocation) {
         withContext(dispatcher) {
