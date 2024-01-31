@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.room
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import net.toughcoder.aeolus.data.qweather.QWeatherCityDTO
 import net.toughcoder.aeolus.model.WeatherLocation
 
 @Entity(tableName = "favorites")
@@ -18,6 +19,15 @@ fun WeatherLocation.asEntity(): LocationEntity {
         qid = id,
         name = name,
         admin = admin,
+        addTime = System.currentTimeMillis()
+    )
+}
+
+fun QWeatherCityDTO.asEntity(): LocationEntity {
+    return LocationEntity(
+        qid = qweatherId,
+        name = name,
+        admin = admin1,
         addTime = System.currentTimeMillis()
     )
 }

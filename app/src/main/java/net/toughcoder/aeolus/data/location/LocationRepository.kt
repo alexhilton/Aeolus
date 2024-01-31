@@ -12,14 +12,17 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.data.location.current.LocationProvider
+import net.toughcoder.aeolus.data.qweather.QWeatherCityDTO
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.logd
+import net.toughcoder.aeolus.model.ERROR_NO_CITY
 import net.toughcoder.aeolus.model.ERROR_NO_LOCATION
 import net.toughcoder.aeolus.model.ERROR_NO_PERM
 import net.toughcoder.aeolus.model.TYPE_CURRENT
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.asModel
+import net.toughcoder.aeolus.model.toModel
 
 class LocationRepository(
     private val prefStore: AeolusStore,
@@ -39,10 +42,10 @@ class LocationRepository(
 
     fun getDefaultCity(): Flow<WeatherLocation> =
         prefStore.getDefaultCity()
-            .map {
+            .map { defaultCity ->
                 val lang = runBlocking { prefStore.getLanguage().first() }
                 // When there is no default city, use current location.
-                if (!it.successful() || it.type == TYPE_CURRENT) {
+                if (!defaultCity.successful() || defaultCity.type == TYPE_CURRENT) {
                     val loc = runBlocking { locationProvider.getLocation().firstOrNull() }
                     if (loc == null || loc.isEmpty() || lang.isEmpty()) {
                         val error = if (loc!!.latitude == LocationProvider.ERROR_NO_PERM) {
@@ -52,15 +55,17 @@ class LocationRepository(
                         }
                         return@map WeatherLocation(type = TYPE_CURRENT, error = error)
                     }
-                    return@map datasource.searchByGeo(loc.longitude, loc.latitude, lang)
+                    val geoCity = datasource.searchByGeo(loc.longitude, loc.latitude, lang)
+                    return@map geoCity
+                        ?.run { toModel(TYPE_CURRENT) }
+                        ?: WeatherLocation(type = TYPE_CURRENT, error = ERROR_NO_CITY)
                 }
-                val city = datasource.loadCityInfo(it.id, lang)
-                if (city.successful()) {
+                val city = datasource.loadCityInfo(defaultCity.id, lang)
+                city?.also {
                     val dao = database.locationDao()
-                    dao.update(city.asEntity())
-                    return@map city
+                    dao.update(it.asEntity())
                 }
-                return@map it
+                return@map city?.run { toModel() } ?: WeatherLocation(error = ERROR_NO_CITY)
             }.flowOn(dispatcher)
 
     suspend fun setDefaultCity(city: WeatherLocation) {
@@ -108,13 +113,11 @@ class LocationRepository(
             val lang = runBlocking { prefStore.getLanguage().first() }
             val dao = database.locationDao()
             dao.getAllCities()
-                .map {
-                    val city = datasource.loadCityInfo(it.qid, lang)
-                    if (city.successful()) {
-                        dao.update(city.asEntity())
-                    }
-                    logd(LOG_TAG, "favorites: old city -> $it, new city -> $city")
-                    return@map if (city.successful()) city else it.asModel()
+                .map { localCity ->
+                    val city = datasource.loadCityInfo(localCity.qid, lang)
+                    city?.also { dao.update(it.asEntity()) }
+                    logd(LOG_TAG, "favorites: old city -> $localCity, new city -> $city")
+                    return@map city?.run { toModel() } ?: WeatherLocation(error = ERROR_NO_CITY)
                 }
         }
     }
@@ -123,15 +126,9 @@ class LocationRepository(
         val lang = runBlocking { prefStore.getLanguage().first() }
         val dao = database.locationDao()
         val city = datasource.loadCityInfo(cityId, lang)
-        if (city.successful()) {
-            dao.update(city.asEntity())
-        }
+        city?.also { dao.update(it.asEntity()) }
         emit(
-            if (city.successful()) {
-                city
-            } else {
-                dao.getCity(cityId)?.asModel() ?: WeatherLocation()
-            }
+            city?.run { toModel() } ?: WeatherLocation(error = ERROR_NO_CITY)
         )
     }.flowOn(dispatcher)
 
@@ -139,12 +136,16 @@ class LocationRepository(
         withContext(dispatcher) {
             val lang = runBlocking { prefStore.getLanguage().first() }
             datasource.searchHotCities(lang)
+                .filter { it.rank > 1 && (it.name == it.admin1 || it.name == it.admin2) }
+                .map(QWeatherCityDTO::toModel)
         }
 
     suspend fun searchCity(query: String): List<WeatherLocation> =
         withContext(dispatcher) {
             val lang = runBlocking { prefStore.getLanguage().first() }
             datasource.searchCity(query, lang)
+                .filter { it.rank > 5 }
+                .map(QWeatherCityDTO::toModel)
         }
 
     fun getCurrentCity(): Flow<WeatherLocation> =
@@ -152,6 +153,9 @@ class LocationRepository(
             if (loc.isEmpty() || lang.isEmpty()) {
                 return@combine WeatherLocation(type = TYPE_CURRENT)
             }
-            return@combine datasource.searchByGeo(loc.longitude, loc.latitude, lang)
+            val city = datasource.searchByGeo(loc.longitude, loc.latitude, lang)
+            return@combine city
+                ?.run { toModel(TYPE_CURRENT) }
+                ?: WeatherLocation(type = TYPE_CURRENT, error = ERROR_NO_CITY)
         }.flowOn(dispatcher)
 }
