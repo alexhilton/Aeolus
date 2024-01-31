@@ -195,27 +195,4 @@ class QWeatherDataSource(
         }
         return emptyList()
     }
-
-    override suspend fun load3DWeatherIndices(
-        loc: WeatherLocation,
-        type: List<Int>,
-        lang: String
-    ): List<DailyWeatherIndex> {
-        try {
-            val response =
-                api.fetch3DWeatherIndices(loc.id, type.joinToString(","), toParamLang(lang))
-            logd(LOG_TAG, "3DWeatherIndex: res code: ${response.code}")
-            if (response.code == "200") {
-                val rawList = response.indexList.map { it.toModel() }
-                return rawList.groupBy { it.date }
-                            .map { entry ->
-                                DailyWeatherIndex(entry.key, entry.value.sortedBy { it.date })
-                            }.toList()
-                            .sortedBy { it.date }
-            }
-        } catch (excep: Exception) {
-            logd(LOG_TAG, "3DWeatherIndex: excep: ${excep.message}")
-        }
-        return emptyList()
-    }
 }

@@ -80,12 +80,4 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
     ): List<WeatherIndex> {
         TODO("Not yet implemented")
     }
-
-    override suspend fun load3DWeatherIndices(
-        loc: WeatherLocation,
-        type: List<Int>,
-        lang: String
-    ): List<DailyWeatherIndex> {
-        TODO("Not yet implemented")
-    }
 }

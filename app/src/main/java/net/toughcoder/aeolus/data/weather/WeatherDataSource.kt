@@ -24,6 +24,4 @@ interface WeatherDataSource {
     suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): AirQuality
 
     suspend fun loadWeatherIndices(loc: WeatherLocation, type: List<Int>, lang: String): List<WeatherIndex>
-
-    suspend fun load3DWeatherIndices(loc: WeatherLocation, type: List<Int>, lang: String): List<DailyWeatherIndex>
 }
