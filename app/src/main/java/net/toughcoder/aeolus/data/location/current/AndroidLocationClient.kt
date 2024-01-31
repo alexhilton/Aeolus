@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data.location
+package net.toughcoder.aeolus.data.location.current
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import net.toughcoder.aeolus.logd
 import java.util.concurrent.Executor

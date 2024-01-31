@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
+import net.toughcoder.aeolus.data.location.current.LocationProvider
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.logd

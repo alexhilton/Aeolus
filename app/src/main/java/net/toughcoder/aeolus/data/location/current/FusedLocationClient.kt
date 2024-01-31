@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data.location
+package net.toughcoder.aeolus.data.location.current
 
 import android.annotation.SuppressLint
 import android.content.Context

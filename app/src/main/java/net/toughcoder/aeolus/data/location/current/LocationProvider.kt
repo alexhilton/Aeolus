@@ -1,4 +1,4 @@
-package net.toughcoder.aeolus.data.location
+package net.toughcoder.aeolus.data.location.current
 
 import android.Manifest
 import android.content.Context

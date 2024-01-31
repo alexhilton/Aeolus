@@ -9,13 +9,9 @@ import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.local.LocalDataSource
 import net.toughcoder.aeolus.data.local.aeolusStore
-import net.toughcoder.aeolus.data.location.AndroidLocationClient
-import net.toughcoder.aeolus.data.location.FakeLocationClient
-import net.toughcoder.aeolus.data.location.FusedLocationClient
-import net.toughcoder.aeolus.data.location.LocationProvider
+import net.toughcoder.aeolus.data.location.current.AndroidLocationClient
+import net.toughcoder.aeolus.data.location.current.LocationProvider
 import net.toughcoder.aeolus.data.location.LocationRepository
-import net.toughcoder.aeolus.data.location.NoLocationClient
-import net.toughcoder.aeolus.data.location.NoPermLocationClient
 import net.toughcoder.aeolus.data.location.QWeatherLocationSource
 import net.toughcoder.aeolus.data.weather.QWeatherDataSource
 import net.toughcoder.aeolus.data.weather.WeatherRepository

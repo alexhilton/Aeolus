@@ -1,9 +1,11 @@
-package net.toughcoder.aeolus.data.location
+package net.toughcoder.aeolus.data.location.current
 
 import android.content.Context
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import net.toughcoder.aeolus.data.location.current.LocationProvider
+import net.toughcoder.aeolus.data.location.current.MyLocation
 import kotlin.random.Random
 
 class NoLocationClient(
