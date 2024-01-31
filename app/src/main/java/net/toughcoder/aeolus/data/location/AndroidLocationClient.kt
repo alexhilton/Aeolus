@@ -45,7 +45,7 @@ class AndroidLocationClient(
             .filter(::upToDate)
 
         if (locations.isNotEmpty()) {
-            val loc = locations.maxByOrNull { it.elapsedRealtimeMillis }
+            val loc = locations.maxByOrNull { it.elapsedRealtimeNanos }
             loc?.also {
                 logd(LOG_TAG, "Get cached location from last known!")
             }?.let { emit(MyLocation(it.latitude, it.longitude)) }
@@ -65,7 +65,7 @@ class AndroidLocationClient(
 
     private fun upToDate(loc: Location): Boolean {
         val now = SystemClock.elapsedRealtime()
-        return now - loc.elapsedRealtimeMillis <= TIMEOUT
+        return now - loc.elapsedRealtimeNanos / 1000L <= TIMEOUT
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
