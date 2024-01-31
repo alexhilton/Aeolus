@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.weather
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
@@ -146,20 +147,21 @@ class QWeatherDataSource(
         TODO("Not yet implemented")
     }
 
-    override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather> {
-        try {
-            val response = api.fetchWeather24H(loc.id, toParamLang(lang), toParamMeasure(measure))
-            return if (response.code == "200") {
-                response.hourList.map { it.toModel(measure) }
-            } else {
-                logd(LOG_TAG, "failed to load24HourWeathers: ${response.code}")
-                emptyList()
+    override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherHourDTO> =
+        withContext(dispatcher) {
+            try {
+                val response = api.fetchWeather24H(loc.id, toParamLang(lang), toParamMeasure(measure))
+                return@withContext if (response.code == "200") {
+                    response.hourList //.map { it.toModel(measure) }
+                } else {
+                    logd(LOG_TAG, "failed to load24HourWeathers: ${response.code}")
+                    emptyList()
+                }
+            } catch (exception: Exception) {
+                logd(LOG_TAG, "Failed to load 24 hour weather ${exception.message}")
             }
-        } catch (exception: Exception) {
-            logd(LOG_TAG, "Failed to load 24 hour weather ${exception.message}")
+            return@withContext emptyList()
         }
-        return emptyList()
-    }
 
     private fun toParamMeasure(measure: String) =
         if (measure == MEASURE_IMPERIAL) "i" else "m"

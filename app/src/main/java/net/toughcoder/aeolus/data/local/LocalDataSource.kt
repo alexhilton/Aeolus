@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.data.local
 
 import net.toughcoder.aeolus.data.qweather.QWeatherCityDTO
+import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
@@ -67,7 +68,7 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         dao.addDailyWeathers(weathers)
     }
 
-    override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather> {
+    override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherHourDTO> {
         TODO("Not yet implemented")
     }
 

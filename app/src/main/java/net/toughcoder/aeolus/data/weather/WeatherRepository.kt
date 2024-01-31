@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.local.LocalDataSource
+import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
 import net.toughcoder.aeolus.model.DEFAULT_MEASURE
@@ -147,7 +148,11 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            hourlyWeatherStream.update { network.load24HourWeathers(location, lang, measure) }
+            val list = network.load24HourWeathers(location, lang, measure)
+                .map { it.toModel(measure) }
+            if (list.isNotEmpty()) {
+                hourlyWeatherStream.update { list }
+            }
         }
     }
 
