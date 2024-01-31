@@ -22,7 +22,5 @@ interface WeatherDataSource {
 
     suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<HourlyWeather>
 
-    suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): AirQuality
-
     suspend fun loadWeatherIndices(loc: WeatherLocation, type: List<Int>, lang: String): List<QWeatherIndexDTO>
 }

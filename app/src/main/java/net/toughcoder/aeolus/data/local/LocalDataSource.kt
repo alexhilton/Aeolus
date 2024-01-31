@@ -71,10 +71,6 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         TODO("Not yet implemented")
     }
 
-    override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): AirQuality {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun loadWeatherIndices(
         loc: WeatherLocation,
         type: List<Int>,
