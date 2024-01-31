@@ -2,6 +2,8 @@ package net.toughcoder.aeolus.data.weather
 
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
+import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
+import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.DailyWeatherIndex
@@ -11,9 +13,9 @@ import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 
 interface WeatherDataSource {
-    suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): WeatherNow
+    suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): QWeatherNowDTO?
 
-    suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow)
+    suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNowEntity)
 
     suspend fun loadDailyWeather(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather>
 

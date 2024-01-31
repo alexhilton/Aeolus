@@ -11,8 +11,8 @@ import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.local.LocalDataSource
-import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
+import net.toughcoder.aeolus.data.room.toEntity
 import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
 import net.toughcoder.aeolus.model.DEFAULT_MEASURE
 import net.toughcoder.aeolus.model.DailyWeather
@@ -35,17 +35,18 @@ class WeatherRepository(
 
     suspend fun getWeatherNow(location: WeatherLocation): WeatherNow =
         withContext(dispatcher) {
-            local.loadWeatherNow(location, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
+            val now = local.loadWeatherNow(location, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
+            return@withContext now?.toModel("") ?: WeatherNow(successful = false)
         }
 
     suspend fun fetchWeatherNow(location: WeatherLocation): WeatherNow =
         withContext(dispatcher) {
             val bundle = network.loadWeatherNow(location, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
-            if (bundle.successful) {
+            bundle?.also {
                 // Update database
-                local.updateWeatherNow(location, bundle)
+                local.updateWeatherNow(location, it.toEntity(location.id, "", -1))
             }
-            bundle
+            return@withContext bundle?.toModel("") ?: WeatherNow(successful = false)
         }
 
     suspend fun weatherNowStream(location: WeatherLocation): Flow<WeatherNow> =
@@ -53,7 +54,8 @@ class WeatherRepository(
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val localNow = local.loadWeatherNow(location, lang, measure)
-            nowWeatherStream = MutableStateFlow(localNow)
+            val data = localNow?.toModel(measure) ?: WeatherNow(successful = false)
+            nowWeatherStream = MutableStateFlow(data)
             nowWeatherStream.asStateFlow()
         }
 
@@ -62,10 +64,11 @@ class WeatherRepository(
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val bundle = network.loadWeatherNow(location, lang, measure)
-            if (bundle.successful) {
-                local.updateWeatherNow(location, bundle)
+            bundle?.also {
+                local.updateWeatherNow(location, it.toEntity(location.id, "", -1))
             }
-            nowWeatherStream.update { bundle }
+            val now = bundle?.toModel(measure) ?: WeatherNow(successful = false)
+            nowWeatherStream.update { now }
         }
     }
 

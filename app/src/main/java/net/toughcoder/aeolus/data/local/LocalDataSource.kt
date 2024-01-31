@@ -3,7 +3,10 @@ package net.toughcoder.aeolus.data.local
 import net.toughcoder.aeolus.data.qweather.QWeatherCityDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
+import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
 import net.toughcoder.aeolus.data.room.AeolusDatabase
+import net.toughcoder.aeolus.data.room.WeatherNowEntity
+import net.toughcoder.aeolus.data.room.asDTO
 import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.data.room.toEntity
 import net.toughcoder.aeolus.model.WeatherLocation
@@ -18,16 +21,16 @@ import net.toughcoder.aeolus.model.asModel
 import net.toughcoder.aeolus.model.toModel
 
 class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource {
-    override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): WeatherNow {
+    override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): QWeatherNowDTO? {
         val dao = database.weatherNowDao()
-        return dao.getByCityId(loc.name)?.asModel(measure) ?: WeatherNow()
+        return dao.getByCityId(loc.name)?.asDTO() ?: null
     }
 
-    override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow) {
+    override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNowEntity) {
         val dao = database.weatherNowDao()
         val entity = dao.getByCityId(loc.id)
         if (entity == null) {
-            dao.insert(weatherNow.asEntity(loc.id))
+            dao.insert(weatherNow)
         } else {
             with(weatherNow) {
                 entity.copy(

@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.model
 import net.toughcoder.aeolus.data.qweather.QWeatherDayDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
+import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
 import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 
@@ -41,6 +42,23 @@ fun WeatherNowEntity.asModel(measure: String): WeatherNow = WeatherNow(
     updateTime = updateTime,
     measure = measure
 )
+
+fun QWeatherNowDTO.toModel(measure: String): WeatherNow =
+    WeatherNow(
+        successful = true,
+        nowTemp = temp,
+        feelsLike = feelsLike,
+        icon = icon,
+        text = text,
+        windDegree = windDegree,
+        windDir = windDir,
+        windScale = windScale,
+        humidity = humidity,
+        airPressure = pressure,
+        visibility = visibility,
+        updateTime = -1,
+        measure = measure
+    )
 
 data class DailyWeather(
     val date: String = "",

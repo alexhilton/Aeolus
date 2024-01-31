@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.room
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
 import net.toughcoder.aeolus.model.WeatherNow
 
 @Entity(tableName = "weather_now")
@@ -39,3 +40,37 @@ fun WeatherNow.asEntity(cityId: String): WeatherNowEntity = WeatherNowEntity(
     visibility = visibility,
     airQualityIndex = airQualityIndex
 )
+
+fun QWeatherNowDTO.toEntity(cityId: String, aqi: String, update: Long): WeatherNowEntity =
+    WeatherNowEntity(
+        cityId = cityId,
+        nowTemp = temp,
+        feelsLike = feelsLike,
+        icon = icon,
+        text = text,
+        windDegree = windDegree,
+        windDir = windDir,
+        windSpeed = windSpeed,
+        windScale = windScale,
+        humidity = humidity,
+        airPressure = pressure,
+        visibility = visibility,
+        airQualityIndex = aqi,
+        updateTime = update
+    )
+
+fun WeatherNowEntity.asDTO(): QWeatherNowDTO =
+    QWeatherNowDTO(
+        temp = nowTemp,
+        feelsLike = feelsLike,
+        icon = icon,
+        text = text,
+        windDir = windDir,
+        windDegree = windDegree,
+        windScale = windScale,
+        windSpeed = windSpeed,
+        humidity = humidity,
+        pressure = airPressure,
+        visibility = visibility,
+        cloud = ""
+    )

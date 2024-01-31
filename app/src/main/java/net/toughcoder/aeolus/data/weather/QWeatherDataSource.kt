@@ -5,15 +5,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
+import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
+import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.logd
-import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
-import net.toughcoder.aeolus.model.DailyWeatherIndex
-import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.MEASURE_IMPERIAL
-import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.model.toModel
 import net.toughcoder.aeolus.model.toParamLang
@@ -28,41 +26,42 @@ class QWeatherDataSource(
     companion object {
         const val LOG_TAG = "QWeatherNowDataSource"
     }
-    override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): WeatherNow {
-        try {
-            val weatherResponsne = api.fetchWeatherNow(loc.id, toParamLang(lang), toParamMeasure(measure))
-            val airResponse = api.fetchAQINow(loc.id, toParamLang(lang))
-            val aqi = if (airResponse.code == "200") airResponse.now.index else ""
-            return if (weatherResponsne.code == "200") {
-                with(weatherResponsne.now) {
-                    WeatherNow(
-                        successful = true,
-                        nowTemp = temp,
-                        feelsLike = feelsLike,
-                        icon = icon,
-                        text = text,
-                        windDegree = windDegree,
-                        windDir = windDir,
-                        windScale = windScale,
-                        windSpeed = windSpeed,
-                        humidity = humidity,
-                        airPressure = pressure,
-                        visibility = visibility,
-                        cloud = cloud,
-                        updateTime = parseTime(weatherResponsne.updateTime),
-                        measure = measure,
-                        airQualityIndex = aqi
-                    )
+    override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): QWeatherNowDTO? =
+        withContext(dispatcher) {
+            try {
+                val response = api.fetchWeatherNow(loc.id, toParamLang(lang), toParamMeasure(measure))
+//                val airResponse = api.fetchAQINow(loc.id, toParamLang(lang))
+//                val aqi = if (airResponse.code == "200") airResponse.now.index else ""
+                if (response.code == "200") {
+                    return@withContext response.now
+//                    (weatherResponse.now) {
+//                        WeatherNow(
+//                            successful = true,
+//                            nowTemp = temp,
+//                            feelsLike = feelsLike,
+//                            icon = icon,
+//                            text = text,
+//                            windDegree = windDegree,
+//                            windDir = windDir,
+//                            windScale = windScale,
+//                            windSpeed = windSpeed,
+//                            humidity = humidity,
+//                            airPressure = pressure,
+//                            visibility = visibility,
+//                            cloud = cloud,
+//                            updateTime = parseTime(weatherResponsne.updateTime),
+//                            measure = measure,
+//                            airQualityIndex = aqi
+//                        )
+//                    }
+                } else {
+                    logd(LOG_TAG, "loadWeatherNow: Error code: ${response.code}")
                 }
-            } else {
-                logd(LOG_TAG, "loadWeatherNow: Error code: ${weatherResponsne.code}")
-                WeatherNow(successful = false)
+            } catch (exception: Exception) {
+                logd(LOG_TAG, "Failed to load now weather ${exception.message}")
             }
-        } catch (exception: Exception) {
-            logd(LOG_TAG, "Failed to load now weather ${exception.message}")
-            return WeatherNow(successful = false)
+            return@withContext null
         }
-    }
 
     private fun parseTime(t: String): Long {
         val d = LocalDateTime.parse(t, DateTimeFormatter.ISO_DATE_TIME)
@@ -136,7 +135,7 @@ class QWeatherDataSource(
         return emptyList()
     }
 
-    override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNow) {
+    override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNowEntity) {
         // Not implemented
     }
 
