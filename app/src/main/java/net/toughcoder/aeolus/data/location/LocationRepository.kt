@@ -101,15 +101,14 @@ class LocationRepository(
         }
     }
 
-    suspend fun loadFavoriteCitiesFromLocal(): List<WeatherLocation> {
-        return withContext(dispatcher) {
+    suspend fun loadFavoriteCitiesFromLocal(): List<WeatherLocation> =
+        withContext(dispatcher) {
             val dao = database.locationDao()
             return@withContext dao.getAllCities().map { it.asModel() }
         }
-    }
 
-    suspend fun loadFavoriteCities(): List<WeatherLocation> {
-        return withContext(dispatcher) {
+    suspend fun loadFavoriteCities(): List<WeatherLocation> =
+        withContext(dispatcher) {
             val lang = runBlocking { prefStore.getLanguage().first() }
             val dao = database.locationDao()
             dao.getAllCities()
@@ -120,7 +119,6 @@ class LocationRepository(
                     return@map city?.run { toModel() } ?: WeatherLocation(error = ERROR_NO_CITY)
                 }
         }
-    }
 
     fun getLocationInfo(cityId: String): Flow<WeatherLocation> = flow {
         val lang = runBlocking { prefStore.getLanguage().first() }
