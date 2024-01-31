@@ -1,5 +1,9 @@
 package net.toughcoder.aeolus.data.weather
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.logd
@@ -17,7 +21,8 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 class QWeatherDataSource(
-    private val api: QWeatherService
+    private val api: QWeatherService,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : WeatherDataSource {
     companion object {
         const val LOG_TAG = "QWeatherNowDataSource"
@@ -182,17 +187,18 @@ class QWeatherDataSource(
         loc: WeatherLocation,
         type: List<Int>,
         lang: String
-    ): List<WeatherIndex> {
+    ): List<QWeatherIndexDTO> =
+        withContext(dispatcher) {
         try {
             val response =
                 api.fetchWeatherIndices(loc.id, type.joinToString(","), toParamLang(lang))
             logd(LOG_TAG, "WeatherIndex: res code: ${response.code}")
             if (response.code == "200") {
-                return response.indexList.map { it.toModel() }
+                return@withContext response.indexList //.map { it.toModel() }
             }
         } catch (excep: Exception) {
             logd(LOG_TAG, "WeatherIndex: excep: ${excep.message}")
         }
-        return emptyList()
+        return@withContext emptyList()
     }
 }

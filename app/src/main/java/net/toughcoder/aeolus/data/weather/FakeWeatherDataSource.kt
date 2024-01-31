@@ -2,6 +2,7 @@ package net.toughcoder.aeolus.data.weather
 
 import android.os.SystemClock
 import kotlinx.coroutines.delay
+import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.DailyWeatherIndex
@@ -72,7 +73,7 @@ class FakeWeatherDataSource : WeatherDataSource {
         loc: WeatherLocation,
         type: List<Int>,
         lang: String
-    ): List<WeatherIndex> {
+    ): List<QWeatherIndexDTO> {
         TODO("Not yet implemented")
     }
 }

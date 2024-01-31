@@ -1,5 +1,7 @@
 package net.toughcoder.aeolus.data.local
 
+import net.toughcoder.aeolus.data.qweather.QWeatherCityDTO
+import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.data.room.toEntity
@@ -77,7 +79,7 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         loc: WeatherLocation,
         type: List<Int>,
         lang: String
-    ): List<WeatherIndex> {
+    ): List<QWeatherIndexDTO> {
         TODO("Not yet implemented")
     }
 }

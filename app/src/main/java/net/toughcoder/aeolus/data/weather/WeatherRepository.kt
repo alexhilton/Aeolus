@@ -11,12 +11,14 @@ import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.local.LocalDataSource
+import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
 import net.toughcoder.aeolus.model.DEFAULT_MEASURE
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.HourlyWeather
 import net.toughcoder.aeolus.model.WeatherIndex
 import net.toughcoder.aeolus.model.WeatherNow
+import net.toughcoder.aeolus.model.toModel
 
 class WeatherRepository(
     private val store: AeolusStore,
@@ -160,6 +162,7 @@ class WeatherRepository(
             val lang = runBlocking { store.getLanguage().first() }
             val types = listOf(1, 2, 3, 5, 7, 9)
             val list = network.loadWeatherIndices(location, types, lang)
+                .map(QWeatherIndexDTO::toModel)
             if (list.isNotEmpty()) {
                 weatherIndexStream.update { list }
             }
