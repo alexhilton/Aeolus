@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.data.weather
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -63,11 +64,19 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val bundle = network.loadWeatherNow(location, lang, measure)
-            bundle?.also {
+            val weatherJob = async {
+                network.loadWeatherNow(location, lang, measure)
+            }
+            val aqiJob = async {
+                network.loadAirQualityNow(location, lang)
+            }
+            val weather = weatherJob.await()
+            val aqi = aqiJob.await()
+            weather?.also {
                 local.updateWeatherNow(location, it.toEntity(location.id, ""))
             }
-            val now = bundle?.toModel(measure) ?: WeatherNow(successful = false)
+
+            val now = weather?.toModel(measure, aqi?.index ?: "") ?: WeatherNow(successful = false)
             nowWeatherStream.update { now }
         }
     }

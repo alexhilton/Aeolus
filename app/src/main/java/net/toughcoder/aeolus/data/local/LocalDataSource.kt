@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.data.local
 
+import net.toughcoder.aeolus.data.qweather.QWeatherAirDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
@@ -71,6 +72,10 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         type: List<Int>,
         lang: String
     ): List<QWeatherIndexDTO> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO? {
         TODO("Not yet implemented")
     }
 }

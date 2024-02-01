@@ -8,7 +8,7 @@ import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 
 data class WeatherNow(
-    val successful: Boolean = false,
+    val successful: Boolean = true,
     val nowTemp: String = "",
     val feelsLike: String = "",
     val icon: String = "",
@@ -41,7 +41,7 @@ fun WeatherNowEntity.asModel(measure: String): WeatherNow = WeatherNow(
     measure = measure
 )
 
-fun QWeatherNowDTO.toModel(measure: String): WeatherNow =
+fun QWeatherNowDTO.toModel(measure: String, aqi: String = ""): WeatherNow =
     WeatherNow(
         successful = true,
         nowTemp = temp,
@@ -54,7 +54,8 @@ fun QWeatherNowDTO.toModel(measure: String): WeatherNow =
         humidity = humidity,
         airPressure = pressure,
         visibility = visibility,
-        measure = measure
+        measure = measure,
+        airQualityIndex = aqi
     )
 
 data class DailyWeather(

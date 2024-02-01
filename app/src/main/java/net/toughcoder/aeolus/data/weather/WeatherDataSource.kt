@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.data.weather
 
+import net.toughcoder.aeolus.data.qweather.QWeatherAirDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
@@ -26,4 +27,6 @@ interface WeatherDataSource {
     suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherHourDTO>
 
     suspend fun loadWeatherIndices(loc: WeatherLocation, type: List<Int>, lang: String): List<QWeatherIndexDTO>
+
+    suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO?
 }

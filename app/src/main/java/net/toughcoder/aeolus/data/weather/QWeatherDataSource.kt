@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.weather
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import net.toughcoder.aeolus.data.qweather.QWeatherAirDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
@@ -12,7 +13,6 @@ import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.MEASURE_IMPERIAL
-import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.model.toModel
 import net.toughcoder.aeolus.model.toParamLang
 import java.time.LocalDateTime
@@ -30,30 +30,8 @@ class QWeatherDataSource(
         withContext(dispatcher) {
             try {
                 val response = api.fetchWeatherNow(loc.id, toParamLang(lang), toParamMeasure(measure))
-//                val airResponse = api.fetchAQINow(loc.id, toParamLang(lang))
-//                val aqi = if (airResponse.code == "200") airResponse.now.index else ""
                 if (response.code == "200") {
                     return@withContext response.now
-//                    (weatherResponse.now) {
-//                        WeatherNow(
-//                            successful = true,
-//                            nowTemp = temp,
-//                            feelsLike = feelsLike,
-//                            icon = icon,
-//                            text = text,
-//                            windDegree = windDegree,
-//                            windDir = windDir,
-//                            windScale = windScale,
-//                            windSpeed = windSpeed,
-//                            humidity = humidity,
-//                            airPressure = pressure,
-//                            visibility = visibility,
-//                            cloud = cloud,
-//                            updateTime = parseTime(weatherResponsne.updateTime),
-//                            measure = measure,
-//                            airQualityIndex = aqi
-//                        )
-//                    }
                 } else {
                     logd(LOG_TAG, "loadWeatherNow: Error code: ${response.code}")
                 }
@@ -183,4 +161,25 @@ class QWeatherDataSource(
         }
         return@withContext emptyList()
     }
+
+    override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO? =
+        withContext(dispatcher) {
+            try {
+                val response = api.fetchAQINow(loc.id, toParamLang(lang))
+                if (response.code == "200") {
+                    return@withContext response.now
+//                with(response.now) {
+//                    AirQuality(
+//                        index = index.toInt(),
+//                        level = level.toInt(),
+//                        category = category,
+//                        primary = primary
+//                    )
+//                }
+                }
+            } catch (excp: Exception) {
+                logd(LOG_TAG, "loadAirQualityNow: Exception: ${excp.message}")
+            }
+            return@withContext null
+        }
 }

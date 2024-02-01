@@ -1,6 +1,7 @@
 package net.toughcoder.aeolus.data.weather
 
 import kotlinx.coroutines.delay
+import net.toughcoder.aeolus.data.qweather.QWeatherAirDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
@@ -60,6 +61,10 @@ class FakeWeatherDataSource : WeatherDataSource {
         type: List<Int>,
         lang: String
     ): List<QWeatherIndexDTO> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO? {
         TODO("Not yet implemented")
     }
 }
