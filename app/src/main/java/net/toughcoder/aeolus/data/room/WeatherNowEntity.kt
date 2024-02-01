@@ -39,7 +39,7 @@ fun WeatherNow.asEntity(cityId: String): WeatherNowEntity = WeatherNowEntity(
     airQualityIndex = airQualityIndex
 )
 
-fun QWeatherNowDTO.toEntity(cityId: String, aqi: String, update: Long): WeatherNowEntity =
+fun QWeatherNowDTO.toEntity(cityId: String, aqi: String): WeatherNowEntity =
     WeatherNowEntity(
         cityId = cityId,
         nowTemp = temp,

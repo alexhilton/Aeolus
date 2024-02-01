@@ -44,7 +44,7 @@ class WeatherRepository(
             val bundle = network.loadWeatherNow(location, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
             bundle?.also {
                 // Update database
-                local.updateWeatherNow(location, it.toEntity(location.id, "", -1))
+                local.updateWeatherNow(location, it.toEntity(location.id, ""))
             }
             return@withContext bundle?.toModel("") ?: WeatherNow(successful = false)
         }
@@ -65,7 +65,7 @@ class WeatherRepository(
             val measure = runBlocking { store.getMeasure().first() }
             val bundle = network.loadWeatherNow(location, lang, measure)
             bundle?.also {
-                local.updateWeatherNow(location, it.toEntity(location.id, "", -1))
+                local.updateWeatherNow(location, it.toEntity(location.id, ""))
             }
             val now = bundle?.toModel(measure) ?: WeatherNow(successful = false)
             nowWeatherStream.update { now }

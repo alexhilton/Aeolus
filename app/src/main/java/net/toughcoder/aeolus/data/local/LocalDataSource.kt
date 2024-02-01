@@ -15,7 +15,7 @@ import net.toughcoder.aeolus.model.toModel
 class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource {
     override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): QWeatherNowDTO? {
         val dao = database.weatherNowDao()
-        return dao.getByCityId(loc.name)?.asDTO() ?: null
+        return dao.getByCityId(loc.name)?.asDTO()
     }
 
     override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNowEntity) {
