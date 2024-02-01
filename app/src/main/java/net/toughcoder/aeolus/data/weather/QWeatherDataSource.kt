@@ -74,7 +74,6 @@ class QWeatherDataSource(
         withContext(dispatcher) {
             try {
                 val weather = api.fetchWeather7D(loc.id, toParamLang(lang), toParamMeasure(measure))
-//            val airResponse = api.fetchAQIDaily(loc.id, toParamLang(lang))
 //            val indexResponse = api.fetch3DWeatherIndices(loc.id, types.joinToString(","), toParamLang(lang))
 //            val indexMap = if (indexResponse.code == "200") {
 //                indexResponse.indexList
@@ -177,5 +176,23 @@ class QWeatherDataSource(
                 logd(LOG_TAG, "loadAirQualityNow: Exception: ${excp.message}")
             }
             return@withContext null
+        }
+
+    override suspend fun loadDailyAirQuality(
+        loc: WeatherLocation,
+        lang: String
+    ): List<QWeatherAirDTO> =
+        withContext(dispatcher) {
+            try {
+                val response = api.fetchAQIDaily(loc.id, toParamLang(lang))
+                if (response.code == "200") {
+                    return@withContext response.dailyAirs
+                } else {
+                    logd(LOG_TAG, "Error response: ${response.code}")
+                }
+            } catch (e: Exception) {
+                logd(LOG_TAG,"Failed to load daily AQI: ${e.message}")
+            }
+            return@withContext emptyList()
         }
 }

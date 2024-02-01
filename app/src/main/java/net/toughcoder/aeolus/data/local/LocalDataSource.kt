@@ -80,4 +80,11 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
     override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO? {
         TODO("Not yet implemented")
     }
+
+    override suspend fun loadDailyAirQuality(
+        loc: WeatherLocation,
+        lang: String
+    ): List<QWeatherAirDTO> {
+        TODO("Not yet implemented")
+    }
 }

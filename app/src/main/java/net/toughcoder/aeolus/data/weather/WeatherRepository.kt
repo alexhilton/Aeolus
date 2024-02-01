@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.local.LocalDataSource
-import net.toughcoder.aeolus.data.qweather.QWeatherDayDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.room.toEntity
 import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
@@ -112,13 +111,25 @@ class WeatherRepository(
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val types = listOf(1, 2, 3, 5, 7, 9)
-            val bundle = network.load7DayWeathers(location, lang, measure, types)
-            if (bundle.isNotEmpty()) {
-                local.updateDailyWeather(
-                    location,
-                    bundle.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
-                )
-                dailyWeatherStream.update { bundle.map { it.toModel(measure, "") } }
+            val weatherJob = async {
+                network.load7DayWeathers(location, lang, measure, types)
+            }
+            val aqiJob = async {
+                network.loadDailyAirQuality(location, lang)
+            }
+            val weatherList = weatherJob.await()
+            val aqiList = aqiJob.await()
+            if (weatherList.isEmpty()) {
+                return@withContext
+            }
+            local.updateDailyWeather(
+                location,
+                weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
+            )
+            dailyWeatherStream.update {
+                weatherList.mapIndexed { idx, dw ->
+                    dw.toModel(measure, if (idx < aqiList.size) aqiList[idx].index else "")
+                }
             }
         }
     }
