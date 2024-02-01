@@ -4,6 +4,7 @@ import net.toughcoder.aeolus.data.qweather.QWeatherAirDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
+import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
@@ -22,7 +23,7 @@ interface WeatherDataSource {
 
     suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String, types: List<Int>): List<DailyWeather>
 
-    suspend fun updateDailyWeather(loc: WeatherLocation, dailyWeathers: List<DailyWeather>)
+    suspend fun updateDailyWeather(loc: WeatherLocation, dailyWeathers: List<DailyWeatherEntity>)
 
     suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherHourDTO>
 

@@ -97,7 +97,10 @@ class WeatherRepository(
             val bundle = network.loadDailyWeather(location, lang, measure)
             if (bundle.isNotEmpty()) {
                 // update local cache
-                local.updateDailyWeather(location, bundle)
+                local.updateDailyWeather(
+                    location,
+                    bundle.mapIndexed{ idx, item -> item.toEntity(location.id, idx) }
+                )
                 dailyWeatherStream.update { bundle }
             }
         }
@@ -110,7 +113,10 @@ class WeatherRepository(
             val types = listOf(1, 2, 3, 5, 7, 9)
             val bundle = network.load7DayWeathers(location, lang, measure, types)
             if (bundle.isNotEmpty()) {
-                local.updateDailyWeather(location, bundle)
+                local.updateDailyWeather(
+                    location,
+                    bundle.mapIndexed{ idx, item -> item.toEntity(location.id, idx) }
+                )
                 dailyWeatherStream.update { bundle }
             }
         }
@@ -132,7 +138,10 @@ class WeatherRepository(
             val measure = runBlocking { store.getMeasure().first() }
             val weatherList = network.loadDailyWeather(location, lang, measure)
             if (weatherList.isNotEmpty()) {
-                local.updateDailyWeather(location, weatherList)
+                local.updateDailyWeather(
+                    location,
+                    weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx) }
+                )
                 weatherSnapshotStream.update { weatherList[0] }
             }
         }
@@ -143,7 +152,10 @@ class WeatherRepository(
             val measure = runBlocking { store.getMeasure().first() }
             val weatherList = network.loadDailyWeather(location, lang, measure)
             if (weatherList.isNotEmpty()) {
-                local.updateDailyWeather(location, weatherList)
+                local.updateDailyWeather(
+                    location,
+                    weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx) }
+                )
                 weatherList[0]
             } else {
                 DailyWeather()

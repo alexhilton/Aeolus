@@ -5,6 +5,7 @@ import net.toughcoder.aeolus.data.qweather.QWeatherAirDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
+import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.WeatherLocation
@@ -47,7 +48,7 @@ class FakeWeatherDataSource : WeatherDataSource {
 
     override suspend fun updateDailyWeather(
         loc: WeatherLocation,
-        dailyWeathers: List<DailyWeather>
+        dailyWeathers: List<DailyWeatherEntity>
     ) {
         TODO("Not yet implemented")
     }

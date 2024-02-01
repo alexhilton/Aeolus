@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.room
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import net.toughcoder.aeolus.data.qweather.QWeatherDayDTO
 import net.toughcoder.aeolus.model.DailyWeather
 
 @Entity(tableName = "daily_weather")
@@ -51,4 +52,28 @@ fun DailyWeather.toEntity(cityId: String, index: Int): DailyWeatherEntity =
         iconNight,
         textNight,
         aqi = airQualityIndex
+    )
+
+fun QWeatherDayDTO.toEntity(cityId: String, index: Int, aqi: String): DailyWeatherEntity =
+    DailyWeatherEntity(
+        "%s-%02d".format(cityId, index),
+        cityId,
+        date,
+        tempHigh,
+        tempLow,
+        sunrise,
+        sunset,
+        iconDay,
+        textDay,
+        uvIndex,
+        humidity,
+        pressure,
+        visibility,
+        windScaleDay,
+        windDegreeDay,
+        windDirDay,
+        windSpeedDay,
+        iconNight,
+        textNight,
+        aqi
     )

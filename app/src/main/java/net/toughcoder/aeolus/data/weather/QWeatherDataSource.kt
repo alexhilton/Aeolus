@@ -9,6 +9,7 @@ import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
+import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.DailyWeather
@@ -119,7 +120,7 @@ class QWeatherDataSource(
 
     override suspend fun updateDailyWeather(
         loc: WeatherLocation,
-        dailyWeathers: List<DailyWeather>
+        dailyWeathers: List<DailyWeatherEntity>
     ) {
         TODO("Not yet implemented")
     }

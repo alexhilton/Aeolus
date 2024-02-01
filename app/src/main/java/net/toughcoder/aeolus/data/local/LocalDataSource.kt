@@ -5,6 +5,7 @@ import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
 import net.toughcoder.aeolus.data.room.AeolusDatabase
+import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.data.room.asDTO
 import net.toughcoder.aeolus.data.room.toEntity
@@ -56,11 +57,11 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
 
     override suspend fun updateDailyWeather(
         loc: WeatherLocation,
-        dailyWeathers: List<DailyWeather>
+        dailyWeathers: List<DailyWeatherEntity>
     ) {
         val dao = database.dailyWeatherDao()
-        val weathers = dailyWeathers.mapIndexed{ idx, item -> item.toEntity(loc.id, idx) }
-        dao.addDailyWeathers(weathers)
+//        val weathers = dailyWeathers.mapIndexed{ idx, item -> item.toEntity(loc.id, idx) }
+        dao.addDailyWeathers(dailyWeathers)
     }
 
     override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherHourDTO> {
