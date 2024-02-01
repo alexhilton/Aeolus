@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.data.local.AeolusStore
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.local.LocalDataSource
+import net.toughcoder.aeolus.data.qweather.QWeatherDayDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.room.toEntity
 import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
@@ -115,9 +116,9 @@ class WeatherRepository(
             if (bundle.isNotEmpty()) {
                 local.updateDailyWeather(
                     location,
-                    bundle.mapIndexed{ idx, item -> item.toEntity(location.id, idx) }
+                    bundle.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
                 )
-                dailyWeatherStream.update { bundle }
+                dailyWeatherStream.update { bundle.map { it.toModel(measure, "") } }
             }
         }
     }
