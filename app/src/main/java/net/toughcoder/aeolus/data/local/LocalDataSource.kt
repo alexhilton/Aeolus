@@ -1,23 +1,15 @@
 package net.toughcoder.aeolus.data.local
 
-import net.toughcoder.aeolus.data.qweather.QWeatherCityDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
 import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.data.room.asDTO
-import net.toughcoder.aeolus.data.room.asEntity
 import net.toughcoder.aeolus.data.room.toEntity
 import net.toughcoder.aeolus.model.WeatherLocation
-import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherDataSource
-import net.toughcoder.aeolus.model.AirQuality
 import net.toughcoder.aeolus.model.DailyWeather
-import net.toughcoder.aeolus.model.DailyWeatherIndex
-import net.toughcoder.aeolus.model.HourlyWeather
-import net.toughcoder.aeolus.model.WeatherIndex
-import net.toughcoder.aeolus.model.asModel
 import net.toughcoder.aeolus.model.toModel
 
 class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource {
@@ -34,7 +26,6 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         } else {
             with(weatherNow) {
                 entity.copy(
-                    updateTime = updateTime,
                     nowTemp = nowTemp,
                     feelsLike = feelsLike,
                     icon = icon,

@@ -21,7 +21,6 @@ data class WeatherNow(
     val airPressure: String = "",
     val visibility: String = "",
     val cloud: String = "",
-    val updateTime: Long = -1,
     val measure: String = "",
     val airQualityIndex: String = ""
 
@@ -39,7 +38,6 @@ fun WeatherNowEntity.asModel(measure: String): WeatherNow = WeatherNow(
     humidity = humidity,
     airPressure = airPressure,
     visibility = visibility,
-    updateTime = updateTime,
     measure = measure
 )
 
@@ -56,7 +54,6 @@ fun QWeatherNowDTO.toModel(measure: String): WeatherNow =
         humidity = humidity,
         airPressure = pressure,
         visibility = visibility,
-        updateTime = -1,
         measure = measure
     )
 

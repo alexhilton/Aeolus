@@ -9,7 +9,6 @@ import net.toughcoder.aeolus.model.WeatherNow
 @Entity(tableName = "weather_now")
 data class WeatherNowEntity(
     @PrimaryKey val cityId: String,
-    @ColumnInfo(name = "update_time") val updateTime: Long,
     @ColumnInfo(name = "now_temp") val nowTemp: String,
     @ColumnInfo(name = "feels_like") val feelsLike: String,
     @ColumnInfo(name = "icon") val icon: String,
@@ -26,7 +25,6 @@ data class WeatherNowEntity(
 
 fun WeatherNow.asEntity(cityId: String): WeatherNowEntity = WeatherNowEntity(
     cityId = cityId,
-    updateTime= updateTime,
     nowTemp = nowTemp,
     feelsLike = feelsLike,
     icon = icon,
@@ -56,7 +54,6 @@ fun QWeatherNowDTO.toEntity(cityId: String, aqi: String, update: Long): WeatherN
         airPressure = pressure,
         visibility = visibility,
         airQualityIndex = aqi,
-        updateTime = update
     )
 
 fun WeatherNowEntity.asDTO(): QWeatherNowDTO =
