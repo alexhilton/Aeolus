@@ -168,14 +168,6 @@ class QWeatherDataSource(
                 val response = api.fetchAQINow(loc.id, toParamLang(lang))
                 if (response.code == "200") {
                     return@withContext response.now
-//                with(response.now) {
-//                    AirQuality(
-//                        index = index.toInt(),
-//                        level = level.toInt(),
-//                        category = category,
-//                        primary = primary
-//                    )
-//                }
                 }
             } catch (excp: Exception) {
                 logd(LOG_TAG, "loadAirQualityNow: Exception: ${excp.message}")
