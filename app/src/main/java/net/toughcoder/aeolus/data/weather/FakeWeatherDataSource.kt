@@ -66,6 +66,14 @@ class FakeWeatherDataSource : WeatherDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun loadDailyWeatherIndices(
+        loc: WeatherLocation,
+        type: List<Int>,
+        lang: String
+    ): Map<String, List<QWeatherIndexDTO>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO? {
         TODO("Not yet implemented")
     }

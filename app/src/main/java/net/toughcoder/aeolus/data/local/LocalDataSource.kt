@@ -61,7 +61,6 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         dailyWeathers: List<DailyWeatherEntity>
     ) {
         val dao = database.dailyWeatherDao()
-//        val weathers = dailyWeathers.mapIndexed{ idx, item -> item.toEntity(loc.id, idx) }
         dao.addDailyWeathers(dailyWeathers)
     }
 
@@ -74,6 +73,14 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         type: List<Int>,
         lang: String
     ): List<QWeatherIndexDTO> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadDailyWeatherIndices(
+        loc: WeatherLocation,
+        type: List<Int>,
+        lang: String
+    ): Map<String, List<QWeatherIndexDTO>> {
         TODO("Not yet implemented")
     }
 

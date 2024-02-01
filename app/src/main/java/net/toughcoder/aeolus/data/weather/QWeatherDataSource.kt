@@ -74,42 +74,7 @@ class QWeatherDataSource(
         withContext(dispatcher) {
             try {
                 val weather = api.fetchWeather7D(loc.id, toParamLang(lang), toParamMeasure(measure))
-//            val indexResponse = api.fetch3DWeatherIndices(loc.id, types.joinToString(","), toParamLang(lang))
-//            val indexMap = if (indexResponse.code == "200") {
-//                indexResponse.indexList
-//                    .map { it.toModel() }
-//                    .groupBy { it.date }
-//            } else {
-//                emptyMap()
-//            }
-//            val airList = if (airResponse.code == "200") airResponse.dailyAirs else emptyList()
                 return@withContext weather.dayList
-//            if (weather.code == "200") {
-//                weather.dayList.mapIndexed{ idx, dw ->
-//                    var clothIndex = ""
-//                    var coldIndex = ""
-//                    val indices = indexMap[dw.date]
-//                    if (indices != null) {
-//                        for (idx in indices) {
-//                            if (idx.type == 3) {
-//                                clothIndex = idx.category
-//                            }
-//                            if (idx.type == 9) {
-//                                coldIndex = idx.category
-//                            }
-//                        }
-//                    }
-//                    dw.toModel(
-//                        measure = measure,
-//                        aqi = if (idx < airList.size) airList[idx].index else "",
-//                        cloth = clothIndex,
-//                        cold = coldIndex
-//                    )
-//                }
-//            } else {
-//                logd(LOG_TAG, "failed to load7DayWeathers: ${weather.code}")
-//                emptyList()
-//            }
             } catch(exception: Exception) {
                 logd(LOG_TAG, "Failed to load 7 days weather ${exception.message}")
             }
@@ -164,6 +129,27 @@ class QWeatherDataSource(
         }
         return@withContext emptyList()
     }
+
+    override suspend fun loadDailyWeatherIndices(
+        loc: WeatherLocation,
+        types: List<Int>,
+        lang: String
+    ): Map<String, List<QWeatherIndexDTO>> =
+        withContext(dispatcher) {
+            try {
+                val response =
+                    api.fetch3DWeatherIndices(loc.id, types.joinToString(","), toParamLang(lang))
+                if (response.code == "200") {
+                    return@withContext response.indexList
+                        .groupBy { it.date }
+                } else {
+                    logd(LOG_TAG, "Bad response: ${response.code}")
+                }
+            } catch (e: Exception) {
+                logd(LOG_TAG, "Failed to load daily weather indices: ${e.message}")
+            }
+            return@withContext emptyMap()
+        }
 
     override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO? =
         withContext(dispatcher) {

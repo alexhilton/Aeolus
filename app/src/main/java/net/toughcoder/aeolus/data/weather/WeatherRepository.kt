@@ -117,8 +117,13 @@ class WeatherRepository(
             val aqiJob = async {
                 network.loadDailyAirQuality(location, lang)
             }
+            val indexJob = async {
+                network.loadDailyWeatherIndices(location, types, lang)
+            }
             val weatherList = weatherJob.await()
             val aqiList = aqiJob.await()
+            val indexMap = indexJob.await()
+
             if (weatherList.isEmpty()) {
                 return@withContext
             }
@@ -128,7 +133,25 @@ class WeatherRepository(
             )
             dailyWeatherStream.update {
                 weatherList.mapIndexed { idx, dw ->
-                    dw.toModel(measure, if (idx < aqiList.size) aqiList[idx].index else "")
+                    var clothIndex = ""
+                    var coldIndex = ""
+                    val indices = indexMap[dw.date]
+                    if (indices != null) {
+                        for (id in indices) {
+                            if (id.type == "3") {
+                                clothIndex = id.category
+                            }
+                            if (id.type == "9") {
+                                coldIndex = id.category
+                            }
+                        }
+                    }
+                    dw.toModel(
+                        measure = measure,
+                        aqi = if (idx < aqiList.size) aqiList[idx].index else "",
+                        cloth = clothIndex,
+                        cold = coldIndex
+                    )
                 }
             }
         }

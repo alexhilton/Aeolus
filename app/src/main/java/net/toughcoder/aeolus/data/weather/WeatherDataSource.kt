@@ -30,6 +30,8 @@ interface WeatherDataSource {
 
     suspend fun loadWeatherIndices(loc: WeatherLocation, type: List<Int>, lang: String): List<QWeatherIndexDTO>
 
+    suspend fun loadDailyWeatherIndices(loc: WeatherLocation, types: List<Int>, lang: String): Map<String, List<QWeatherIndexDTO>>
+
     suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO?
 
     suspend fun loadDailyAirQuality(loc: WeatherLocation, lang: String): List<QWeatherAirDTO>
