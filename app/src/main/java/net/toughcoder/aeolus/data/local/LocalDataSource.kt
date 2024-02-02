@@ -46,7 +46,7 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         }
     }
 
-    override suspend fun loadDailyWeather(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
+    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         val dao = database.dailyWeatherDao()
         val weathers = dao.getDailyWeathers(loc.id)
         return weathers.map { it.toModel(measure) }

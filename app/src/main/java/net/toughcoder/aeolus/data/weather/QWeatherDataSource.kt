@@ -49,7 +49,7 @@ class QWeatherDataSource(
         return d.toEpochSecond(ZoneOffset.UTC)
     }
 
-    override suspend fun loadDailyWeather(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
+    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
         try {
             val weather = api.fetchWeather3D(loc.id, toParamLang(lang), toParamMeasure(measure))
             val airResponse = api.fetchAQIDaily(loc.id, toParamLang(lang))

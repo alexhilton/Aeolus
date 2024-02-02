@@ -69,7 +69,7 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val fromLocal = local.loadDailyWeather(location, lang, measure)
+            val fromLocal = local.load3DayWeathers(location, lang, measure)
             dailyWeatherStream = MutableStateFlow(fromLocal)
             dailyWeatherStream.asStateFlow()
         }
@@ -129,7 +129,7 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val bundle = network.loadDailyWeather(location, lang, measure)
+            val bundle = network.load3DayWeathers(location, lang, measure)
             if (bundle.isNotEmpty()) {
                 // update local cache
                 local.updateDailyWeather(
@@ -181,7 +181,7 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val weatherList = network.loadDailyWeather(location, lang, measure)
+            val weatherList = network.load3DayWeathers(location, lang, measure)
             if (weatherList.isNotEmpty()) {
                 local.updateDailyWeather(
                     location,
@@ -197,7 +197,7 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val weatherList = local.loadDailyWeather(location, lang, measure)
+            val weatherList = local.load3DayWeathers(location, lang, measure)
             val fromLocal = if (weatherList.isEmpty()) DailyWeather() else weatherList[0]
             weatherSnapshotStream = MutableStateFlow(fromLocal)
             weatherSnapshotStream.asStateFlow()
@@ -207,7 +207,7 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val weatherList = network.loadDailyWeather(location, lang, measure)
+            val weatherList = network.load3DayWeathers(location, lang, measure)
             if (weatherList.isNotEmpty()) {
                 local.updateDailyWeather(
                     location,
