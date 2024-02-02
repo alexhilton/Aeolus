@@ -38,7 +38,7 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val localNow = local.loadWeatherNow(location, lang, measure)
+            val localNow = local.loadWeatherNow(location.id, lang, measure)
             val data = localNow?.toModel(measure) ?: WeatherNow(successful = false)
             nowWeatherStream = MutableStateFlow(data)
             nowWeatherStream.asStateFlow()
@@ -49,7 +49,7 @@ class WeatherRepository(
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val weatherJob = async {
-                network.loadWeatherNow(location, lang, measure)
+                network.loadWeatherNow(location.id, lang, measure)
             }
             val aqiJob = async {
                 network.loadAirQualityNow(location, lang)
@@ -231,13 +231,13 @@ class WeatherRepository(
 
     suspend fun getWeatherNow(location: WeatherLocation): WeatherNow =
         withContext(dispatcher) {
-            val now = local.loadWeatherNow(location, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
+            val now = local.loadWeatherNow(location.id, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
             return@withContext now?.toModel("") ?: WeatherNow(successful = false)
         }
 
     suspend fun fetchWeatherNow(location: WeatherLocation): WeatherNow =
         withContext(dispatcher) {
-            val bundle = network.loadWeatherNow(location, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
+            val bundle = network.loadWeatherNow(location.id, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
             bundle?.also {
                 // Update database
                 local.updateWeatherNow(location, it.toEntity(location.id, ""))

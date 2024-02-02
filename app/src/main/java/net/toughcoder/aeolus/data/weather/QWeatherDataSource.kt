@@ -26,10 +26,10 @@ class QWeatherDataSource(
     companion object {
         const val LOG_TAG = "QWeatherNowDataSource"
     }
-    override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): QWeatherNowDTO? =
+    override suspend fun loadWeatherNow(loc: String, lang: String, measure: String): QWeatherNowDTO? =
         withContext(dispatcher) {
             try {
-                val response = api.fetchWeatherNow(loc.id, toParamLang(lang), toParamMeasure(measure))
+                val response = api.fetchWeatherNow(loc, toParamLang(lang), toParamMeasure(measure))
                 if (response.code == "200") {
                     return@withContext response.now
                 } else {

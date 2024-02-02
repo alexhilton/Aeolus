@@ -10,16 +10,13 @@ import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.data.room.asDTO
 import net.toughcoder.aeolus.data.room.toDTO
-import net.toughcoder.aeolus.data.room.toEntity
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.weather.WeatherDataSource
-import net.toughcoder.aeolus.model.DailyWeather
-import net.toughcoder.aeolus.model.toModel
 
 class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource {
-    override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): QWeatherNowDTO? {
+    override suspend fun loadWeatherNow(loc: String, lang: String, measure: String): QWeatherNowDTO? {
         val dao = database.weatherNowDao()
-        return dao.getByCityId(loc.name)?.asDTO()
+        return dao.getByCityId(loc)?.asDTO()
     }
 
     override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNowEntity) {

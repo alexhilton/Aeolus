@@ -8,12 +8,11 @@ import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
 import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
-import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.WeatherLocation
 import kotlin.random.Random
 
 class FakeWeatherDataSource : WeatherDataSource {
-    override suspend fun loadWeatherNow(loc: WeatherLocation, lang: String, measure: String): QWeatherNowDTO? {
+    override suspend fun loadWeatherNow(loc: String, lang: String, measure: String): QWeatherNowDTO? {
         delay(((Random.nextFloat() + 0.1f) * 3000f).toLong())
         val hasError = Random.nextInt(15) % 4 == 0
         return fakeNow()
