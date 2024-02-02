@@ -84,7 +84,7 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun doRefresh() {
+    private suspend fun doRefresh(force: Boolean = false) {
         // Step #1: Mark as loading
         viewModelState.update { it.copy(loading = true) }
 
@@ -92,7 +92,7 @@ class HomeViewModel(
         val now = SystemClock.uptimeMillis()
         logd(LOG_TAG, "doRefresh now $now, last ${viewModelState.value.updateTime}")
         val cityChanged = locationState.value != viewModelState.value.city
-        if (!cityChanged && now - viewModelState.value.updateTime < 120 * 1000L) {
+        if (!force && !cityChanged && now - viewModelState.value.updateTime < 120 * 1000L) {
             viewModelState.update {
                 it.copy(loading = false, error = R.string.error_up_to_date)
             }
@@ -171,7 +171,7 @@ class HomeViewModel(
                         updateState(true)
                     }
 
-                    doRefresh()
+                    doRefresh(true)
                 }
         }
     }
