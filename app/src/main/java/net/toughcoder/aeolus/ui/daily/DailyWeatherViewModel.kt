@@ -48,7 +48,7 @@ class DailyWeatherViewModel(
             locationRepo.getLocationInfo(cityId)
                 .flatMapMerge { loc ->
                     weatherStream = weatherRepo.dailyWeatherStream(loc)
-                    weatherRepo.refreshDailyWeathers(loc)
+                    weatherRepo.refresh7DayWeathers(loc)
                     viewModelState.update { it.copy(city = loc.asUiState()) }
                     weatherStream
                 }.collect { weathers ->

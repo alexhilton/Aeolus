@@ -74,7 +74,7 @@ class WeatherRepository(
             dailyWeatherStream.asStateFlow()
         }
 
-    suspend fun refreshDailyWeathers(location: WeatherLocation) {
+    suspend fun refresh7DayWeathers(location: WeatherLocation) {
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
@@ -125,7 +125,7 @@ class WeatherRepository(
         }
     }
 
-    suspend fun fetch3DayWeathers(location: WeatherLocation) {
+    suspend fun refresh3DayWeathers(location: WeatherLocation) {
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }

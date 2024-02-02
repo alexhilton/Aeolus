@@ -107,7 +107,7 @@ class HomeViewModel(
                 if (loc.successful()) {
                     locationState.update { loc }
                     weatherRepo.refreshWeatherNow(loc)
-                    weatherRepo.fetch3DayWeathers(loc)
+                    weatherRepo.refresh3DayWeathers(loc)
                     weatherRepo.fetchHourlyWeathers(loc)
                     weatherRepo.refreshWeatherIndices(loc)
 
