@@ -129,14 +129,25 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val bundle = network.load3DayWeathers(location, lang, measure)
-            if (bundle.isNotEmpty()) {
+            val weatherJob = async {
+                network.load3DayWeathers(location, lang, measure)
+            }
+            val aqiJob = async {
+                network.loadDailyAirQuality(location, lang)
+            }
+            val weatherList = weatherJob.await()
+            val aqiList = aqiJob.await()
+            if (weatherList.isNotEmpty()) {
                 // update local cache
                 local.updateDailyWeather(
                     location,
-                    bundle.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
+                    weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, aqiList[idx].index) }
                 )
-                dailyWeatherStream.update { bundle.map { it.toModel(measure, "", "", "") } }
+                dailyWeatherStream.update {
+                    weatherList.zip(aqiList) { dw, aqi ->
+                        dw.toModel(measure, aqi.index)
+                    }
+                }
             }
         }
     }

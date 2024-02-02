@@ -13,9 +13,7 @@ import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.logd
-import net.toughcoder.aeolus.model.DailyWeather
 import net.toughcoder.aeolus.model.MEASURE_IMPERIAL
-import net.toughcoder.aeolus.model.toModel
 import net.toughcoder.aeolus.model.toParamLang
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -53,21 +51,11 @@ class QWeatherDataSource(
         withContext(dispatcher) {
             try {
                 val weather = api.fetchWeather3D(loc.id, toParamLang(lang), toParamMeasure(measure))
-//                val airResponse = api.fetchAQIDaily(loc.id, toParamLang(lang))
-//                val airList = if (airResponse.code == "200") airResponse.dailyAirs else emptyList()
                 if (weather.code == "200") {
                     return@withContext weather.dayList
                 } else {
                     logd(LOG_TAG, "Bad response ${weather.code}")
                 }
-//            if (weather.code == "200") {
-//                weather.dayList.zip(airList) { w, air ->
-//                    w.toModel(measure, air.index)
-//                }
-//            } else {
-//                logd(LOG_TAG, "failed to loadDailyWeather: ${weather.code}")
-//                emptyList()
-//            }
             } catch(exception: Exception) {
                 logd(LOG_TAG, "Failed to load daily weather ${exception.message}")
             }
