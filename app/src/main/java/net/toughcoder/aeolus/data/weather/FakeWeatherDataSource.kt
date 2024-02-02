@@ -8,7 +8,6 @@ import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
 import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
-import net.toughcoder.aeolus.model.WeatherLocation
 import kotlin.random.Random
 
 class FakeWeatherDataSource : WeatherDataSource {
@@ -37,12 +36,12 @@ class FakeWeatherDataSource : WeatherDataSource {
         cloud = "10"
     )
 
-    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherDayDTO> {
+    override suspend fun load3DayWeathers(loc: String, lang: String, measure: String): List<QWeatherDayDTO> {
         TODO("Not yet implemented")
     }
 
 
-    override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String, types: List<Int>): List<QWeatherDayDTO> {
+    override suspend fun load7DayWeathers(loc: String, lang: String, measure: String, types: List<Int>): List<QWeatherDayDTO> {
         TODO("Not yet implemented")
     }
 
@@ -53,12 +52,12 @@ class FakeWeatherDataSource : WeatherDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherHourDTO> {
+    override suspend fun load24HourWeathers(loc: String, lang: String, measure: String): List<QWeatherHourDTO> {
         TODO("Not yet implemented")
     }
 
     override suspend fun loadWeatherIndices(
-        loc: WeatherLocation,
+        loc: String,
         type: List<Int>,
         lang: String
     ): List<QWeatherIndexDTO> {
@@ -66,19 +65,19 @@ class FakeWeatherDataSource : WeatherDataSource {
     }
 
     override suspend fun loadDailyWeatherIndices(
-        loc: WeatherLocation,
+        loc: String,
         type: List<Int>,
         lang: String
     ): Map<String, List<QWeatherIndexDTO>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO? {
+    override suspend fun loadAirQualityNow(loc: String, lang: String): QWeatherAirDTO? {
         TODO("Not yet implemented")
     }
 
     override suspend fun loadDailyAirQuality(
-        loc: WeatherLocation,
+        loc: String,
         lang: String
     ): List<QWeatherAirDTO> {
         TODO("Not yet implemented")

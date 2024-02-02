@@ -8,7 +8,6 @@ import net.toughcoder.aeolus.data.qweather.QWeatherDayDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherHourDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherIndexDTO
 import net.toughcoder.aeolus.data.qweather.QWeatherNowDTO
-import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.qweather.QWeatherService
 import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
@@ -47,10 +46,10 @@ class QWeatherDataSource(
         return d.toEpochSecond(ZoneOffset.UTC)
     }
 
-    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherDayDTO> =
+    override suspend fun load3DayWeathers(loc: String, lang: String, measure: String): List<QWeatherDayDTO> =
         withContext(dispatcher) {
             try {
-                val weather = api.fetchWeather3D(loc.id, toParamLang(lang), toParamMeasure(measure))
+                val weather = api.fetchWeather3D(loc, toParamLang(lang), toParamMeasure(measure))
                 if (weather.code == "200") {
                     return@withContext weather.dayList
                 } else {
@@ -63,11 +62,11 @@ class QWeatherDataSource(
         }
 
     override suspend fun load7DayWeathers(
-        loc: WeatherLocation, lang: String, measure: String, types: List<Int>
+        loc: String, lang: String, measure: String, types: List<Int>
     ): List<QWeatherDayDTO> =
         withContext(dispatcher) {
             try {
-                val weather = api.fetchWeather7D(loc.id, toParamLang(lang), toParamMeasure(measure))
+                val weather = api.fetchWeather7D(loc, toParamLang(lang), toParamMeasure(measure))
                 return@withContext weather.dayList
             } catch(exception: Exception) {
                 logd(LOG_TAG, "Failed to load 7 days weather ${exception.message}")
@@ -86,10 +85,10 @@ class QWeatherDataSource(
         TODO("Not yet implemented")
     }
 
-    override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherHourDTO> =
+    override suspend fun load24HourWeathers(loc: String, lang: String, measure: String): List<QWeatherHourDTO> =
         withContext(dispatcher) {
             try {
-                val response = api.fetchWeather24H(loc.id, toParamLang(lang), toParamMeasure(measure))
+                val response = api.fetchWeather24H(loc, toParamLang(lang), toParamMeasure(measure))
                 return@withContext if (response.code == "200") {
                     response.hourList //.map { it.toModel(measure) }
                 } else {
@@ -106,14 +105,14 @@ class QWeatherDataSource(
         if (measure == MEASURE_IMPERIAL) "i" else "m"
 
     override suspend fun loadWeatherIndices(
-        loc: WeatherLocation,
+        loc: String,
         type: List<Int>,
         lang: String
     ): List<QWeatherIndexDTO> =
         withContext(dispatcher) {
         try {
             val response =
-                api.fetchWeatherIndices(loc.id, type.joinToString(","), toParamLang(lang))
+                api.fetchWeatherIndices(loc, type.joinToString(","), toParamLang(lang))
             logd(LOG_TAG, "WeatherIndex: res code: ${response.code}")
             if (response.code == "200") {
                 return@withContext response.indexList //.map { it.toModel() }
@@ -125,14 +124,14 @@ class QWeatherDataSource(
     }
 
     override suspend fun loadDailyWeatherIndices(
-        loc: WeatherLocation,
+        loc: String,
         types: List<Int>,
         lang: String
     ): Map<String, List<QWeatherIndexDTO>> =
         withContext(dispatcher) {
             try {
                 val response =
-                    api.fetch3DWeatherIndices(loc.id, types.joinToString(","), toParamLang(lang))
+                    api.fetch3DWeatherIndices(loc, types.joinToString(","), toParamLang(lang))
                 if (response.code == "200") {
                     return@withContext response.indexList
                         .groupBy { it.date }
@@ -145,10 +144,10 @@ class QWeatherDataSource(
             return@withContext emptyMap()
         }
 
-    override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO? =
+    override suspend fun loadAirQualityNow(loc: String, lang: String): QWeatherAirDTO? =
         withContext(dispatcher) {
             try {
-                val response = api.fetchAQINow(loc.id, toParamLang(lang))
+                val response = api.fetchAQINow(loc, toParamLang(lang))
                 if (response.code == "200") {
                     return@withContext response.now
                 }
@@ -159,12 +158,12 @@ class QWeatherDataSource(
         }
 
     override suspend fun loadDailyAirQuality(
-        loc: WeatherLocation,
+        loc: String,
         lang: String
     ): List<QWeatherAirDTO> =
         withContext(dispatcher) {
             try {
-                val response = api.fetchAQIDaily(loc.id, toParamLang(lang))
+                val response = api.fetchAQIDaily(loc, toParamLang(lang))
                 if (response.code == "200") {
                     return@withContext response.dailyAirs
                 } else {

@@ -10,7 +10,6 @@ import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.data.room.asDTO
 import net.toughcoder.aeolus.data.room.toDTO
-import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.weather.WeatherDataSource
 
 class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource {
@@ -44,13 +43,13 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         }
     }
 
-    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherDayDTO> {
+    override suspend fun load3DayWeathers(loc: String, lang: String, measure: String): List<QWeatherDayDTO> {
         val dao = database.dailyWeatherDao()
-        val weathers = dao.getDailyWeathers(loc.id)
+        val weathers = dao.getDailyWeathers(loc)
         return weathers.map(DailyWeatherEntity::toDTO)
     }
 
-    override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String, types: List<Int>): List<QWeatherDayDTO> {
+    override suspend fun load7DayWeathers(loc: String, lang: String, measure: String, types: List<Int>): List<QWeatherDayDTO> {
         TODO("Not yet implemented")
     }
 
@@ -62,12 +61,12 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         dao.addDailyWeathers(dailyWeathers)
     }
 
-    override suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherHourDTO> {
+    override suspend fun load24HourWeathers(loc: String, lang: String, measure: String): List<QWeatherHourDTO> {
         TODO("Not yet implemented")
     }
 
     override suspend fun loadWeatherIndices(
-        loc: WeatherLocation,
+        loc: String,
         type: List<Int>,
         lang: String
     ): List<QWeatherIndexDTO> {
@@ -75,19 +74,19 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
     }
 
     override suspend fun loadDailyWeatherIndices(
-        loc: WeatherLocation,
+        loc: String,
         type: List<Int>,
         lang: String
     ): Map<String, List<QWeatherIndexDTO>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun loadAirQualityNow(loc: WeatherLocation, lang: String): QWeatherAirDTO? {
+    override suspend fun loadAirQualityNow(loc: String, lang: String): QWeatherAirDTO? {
         TODO("Not yet implemented")
     }
 
     override suspend fun loadDailyAirQuality(
-        loc: WeatherLocation,
+        loc: String,
         lang: String
     ): List<QWeatherAirDTO> {
         TODO("Not yet implemented")

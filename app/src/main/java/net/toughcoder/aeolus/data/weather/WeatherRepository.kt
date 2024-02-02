@@ -46,18 +46,19 @@ class WeatherRepository(
 
     suspend fun refreshWeatherNow(location: WeatherLocation) {
         withContext(dispatcher) {
+            val cityId = location.id
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val weatherJob = async {
-                network.loadWeatherNow(location.id, lang, measure)
+                network.loadWeatherNow(cityId, lang, measure)
             }
             val aqiJob = async {
-                network.loadAirQualityNow(location, lang)
+                network.loadAirQualityNow(cityId, lang)
             }
             val weather = weatherJob.await()
             val aqi = aqiJob.await()
             weather?.also {
-                local.updateWeatherNow(location.id, it.toEntity(location.id, ""))
+                local.updateWeatherNow(cityId, it.toEntity(cityId, ""))
             }
 
             val now = weather?.toModel(measure, aqi?.index ?: "") ?: WeatherNow(successful = false)
@@ -69,24 +70,25 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val fromLocal = local.load3DayWeathers(location, lang, measure)
+            val fromLocal = local.load3DayWeathers(location.id, lang, measure)
             dailyWeatherStream = MutableStateFlow(fromLocal.map { it.toModel(measure, "") })
             dailyWeatherStream.asStateFlow()
         }
 
     suspend fun refresh7DayWeathers(location: WeatherLocation) {
         withContext(dispatcher) {
+            val cityId = location.id
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val types = listOf(1, 2, 3, 5, 7, 9)
             val weatherJob = async {
-                network.load7DayWeathers(location, lang, measure, types)
+                network.load7DayWeathers(cityId, lang, measure, types)
             }
             val aqiJob = async {
-                network.loadDailyAirQuality(location, lang)
+                network.loadDailyAirQuality(cityId, lang)
             }
             val indexJob = async {
-                network.loadDailyWeatherIndices(location, types, lang)
+                network.loadDailyWeatherIndices(cityId, types, lang)
             }
             val weatherList = weatherJob.await()
             val aqiList = aqiJob.await()
@@ -96,8 +98,8 @@ class WeatherRepository(
                 return@withContext
             }
             local.updateDailyWeather(
-                location.id,
-                weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
+                cityId,
+                weatherList.mapIndexed{ idx, item -> item.toEntity(cityId, idx, "") }
             )
             dailyWeatherStream.update {
                 weatherList.mapIndexed { idx, dw ->
@@ -127,21 +129,22 @@ class WeatherRepository(
 
     suspend fun refresh3DayWeathers(location: WeatherLocation) {
         withContext(dispatcher) {
+            val cityId = location.id
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val weatherJob = async {
-                network.load3DayWeathers(location, lang, measure)
+                network.load3DayWeathers(cityId, lang, measure)
             }
             val aqiJob = async {
-                network.loadDailyAirQuality(location, lang)
+                network.loadDailyAirQuality(cityId, lang)
             }
             val weatherList = weatherJob.await()
             val aqiList = aqiJob.await()
             if (weatherList.isNotEmpty()) {
                 // update local cache
                 local.updateDailyWeather(
-                    location.id,
-                    weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, aqiList[idx].index) }
+                    cityId,
+                    weatherList.mapIndexed{ idx, item -> item.toEntity(cityId, idx, aqiList[idx].index) }
                 )
                 dailyWeatherStream.update {
                     weatherList.zip(aqiList) { dw, aqi ->
@@ -162,7 +165,7 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val list = network.load24HourWeathers(location, lang, measure)
+            val list = network.load24HourWeathers(location.id, lang, measure)
                 .map { it.toModel(measure) }
             if (list.isNotEmpty()) {
                 hourlyWeatherStream.update { list }
@@ -180,7 +183,7 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val types = listOf(1, 2, 3, 5, 7, 9)
-            val list = network.loadWeatherIndices(location, types, lang)
+            val list = network.loadWeatherIndices(location.id, types, lang)
                 .map(QWeatherIndexDTO::toModel)
             if (list.isNotEmpty()) {
                 weatherIndexStream.update { list }
@@ -190,13 +193,14 @@ class WeatherRepository(
 
     suspend fun fetchDayWeather(location: WeatherLocation): DailyWeather =
         withContext(dispatcher) {
+            val cityId = location.id
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val weatherList = network.load3DayWeathers(location, lang, measure)
+            val weatherList = network.load3DayWeathers(cityId, lang, measure)
             if (weatherList.isNotEmpty()) {
                 local.updateDailyWeather(
-                    location.id,
-                    weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
+                    cityId,
+                    weatherList.mapIndexed{ idx, item -> item.toEntity(cityId, idx, "") }
                 )
                 weatherList[0].toModel(measure, "")
             } else {
@@ -208,7 +212,7 @@ class WeatherRepository(
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val weatherList = local.load3DayWeathers(location, lang, measure)
+            val weatherList = local.load3DayWeathers(location.id, lang, measure)
             val fromLocal = if (weatherList.isEmpty()) DailyWeather() else weatherList[0].toModel(measure, "")
             weatherSnapshotStream = MutableStateFlow(fromLocal)
             weatherSnapshotStream.asStateFlow()
@@ -216,13 +220,14 @@ class WeatherRepository(
 
     suspend fun loadWeatherSnapshot(location: WeatherLocation) =
         withContext(dispatcher) {
+            val cityId = location.id
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
-            val weatherList = network.load3DayWeathers(location, lang, measure)
+            val weatherList = network.load3DayWeathers(cityId, lang, measure)
             if (weatherList.isNotEmpty()) {
                 local.updateDailyWeather(
-                    location.id,
-                    weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
+                    cityId,
+                    weatherList.mapIndexed{ idx, item -> item.toEntity(cityId, idx, "") }
                 )
                 weatherSnapshotStream.update { weatherList[0].toModel(measure, "") }
             }
@@ -237,10 +242,11 @@ class WeatherRepository(
 
     suspend fun fetchWeatherNow(location: WeatherLocation): WeatherNow =
         withContext(dispatcher) {
-            val bundle = network.loadWeatherNow(location.id, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
+            val cityId = location.id
+            val bundle = network.loadWeatherNow(cityId, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
             bundle?.also {
                 // Update database
-                local.updateWeatherNow(location.id, it.toEntity(location.id, ""))
+                local.updateWeatherNow(cityId, it.toEntity(cityId, ""))
             }
             return@withContext bundle?.toModel("") ?: WeatherNow(successful = false)
         }
