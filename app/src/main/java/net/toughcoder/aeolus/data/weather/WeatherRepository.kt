@@ -106,7 +106,7 @@ class WeatherRepository(
         }
     }
 
-    suspend fun fetch7DayWeathers(location: WeatherLocation) {
+    suspend fun refreshDailyWeathers(location: WeatherLocation) {
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
