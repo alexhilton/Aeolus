@@ -93,7 +93,9 @@ fun DailyWeatherItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            GeneralText(text = stringResource(R.string.aqi, weather.aqi))
+            if (weather.aqi.isNotEmpty()) {
+                GeneralText(text = stringResource(R.string.aqi, weather.aqi))
+            }
             GeneralText(text = "${weather.tempHigh} / ${weather.tempLow}")
         }
     }
