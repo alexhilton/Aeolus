@@ -75,12 +75,12 @@ class QWeatherDataSource(
             return@withContext emptyList()
         }
 
-    override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNowEntity) {
+    override suspend fun updateWeatherNow(loc: String, weatherNow: WeatherNowEntity) {
         // Not implemented
     }
 
     override suspend fun updateDailyWeather(
-        loc: WeatherLocation,
+        loc: String,
         dailyWeathers: List<DailyWeatherEntity>
     ) {
         TODO("Not yet implemented")

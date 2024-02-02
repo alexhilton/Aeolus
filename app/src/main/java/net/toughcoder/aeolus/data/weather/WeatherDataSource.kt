@@ -12,13 +12,13 @@ import net.toughcoder.aeolus.model.WeatherLocation
 interface WeatherDataSource {
     suspend fun loadWeatherNow(loc: String, lang: String, measure: String): QWeatherNowDTO?
 
-    suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNowEntity)
+    suspend fun updateWeatherNow(loc: String, weatherNow: WeatherNowEntity)
 
     suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherDayDTO>
 
     suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String, types: List<Int>): List<QWeatherDayDTO>
 
-    suspend fun updateDailyWeather(loc: WeatherLocation, dailyWeathers: List<DailyWeatherEntity>)
+    suspend fun updateDailyWeather(loc: String, dailyWeathers: List<DailyWeatherEntity>)
 
     suspend fun load24HourWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherHourDTO>
 

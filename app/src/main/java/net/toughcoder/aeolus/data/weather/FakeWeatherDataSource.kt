@@ -18,7 +18,7 @@ class FakeWeatherDataSource : WeatherDataSource {
         return fakeNow()
     }
 
-    override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNowEntity) {
+    override suspend fun updateWeatherNow(loc: String, weatherNow: WeatherNowEntity) {
         TODO("Not yet implemented")
     }
 
@@ -47,7 +47,7 @@ class FakeWeatherDataSource : WeatherDataSource {
     }
 
     override suspend fun updateDailyWeather(
-        loc: WeatherLocation,
+        loc: String,
         dailyWeathers: List<DailyWeatherEntity>
     ) {
         TODO("Not yet implemented")

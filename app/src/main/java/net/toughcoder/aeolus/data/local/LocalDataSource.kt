@@ -19,9 +19,9 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         return dao.getByCityId(loc)?.asDTO()
     }
 
-    override suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNowEntity) {
+    override suspend fun updateWeatherNow(loc: String, weatherNow: WeatherNowEntity) {
         val dao = database.weatherNowDao()
-        val entity = dao.getByCityId(loc.id)
+        val entity = dao.getByCityId(loc)
         if (entity == null) {
             dao.insert(weatherNow)
         } else {
@@ -55,7 +55,7 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
     }
 
     override suspend fun updateDailyWeather(
-        loc: WeatherLocation,
+        loc: String,
         dailyWeathers: List<DailyWeatherEntity>
     ) {
         val dao = database.dailyWeatherDao()

@@ -57,7 +57,7 @@ class WeatherRepository(
             val weather = weatherJob.await()
             val aqi = aqiJob.await()
             weather?.also {
-                local.updateWeatherNow(location, it.toEntity(location.id, ""))
+                local.updateWeatherNow(location.id, it.toEntity(location.id, ""))
             }
 
             val now = weather?.toModel(measure, aqi?.index ?: "") ?: WeatherNow(successful = false)
@@ -96,7 +96,7 @@ class WeatherRepository(
                 return@withContext
             }
             local.updateDailyWeather(
-                location,
+                location.id,
                 weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
             )
             dailyWeatherStream.update {
@@ -140,7 +140,7 @@ class WeatherRepository(
             if (weatherList.isNotEmpty()) {
                 // update local cache
                 local.updateDailyWeather(
-                    location,
+                    location.id,
                     weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, aqiList[idx].index) }
                 )
                 dailyWeatherStream.update {
@@ -195,7 +195,7 @@ class WeatherRepository(
             val weatherList = network.load3DayWeathers(location, lang, measure)
             if (weatherList.isNotEmpty()) {
                 local.updateDailyWeather(
-                    location,
+                    location.id,
                     weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
                 )
                 weatherList[0].toModel(measure, "")
@@ -221,7 +221,7 @@ class WeatherRepository(
             val weatherList = network.load3DayWeathers(location, lang, measure)
             if (weatherList.isNotEmpty()) {
                 local.updateDailyWeather(
-                    location,
+                    location.id,
                     weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
                 )
                 weatherSnapshotStream.update { weatherList[0].toModel(measure, "") }
@@ -240,7 +240,7 @@ class WeatherRepository(
             val bundle = network.loadWeatherNow(location.id, DEFAULT_LANGUAGE, DEFAULT_MEASURE)
             bundle?.also {
                 // Update database
-                local.updateWeatherNow(location, it.toEntity(location.id, ""))
+                local.updateWeatherNow(location.id, it.toEntity(location.id, ""))
             }
             return@withContext bundle?.toModel("") ?: WeatherNow(successful = false)
         }
