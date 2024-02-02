@@ -158,7 +158,7 @@ class WeatherRepository(
             hourlyWeatherStream.asStateFlow()
         }
 
-    suspend fun fetchHourlyWeathers(location: WeatherLocation) {
+    suspend fun refreshHourlyWeathers(location: WeatherLocation) {
         withContext(dispatcher) {
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }

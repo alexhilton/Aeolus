@@ -108,7 +108,7 @@ class HomeViewModel(
                     locationState.update { loc }
                     weatherRepo.refreshWeatherNow(loc)
                     weatherRepo.refresh3DayWeathers(loc)
-                    weatherRepo.fetchHourlyWeathers(loc)
+                    weatherRepo.refreshHourlyWeathers(loc)
                     weatherRepo.refreshWeatherIndices(loc)
 
                     viewModelScope.launch {
