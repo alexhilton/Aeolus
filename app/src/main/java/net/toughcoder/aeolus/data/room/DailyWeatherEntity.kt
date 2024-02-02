@@ -77,3 +77,30 @@ fun QWeatherDayDTO.toEntity(cityId: String, index: Int, aqi: String): DailyWeath
         textNight,
         aqi
     )
+
+fun DailyWeatherEntity.toDTO(): QWeatherDayDTO =
+    QWeatherDayDTO(
+        date = date,
+        tempHigh = tempHigh,
+        tempLow = tempLow,
+        sunrise = sunrise,
+        sunset = sunset,
+        iconDay = iconDay,
+        textDay = textDay,
+        windScaleDay = windScale,
+        windDegreeDay = windDegree,
+        windDirDay = windDir,
+        windSpeedDay = windSpeed,
+        iconNight = iconNight,
+        textNight = textNight,
+        humidity = humidity,
+        uvIndex = uvIndex,
+        pressure = pressure,
+        visibility = visibility,
+
+        precip = "",
+        windDegreeNight = "",
+        windDirNight = "",
+        windScaleNight = "",
+        windSpeedNight = ""
+    )

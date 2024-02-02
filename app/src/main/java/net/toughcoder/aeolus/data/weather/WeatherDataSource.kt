@@ -15,7 +15,7 @@ interface WeatherDataSource {
 
     suspend fun updateWeatherNow(loc: WeatherLocation, weatherNow: WeatherNowEntity)
 
-    suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather>
+    suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherDayDTO>
 
     suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String, types: List<Int>): List<QWeatherDayDTO>
 

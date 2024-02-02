@@ -70,7 +70,7 @@ class WeatherRepository(
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val fromLocal = local.load3DayWeathers(location, lang, measure)
-            dailyWeatherStream = MutableStateFlow(fromLocal)
+            dailyWeatherStream = MutableStateFlow(fromLocal.map { it.toModel(measure, "") })
             dailyWeatherStream.asStateFlow()
         }
 
@@ -134,9 +134,9 @@ class WeatherRepository(
                 // update local cache
                 local.updateDailyWeather(
                     location,
-                    bundle.mapIndexed{ idx, item -> item.toEntity(location.id, idx) }
+                    bundle.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
                 )
-                dailyWeatherStream.update { bundle }
+                dailyWeatherStream.update { bundle.map { it.toModel(measure, "", "", "") } }
             }
         }
     }
@@ -185,9 +185,9 @@ class WeatherRepository(
             if (weatherList.isNotEmpty()) {
                 local.updateDailyWeather(
                     location,
-                    weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx) }
+                    weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
                 )
-                weatherList[0]
+                weatherList[0].toModel(measure, "")
             } else {
                 DailyWeather()
             }
@@ -198,7 +198,7 @@ class WeatherRepository(
             val lang = runBlocking { store.getLanguage().first() }
             val measure = runBlocking { store.getMeasure().first() }
             val weatherList = local.load3DayWeathers(location, lang, measure)
-            val fromLocal = if (weatherList.isEmpty()) DailyWeather() else weatherList[0]
+            val fromLocal = if (weatherList.isEmpty()) DailyWeather() else weatherList[0].toModel(measure, "")
             weatherSnapshotStream = MutableStateFlow(fromLocal)
             weatherSnapshotStream.asStateFlow()
         }
@@ -211,9 +211,9 @@ class WeatherRepository(
             if (weatherList.isNotEmpty()) {
                 local.updateDailyWeather(
                     location,
-                    weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx) }
+                    weatherList.mapIndexed{ idx, item -> item.toEntity(location.id, idx, "") }
                 )
-                weatherSnapshotStream.update { weatherList[0] }
+                weatherSnapshotStream.update { weatherList[0].toModel(measure, "") }
             }
         }
 

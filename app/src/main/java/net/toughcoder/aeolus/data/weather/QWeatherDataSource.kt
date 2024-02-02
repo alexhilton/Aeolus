@@ -49,24 +49,30 @@ class QWeatherDataSource(
         return d.toEpochSecond(ZoneOffset.UTC)
     }
 
-    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
-        try {
-            val weather = api.fetchWeather3D(loc.id, toParamLang(lang), toParamMeasure(measure))
-            val airResponse = api.fetchAQIDaily(loc.id, toParamLang(lang))
-            val airList = if (airResponse.code == "200") airResponse.dailyAirs else emptyList()
-            return if (weather.code == "200") {
-                weather.dayList.zip(airList) { w, air ->
-                    w.toModel(measure, air.index)
+    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherDayDTO> =
+        withContext(dispatcher) {
+            try {
+                val weather = api.fetchWeather3D(loc.id, toParamLang(lang), toParamMeasure(measure))
+//                val airResponse = api.fetchAQIDaily(loc.id, toParamLang(lang))
+//                val airList = if (airResponse.code == "200") airResponse.dailyAirs else emptyList()
+                if (weather.code == "200") {
+                    return@withContext weather.dayList
+                } else {
+                    logd(LOG_TAG, "Bad response ${weather.code}")
                 }
-            } else {
-                logd(LOG_TAG, "failed to loadDailyWeather: ${weather.code}")
-                emptyList()
+//            if (weather.code == "200") {
+//                weather.dayList.zip(airList) { w, air ->
+//                    w.toModel(measure, air.index)
+//                }
+//            } else {
+//                logd(LOG_TAG, "failed to loadDailyWeather: ${weather.code}")
+//                emptyList()
+//            }
+            } catch(exception: Exception) {
+                logd(LOG_TAG, "Failed to load daily weather ${exception.message}")
             }
-        } catch(exception: Exception) {
-            logd(LOG_TAG, "Failed to load daily weather ${exception.message}")
+            return@withContext emptyList()
         }
-        return emptyList()
-    }
 
     override suspend fun load7DayWeathers(
         loc: WeatherLocation, lang: String, measure: String, types: List<Int>

@@ -9,6 +9,7 @@ import net.toughcoder.aeolus.data.room.AeolusDatabase
 import net.toughcoder.aeolus.data.room.DailyWeatherEntity
 import net.toughcoder.aeolus.data.room.WeatherNowEntity
 import net.toughcoder.aeolus.data.room.asDTO
+import net.toughcoder.aeolus.data.room.toDTO
 import net.toughcoder.aeolus.data.room.toEntity
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.data.weather.WeatherDataSource
@@ -46,10 +47,10 @@ class LocalDataSource(private val database: AeolusDatabase) : WeatherDataSource 
         }
     }
 
-    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
+    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherDayDTO> {
         val dao = database.dailyWeatherDao()
         val weathers = dao.getDailyWeathers(loc.id)
-        return weathers.map { it.toModel(measure) }
+        return weathers.map(DailyWeatherEntity::toDTO)
     }
 
     override suspend fun load7DayWeathers(loc: WeatherLocation, lang: String, measure: String, types: List<Int>): List<QWeatherDayDTO> {

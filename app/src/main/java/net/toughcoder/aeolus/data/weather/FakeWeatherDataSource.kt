@@ -38,7 +38,7 @@ class FakeWeatherDataSource : WeatherDataSource {
         cloud = "10"
     )
 
-    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<DailyWeather> {
+    override suspend fun load3DayWeathers(loc: WeatherLocation, lang: String, measure: String): List<QWeatherDayDTO> {
         TODO("Not yet implemented")
     }
 
