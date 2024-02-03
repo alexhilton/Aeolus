@@ -49,12 +49,8 @@ class AndroidLocationClient(
                 logd(LOG_TAG, "Get cached location from last known!")
             }?.let { emit(MyLocation(it.latitude, it.longitude)) }
         } else {
-            val builder = LocationRequest.Builder(500)
-                .setDurationMillis(60 * 1000) // Stop requesting after 1 min.
-                .setMaxUpdates(1)
-
             providers.asFlow()
-                .flatMapLatest { current(it, locationManager, builder.build(), context.mainExecutor) }
+                .flatMapLatest { current(it, locationManager, context.mainExecutor) }
                 .collect {
                     logd(LOG_TAG, "Get current location fix!")
                     emit(MyLocation(it.latitude, it.longitude))
@@ -93,15 +89,45 @@ class AndroidLocationClient(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun current(
+        provider: String,
+        manager: LocationManager,
+        executor: Executor
+    ): Flow<Location> =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val builder = LocationRequest.Builder(500)
+                .setDurationMillis(60 * 1000) // Stop requesting after 1 min.
+                .setMaxUpdates(1)
+
+            currentS(provider, manager, builder.build(), executor)
+        } else {
+            currentR(provider, manager, executor)
+        }
+
     @SuppressLint("MissingPermission")
     @RequiresApi(Build.VERSION_CODES.S)
-    private fun current(
+    private fun currentS(
         provider: String,
         manager: LocationManager,
         request: LocationRequest,
         executor: Executor
     ): Flow<Location> = callbackFlow {
         manager.getCurrentLocation(provider, request, null, executor) { loc ->
+            loc?.let { trySend(it) }
+        }
+
+        awaitClose {}
+    }
+
+    @SuppressLint("MissingPermission")
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun currentR(
+        provider: String,
+        manager: LocationManager,
+        executor: Executor
+    ): Flow<Location> = callbackFlow {
+        manager.getCurrentLocation(provider, null, executor) { loc ->
             loc?.let { trySend(it) }
         }
 
