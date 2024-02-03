@@ -51,6 +51,7 @@ fun QWeatherNowDTO.toModel(measure: String, aqi: String = ""): WeatherNow =
         windDegree = windDegree,
         windDir = windDir,
         windScale = windScale,
+        windSpeed = windSpeed,
         humidity = humidity,
         airPressure = pressure,
         visibility = visibility,
