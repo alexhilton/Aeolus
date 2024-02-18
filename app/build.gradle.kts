@@ -67,13 +67,13 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
     implementation("androidx.activity:activity-compose:1.8.2")
-    val navVersion = "2.7.6"
+    val navVersion = "2.7.7"
     implementation("androidx.navigation:navigation-runtime-ktx:$navVersion")
     implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Google Play Services
-    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.gms:play-services-location:21.1.0")
 
     // Compose
     implementation(platform("androidx.compose:compose-bom:2023.10.01"))
