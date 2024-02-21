@@ -99,7 +99,7 @@ class WeatherRepository(
             }
             local.updateDailyWeather(
                 cityId,
-                weatherList.mapIndexed{ idx, item -> item.toEntity(cityId, idx, "") }
+                weatherList.mapIndexed { idx, item -> item.toEntity(cityId, idx, "") }
             )
             dailyWeatherStream.update {
                 weatherList.mapIndexed { idx, dw ->
@@ -144,7 +144,7 @@ class WeatherRepository(
                 // update local cache
                 local.updateDailyWeather(
                     cityId,
-                    weatherList.mapIndexed{ idx, item -> item.toEntity(cityId, idx, aqiList[idx].index) }
+                    weatherList.mapIndexed { idx, item -> item.toEntity(cityId, idx, aqiList[idx].index) }
                 )
                 dailyWeatherStream.update {
                     weatherList.zip(aqiList) { dw, aqi ->
@@ -200,7 +200,7 @@ class WeatherRepository(
             if (weatherList.isNotEmpty()) {
                 local.updateDailyWeather(
                     cityId,
-                    weatherList.mapIndexed{ idx, item -> item.toEntity(cityId, idx, "") }
+                    weatherList.mapIndexed { idx, item -> item.toEntity(cityId, idx, "") }
                 )
                 weatherList[0].toModel(measure, "")
             } else {
@@ -227,7 +227,7 @@ class WeatherRepository(
             if (weatherList.isNotEmpty()) {
                 local.updateDailyWeather(
                     cityId,
-                    weatherList.mapIndexed{ idx, item -> item.toEntity(cityId, idx, "") }
+                    weatherList.mapIndexed { idx, item -> item.toEntity(cityId, idx, "") }
                 )
                 weatherSnapshotStream.update { weatherList[0].toModel(measure, "") }
             }
