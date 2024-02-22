@@ -121,7 +121,9 @@ fun FavoriteList(
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(favorites) {
+        items(
+            favorites,
+            key = { it.city.id }) {
             FavoriteItem(modifier, it, onFavoriteClick)
         }
     }
