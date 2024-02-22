@@ -88,16 +88,16 @@ fun CenteredLoadingContainer(
     loading: Boolean,
     content: @Composable BoxScope.() -> Unit
 ) {
-    Box(
+    Crossfade(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = if (loading) Alignment.Center else Alignment.TopStart
-    ) {
-        Crossfade(
-            modifier = Modifier,
-            targetState = loading,
-            label = "crossfade"
-        ) { loading ->
-            if (loading) {
+        targetState = loading,
+        label = "crossfade"
+    ) { progressing ->
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = if (progressing) Alignment.Center else Alignment.TopStart
+        ) {
+            if (progressing) {
                 CircularProgressIndicator(Modifier.size(88.dp))
             } else {
                 content()

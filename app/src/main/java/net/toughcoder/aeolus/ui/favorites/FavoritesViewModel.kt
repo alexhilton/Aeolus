@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.weather.WeatherRepository
-import net.toughcoder.aeolus.model.TYPE_CURRENT
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
