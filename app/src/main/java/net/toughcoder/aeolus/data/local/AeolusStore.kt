@@ -72,6 +72,14 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
         }
     }
 
+    suspend fun removeCity() {
+        withContext(Dispatchers.IO) {
+            dataStore.edit { prefs ->
+                prefs.remove(defaultCityKey)
+            }
+        }
+    }
+
     fun getDefaultCity(): Flow<WeatherLocation> {
         return dataStore.data.map { prefs ->
             val bundle = prefs[defaultCityKey]

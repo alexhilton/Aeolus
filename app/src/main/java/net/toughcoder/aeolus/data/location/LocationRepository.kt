@@ -72,6 +72,17 @@ class LocationRepository(
         prefStore.persistCity(city)
     }
 
+    suspend fun removeDefaultCity() {
+        prefStore.removeCity()
+    }
+
+    suspend fun removeCity(city: WeatherLocation) {
+        withContext(dispatcher) {
+            val locationDao = database.locationDao()
+            locationDao.delete(city.asEntity())
+        }
+    }
+
     suspend fun favoriteCity(city: WeatherLocation) {
         withContext(dispatcher) {
             val locationDao = database.locationDao()
@@ -101,11 +112,10 @@ class LocationRepository(
         }
     }
 
-    suspend fun loadFavoriteCitiesFromLocal(): List<WeatherLocation> =
-        withContext(dispatcher) {
-            val dao = database.locationDao()
-            return@withContext dao.getAllCities().map { it.asModel() }
-        }
+    fun loadFavoriteCitiesFromLocal(): Flow<List<WeatherLocation>> = flow {
+        val dao = database.locationDao()
+        emit(dao.getAllCities().map { it.asModel() })
+    }.flowOn(dispatcher)
 
     suspend fun loadFavoriteCities(): List<WeatherLocation> =
         withContext(dispatcher) {

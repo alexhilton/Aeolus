@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -54,7 +55,7 @@ fun FavoritesScreen(
     onBack: () -> Unit,
     onSearch: () -> Unit
 ) {
-    val uiState by viewModel.getAllFavorites().collectAsStateWithLifecycle(initialValue = FavoriteScreenUiState())
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = modifier,
@@ -101,7 +102,10 @@ fun FavoritesScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
             } else {
-                FavoriteList(favorites = uiState.favorites) { city ->
+                FavoriteList(
+                    favorites = uiState.favorites,
+                    onFavoriteRemove = viewModel::removeFavorite
+                ) { city ->
                     viewModel.setDefaultCity(city)
                     onBack()
                 }
@@ -114,6 +118,7 @@ fun FavoritesScreen(
 fun FavoriteList(
     modifier: Modifier = Modifier,
     favorites: List<FavoriteUiState>,
+    onFavoriteRemove: (FavoriteUiState) -> Unit,
     onFavoriteClick: (CityState) -> Unit
 ) {
     LazyColumn(
@@ -124,7 +129,7 @@ fun FavoriteList(
         items(
             favorites,
             key = { it.city.id }) {
-            FavoriteItem(modifier, it, onFavoriteClick)
+            FavoriteItem(modifier, it, onFavoriteRemove, onFavoriteClick)
         }
     }
 }
@@ -133,6 +138,7 @@ fun FavoriteList(
 fun FavoriteItem(
     modifier: Modifier = Modifier,
     item: FavoriteUiState,
+    onRemove: (FavoriteUiState) -> Unit,
     onClick: (CityState) -> Unit
 ) {
     Surface(
@@ -179,10 +185,22 @@ fun FavoriteItem(
                 }
             }
 
-            if (item.selected) {
-                Checkbox(
-                    checked = true, onCheckedChange = {}
-                )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (item.selected) {
+                    Checkbox(
+                        checked = true, onCheckedChange = {}
+                    )
+                }
+
+                if (!item.current()) {
+                    IconButton(
+                        onClick = { onRemove(item) }
+                    ) {
+                        Icon(Icons.Default.Close, contentDescription = "Delete item")
+                    }
+                }
             }
         }
     }
@@ -270,6 +288,7 @@ fun FavoriteItemPreview() {
                 "12", "Sun",
                 R.drawable.ic_nav, 123f, "South", "1"
             )
-        )
-    ) { _ -> 3}
+        ),
+        { _ -> 4 }
+    ) { _ -> 3 }
 }

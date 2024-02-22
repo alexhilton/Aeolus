@@ -3,10 +3,11 @@ package net.toughcoder.aeolus.ui.favorites
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.weather.WeatherRepository
@@ -20,35 +21,72 @@ class FavoritesViewModel(
     private val weatherRepo: WeatherRepository
 ) : ViewModel() {
 
-    fun getAllFavorites(): Flow<FavoriteScreenUiState> =
-        combine(locationRepo.getDefaultCityId(), locationRepo.getCurrentCity()) { defaultCityId, currentCity ->
-            val favorites = locationRepo.loadFavoriteCitiesFromLocal()
-            val allCities = mutableListOf<WeatherLocation>()
-            if (currentCity.successful()) {
-                allCities.add(currentCity)
-            }
-            for (fc in favorites) {
-                if (fc.id != currentCity.id) {
-                    allCities.add(fc)
-                }
-            }
+    private val viewModelState = MutableStateFlow(FavoriteScreenUiState())
 
-            return@combine FavoriteScreenUiState(
-                loading = false,
-                favorites = allCities.map { city ->
-                    val weather = weatherRepo.fetchDayWeather(city)
-                    return@map FavoriteUiState(
-                        city = city.asUiState(),
-                        snapshot = weather.asUiState(),
-                        selected = city.id == defaultCityId,
-                    )
+    val uiState = viewModelState
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            viewModelState.value
+        )
+
+    init {
+        getAllFavorites()
+    }
+
+    private fun getAllFavorites() {
+        viewModelScope.launch {
+            combine(
+                locationRepo.getDefaultCityId(),
+                locationRepo.getCurrentCity(),
+                locationRepo.loadFavoriteCitiesFromLocal()
+            ) { defaultCityId, currentCity, favorites ->
+                val allCities = mutableListOf<WeatherLocation>()
+                if (currentCity.successful()) {
+                    allCities.add(currentCity)
                 }
-            )
-        }.flowOn(Dispatchers.IO)
+                for (fc in favorites) {
+                    if (fc.id != currentCity.id) {
+                        allCities.add(fc)
+                    }
+                }
+
+                return@combine FavoriteScreenUiState(
+                    loading = false,
+                    favorites = allCities.map { city ->
+                        val weather = weatherRepo.fetchDayWeather(city)
+                        return@map FavoriteUiState(
+                            city = city.asUiState(),
+                            snapshot = weather.asUiState(),
+                            selected = city.id == defaultCityId,
+                        )
+                    }
+                )
+            }.collect { state ->
+                viewModelState.update { state }
+            }
+        }
+    }
+
 
     fun setDefaultCity(city: CityState) {
         viewModelScope.launch {
             locationRepo.setDefaultCity(city.toModel())
+        }
+    }
+
+    fun removeFavorite(item: FavoriteUiState) {
+        viewModelScope.launch {
+            if (item.city.current()) {
+                return@launch
+            }
+            if (item.selected) {
+                locationRepo.removeDefaultCity()
+            }
+            locationRepo.removeCity(item.city.toModel())
+
+            // TODO: We should not refresh, it should be refreshed automatically
+            getAllFavorites()
         }
     }
 
@@ -65,6 +103,7 @@ class FavoritesViewModel(
             }
     }
 }
+
 
 data class FavoriteScreenUiState(
     val loading: Boolean = true,
