@@ -32,12 +32,13 @@ class FavoritesViewModel(
         )
 
     fun loadFavorites() {
+        Thread.dumpStack()
         viewModelScope.launch {
             combine(
                 locationRepo.getDefaultCityId(),
                 locationRepo.getCurrentCity(),
-                locationRepo.loadFavoriteCitiesFromLocal()
-            ) { defaultCityId, currentCity, favorites ->
+            ) { defaultCityId, currentCity ->
+                val favorites = locationRepo.loadFavoriteCitiesLocally()
                 val allCities = mutableListOf<WeatherLocation>()
                 if (currentCity.successful()) {
                     allCities.add(currentCity)
@@ -78,8 +79,11 @@ class FavoritesViewModel(
                 return@launch
             }
             if (item.selected) {
+                logd("Fav", "remove default city")
                 locationRepo.removeDefaultCity()
             }
+
+            logd("Fav", "remove city")
             locationRepo.removeCity(item.city.toModel())
 
             // TODO: We should not refresh, it should be refreshed automatically

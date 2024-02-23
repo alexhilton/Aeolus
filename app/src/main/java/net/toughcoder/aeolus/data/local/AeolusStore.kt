@@ -11,6 +11,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
@@ -74,8 +75,10 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
 
     suspend fun removeCity() {
         withContext(Dispatchers.IO) {
-            dataStore.edit { prefs ->
-                prefs.remove(defaultCityKey)
+            runBlocking {
+                dataStore.edit { prefs ->
+                    prefs.remove(defaultCityKey)
+                }
             }
         }
     }
