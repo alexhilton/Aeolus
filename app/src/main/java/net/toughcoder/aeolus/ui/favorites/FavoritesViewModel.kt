@@ -32,7 +32,6 @@ class FavoritesViewModel(
         )
 
     fun loadFavorites() {
-        Thread.dumpStack()
         viewModelScope.launch {
             combine(
                 locationRepo.getDefaultCityId(),
