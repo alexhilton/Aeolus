@@ -30,11 +30,7 @@ class FavoritesViewModel(
             viewModelState.value
         )
 
-    init {
-        getAllFavorites()
-    }
-
-    private fun getAllFavorites() {
+    fun loadFavorites() {
         viewModelScope.launch {
             combine(
                 locationRepo.getDefaultCityId(),
@@ -86,7 +82,7 @@ class FavoritesViewModel(
             locationRepo.removeCity(item.city.toModel())
 
             // TODO: We should not refresh, it should be refreshed automatically
-            getAllFavorites()
+            loadFavorites()
         }
     }
 
