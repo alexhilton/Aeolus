@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.weather.WeatherRepository
+import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
@@ -54,7 +55,7 @@ class FavoritesViewModel(
                         return@map FavoriteUiState(
                             city = city.asUiState(),
                             snapshot = weather.asUiState(),
-                            selected = city.id == defaultCityId,
+                            selected = city.id == defaultCityId.ifEmpty { currentCity.id },
                         )
                     }
                 )
