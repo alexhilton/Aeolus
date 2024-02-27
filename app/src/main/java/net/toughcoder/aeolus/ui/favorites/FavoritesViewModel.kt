@@ -31,7 +31,11 @@ class FavoritesViewModel(
             viewModelState.value
         )
 
-    fun loadFavorites() {
+    init {
+        loadFavorites()
+    }
+
+    private fun loadFavorites() {
         viewModelScope.launch {
             combine(
                 locationRepo.getDefaultCityId(),

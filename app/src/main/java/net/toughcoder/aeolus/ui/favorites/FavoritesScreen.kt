@@ -58,10 +58,6 @@ fun FavoritesScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.loadFavorites()
-    }
-
     Scaffold(
         modifier = modifier,
         topBar = {
