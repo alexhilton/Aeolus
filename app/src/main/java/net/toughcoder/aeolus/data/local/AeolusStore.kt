@@ -75,10 +75,8 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
 
     suspend fun removeCity() {
         withContext(Dispatchers.IO) {
-            runBlocking {
-                dataStore.edit { prefs ->
-                    prefs.remove(defaultCityKey)
-                }
+            dataStore.edit { prefs ->
+                prefs.remove(defaultCityKey)
             }
         }
     }
