@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -91,7 +92,7 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
                 val type = if (parts.size > 3) parts[3].toInt() else TYPE_NORMAL
                 WeatherLocation(id = parts[0], name = parts[1], admin = parts[2], type = type)
             }
-        }
+        }.distinctUntilChanged()
     }
 
     fun getLanguage(): Flow<String> {
