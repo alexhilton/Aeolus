@@ -3,6 +3,7 @@ package net.toughcoder.aeolus.data.location
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -112,10 +113,12 @@ class LocationRepository(
         }
     }
 
-    fun loadFavoriteCitiesFromLocal(): Flow<List<WeatherLocation>> = flow {
-        val dao = database.locationDao()
-        emit(dao.getAllCities().map { it.asModel() })
-    }.flowOn(dispatcher)
+    fun queryFavoriteCities(): Flow<List<WeatherLocation>> =
+        database.locationDao()
+            .queryAllCities()
+            .distinctUntilChanged()
+            .map { list -> list.map { it.asModel() } }
+            .flowOn(dispatcher)
 
     suspend fun loadFavoriteCitiesLocally(): List<WeatherLocation> =
         withContext(dispatcher) {
