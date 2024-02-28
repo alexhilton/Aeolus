@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.toughcoder.aeolus.logd
 import net.toughcoder.aeolus.model.DEFAULT_LANGUAGE
@@ -36,12 +35,11 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
     private val languageKey = stringPreferencesKey(KEY_LANGUAGE)
     private val measureKey = stringPreferencesKey(KEY_MEASURE)
 
-    fun getSearchHistories(): Flow<List<String>> {
-        return dataStore.data.map { prefs ->
+    fun getSearchHistories(): Flow<List<String>> =
+        dataStore.data.map { prefs ->
             val bundle = prefs[searchHistoryKey]
             bundle?.split(";")?.toList() ?: listOf()
-        }
-    }
+        }.distinctUntilChanged()
 
     suspend fun addSearchHistory(history: String) {
         withContext(Dispatchers.IO) {
@@ -82,8 +80,8 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
         }
     }
 
-    fun getDefaultCity(): Flow<WeatherLocation> {
-        return dataStore.data.map { prefs ->
+    fun getDefaultCity(): Flow<WeatherLocation> =
+        dataStore.data.map { prefs ->
             val bundle = prefs[defaultCityKey]
             if (bundle.isNullOrEmpty()) {
                 WeatherLocation()
@@ -93,13 +91,11 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
                 WeatherLocation(id = parts[0], name = parts[1], admin = parts[2], type = type)
             }
         }.distinctUntilChanged()
-    }
 
-    fun getLanguage(): Flow<String> {
-        return dataStore.data.map { prefs ->
+    fun getLanguage(): Flow<String> =
+        dataStore.data.map { prefs ->
             prefs[languageKey] ?: DEFAULT_LANGUAGE
-        }
-    }
+        }.distinctUntilChanged()
 
     suspend fun persistLanguage(lang: String) {
         val locale = if (lang == LANGUAGE_AUTO) {
@@ -118,11 +114,10 @@ class AeolusStore(private val dataStore: DataStore<Preferences>) {
         }
     }
 
-    fun getMeasure(): Flow<String> {
-        return dataStore.data.map { prefs ->
+    fun getMeasure(): Flow<String> =
+        dataStore.data.map { prefs ->
             prefs[measureKey] ?: DEFAULT_MEASURE
-        }
-    }
+        }.distinctUntilChanged()
 
     suspend fun persistMeasure(measure: String) {
         withContext(Dispatchers.IO) {
