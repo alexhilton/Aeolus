@@ -51,6 +51,11 @@
     <string name="weekday_5">Sat</string>
     <string name="weekday_6">Sun</string>
 
+    <string name="favorite_delete_title">Delete city</string>
+    <string name="favorite_delete_message">Are you sure you want to delete favorite city "%1$s"?</string>
+    <string name="favorite_delete_confirm">Delete</string>
+    <string name="button_text_cancel">Cancel</string>
+
     <string name="settings_title">Settings</string>
     <string name="settings_entry_language_title">Display language</string>
     <string name="settings_entry_language_description">Select the display language used in screens.</string>

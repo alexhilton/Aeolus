@@ -51,6 +51,11 @@
     <string name="weekday_5">周六</string>
     <string name="weekday_6">周日</string>
 
+    <string name="favorite_delete_title">删除城市</string>
+    <string name="favorite_delete_message">您确定要删除收藏的城市『%1$s』吗？</string>
+    <string name="favorite_delete_confirm">删除</string>
+    <string name="button_text_cancel">取消</string>
+
     <string name="settings_title">设置</string>
     <string name="settings_entry_language_title">界面展示语言</string>
     <string name="settings_entry_language_description">Select the display language used in screens.</string>

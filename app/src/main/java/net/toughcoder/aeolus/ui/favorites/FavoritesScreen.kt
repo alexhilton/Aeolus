@@ -17,8 +17,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,10 +30,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -115,6 +120,7 @@ fun FavoritesScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteList(
     modifier: Modifier = Modifier,
@@ -122,6 +128,11 @@ fun FavoriteList(
     onFavoriteRemove: (FavoriteUiState) -> Unit,
     onFavoriteClick: (CityState) -> Unit
 ) {
+    val openAlertDialog = remember { mutableStateOf(false) }
+    val itemToRemove = remember {
+        mutableStateOf<FavoriteUiState?>(null)
+    }
+
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(8.dp),
@@ -130,8 +141,34 @@ fun FavoriteList(
         items(
             favorites,
             key = { it.city.id }) {
-            FavoriteItem(modifier, it, onFavoriteRemove, onFavoriteClick)
+            FavoriteItem(modifier, it, { item -> itemToRemove.value = item }, onFavoriteClick)
         }
+    }
+
+    itemToRemove.value?.let { item ->
+        AlertDialog(
+            icon = { Icon(Icons.Default.Info, contentDescription = null) },
+            title = { Text(stringResource(R.string.favorite_delete_title)) },
+            text = { Text(stringResource(R.string.favorite_delete_message, item.city.name)) },
+            onDismissRequest = { itemToRemove.value = null },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onFavoriteRemove(item)
+                        itemToRemove.value = null
+                    }
+                ) {
+                    Text(stringResource(R.string.favorite_delete_confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { itemToRemove.value = null }
+                ) {
+                    Text(stringResource(R.string.button_text_cancel))
+                }
+            }
+        )
     }
 }
 
