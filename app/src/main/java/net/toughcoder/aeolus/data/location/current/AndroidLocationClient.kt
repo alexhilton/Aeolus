@@ -10,20 +10,23 @@ import android.os.SystemClock
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.timeout
 import net.toughcoder.aeolus.logd
 import java.util.concurrent.Executor
 
 class AndroidLocationClient(
     context: Context
 ) : LocationProvider(context) {
-    @OptIn(ExperimentalCoroutinesApi::class)
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("MissingPermission")
     override fun getLocation(): Flow<MyLocation> = flow {
@@ -51,6 +54,11 @@ class AndroidLocationClient(
         } else {
             providers.asFlow()
                 .flatMapLatest { current(it, locationManager, context.mainExecutor) }
+                .timeout(REQUEST_TIMEOUT)
+                .catch {
+                    logd(LOG_TAG, "Failed to get location: ${it.message}")
+                    emit(MyLocation(ERROR_NO_LOCATION, ERROR_NO_LOCATION))
+                }
                 .collect {
                     logd(LOG_TAG, "Get current location fix!")
                     emit(MyLocation(it.latitude, it.longitude))
@@ -60,7 +68,7 @@ class AndroidLocationClient(
 
     private fun upToDate(loc: Location): Boolean {
         val now = SystemClock.elapsedRealtime()
-        return now - loc.elapsedRealtimeNanos / 1000L <= TIMEOUT
+        return now - loc.elapsedRealtimeNanos / 1000L <= LOCATION_AGE
     }
 
     @RequiresApi(Build.VERSION_CODES.S)

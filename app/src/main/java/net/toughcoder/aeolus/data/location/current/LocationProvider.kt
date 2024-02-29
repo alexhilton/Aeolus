@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.Flow
+import kotlin.time.Duration.Companion.seconds
 
 abstract class LocationProvider(
     val context: Context
@@ -36,7 +37,8 @@ abstract class LocationProvider(
         const val ERROR_NO_PERM = -1.0
         const val ERROR_NO_LOCATION = -2.0
         const val ERROR_FAILURE = -3.0
-        const val TIMEOUT = 5 * 60 * 1000 // 5 minutes
+        const val LOCATION_AGE = 5 * 60 * 1000 // 5 minutes
+        val REQUEST_TIMEOUT = 60.seconds // 1 minute
     }
 }
 
