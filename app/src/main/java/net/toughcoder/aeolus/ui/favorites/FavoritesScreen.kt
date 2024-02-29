@@ -28,15 +28,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -48,7 +49,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.R
+import net.toughcoder.aeolus.ui.AeolusSnackbarHost
 import net.toughcoder.aeolus.ui.CenteredLoadingContainer
 import net.toughcoder.aeolus.ui.CityState
 import net.toughcoder.aeolus.ui.DailyUiState
@@ -62,6 +65,14 @@ fun FavoritesScreen(
     onSearch: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val itemToRemove = remember {
+        mutableStateOf<FavoriteUiState?>(null)
+    }
+
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier,
@@ -95,7 +106,8 @@ fun FavoritesScreen(
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { AeolusSnackbarHost(snackbarHostState, modifier) }
     ) { it ->
         CenteredLoadingContainer(
             modifier = Modifier.padding(it),
@@ -110,17 +122,48 @@ fun FavoritesScreen(
             } else {
                 FavoriteList(
                     favorites = uiState.favorites,
-                    onFavoriteRemove = viewModel::removeFavorite
+                    onFavoriteRemove = { item -> itemToRemove.value = item }
                 ) { city ->
                     viewModel.setDefaultCity(city)
                     onBack()
                 }
             }
         }
+
+        itemToRemove.value?.let { item ->
+            AlertDialog(
+                icon = { Icon(Icons.Default.Info, contentDescription = null) },
+                title = { Text(stringResource(R.string.favorite_delete_title)) },
+                text = { Text(stringResource(R.string.favorite_delete_message, item.city.name)) },
+                onDismissRequest = { itemToRemove.value = null },
+                confirmButton = {
+                    val deleteNotify = stringResource(R.string.favorite_delete_notify, item.city.name)
+                    TextButton(
+                        onClick = {
+                            viewModel.removeFavorite(item) {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(deleteNotify)
+                                }
+                            }
+
+                            itemToRemove.value = null
+                        }
+                    ) {
+                        Text(stringResource(R.string.favorite_delete_confirm))
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = { itemToRemove.value = null }
+                    ) {
+                        Text(stringResource(R.string.button_text_cancel))
+                    }
+                }
+            )
+        }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteList(
     modifier: Modifier = Modifier,
@@ -128,11 +171,6 @@ fun FavoriteList(
     onFavoriteRemove: (FavoriteUiState) -> Unit,
     onFavoriteClick: (CityState) -> Unit
 ) {
-    val openAlertDialog = remember { mutableStateOf(false) }
-    val itemToRemove = remember {
-        mutableStateOf<FavoriteUiState?>(null)
-    }
-
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(8.dp),
@@ -141,34 +179,8 @@ fun FavoriteList(
         items(
             favorites,
             key = { it.city.id }) {
-            FavoriteItem(modifier, it, { item -> itemToRemove.value = item }, onFavoriteClick)
+            FavoriteItem(modifier, it, onFavoriteRemove, onFavoriteClick)
         }
-    }
-
-    itemToRemove.value?.let { item ->
-        AlertDialog(
-            icon = { Icon(Icons.Default.Info, contentDescription = null) },
-            title = { Text(stringResource(R.string.favorite_delete_title)) },
-            text = { Text(stringResource(R.string.favorite_delete_message, item.city.name)) },
-            onDismissRequest = { itemToRemove.value = null },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onFavoriteRemove(item)
-                        itemToRemove.value = null
-                    }
-                ) {
-                    Text(stringResource(R.string.favorite_delete_confirm))
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = { itemToRemove.value = null }
-                ) {
-                    Text(stringResource(R.string.button_text_cancel))
-                }
-            }
-        )
     }
 }
 

@@ -8,16 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Snackbar
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.LocationOn
@@ -31,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -46,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.toughcoder.aeolus.R
+import net.toughcoder.aeolus.ui.AeolusSnackbarHost
 import net.toughcoder.aeolus.ui.NO_ERROR
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -172,22 +168,6 @@ fun EmptyScreen(
         text = message,
         style = MaterialTheme.typography.headlineLarge,
         color = MaterialTheme.colorScheme.primary
-    )
-}
-
-@Composable
-fun AeolusSnackbarHost(
-    hostState: SnackbarHostState,
-    modifier: Modifier = Modifier
-) {
-    SnackbarHost(
-        hostState = hostState,
-        modifier = modifier
-            .systemBarsPadding()
-            // Limit the Snackbar width for large screens
-            .wrapContentWidth(align = Alignment.Start)
-            .widthIn(max = 550.dp),
-        snackbar = { Snackbar(it) }
     )
 }
 

@@ -55,6 +55,7 @@
     <string name="favorite_delete_message">Are you sure you want to delete favorite city "%1$s"?</string>
     <string name="favorite_delete_confirm">Delete</string>
     <string name="button_text_cancel">Cancel</string>
+    <string name="favorite_delete_notify">Favorite city "%1$s" has been deleted!</string>
 
     <string name="settings_title">Settings</string>
     <string name="settings_entry_language_title">Display language</string>

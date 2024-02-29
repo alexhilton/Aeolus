@@ -77,7 +77,7 @@ class FavoritesViewModel(
         }
     }
 
-    fun removeFavorite(item: FavoriteUiState) {
+    fun removeFavorite(item: FavoriteUiState, action: ((CityState) -> Unit)?) {
         viewModelScope.launch {
             if (item.city.current()) {
                 return@launch
@@ -89,6 +89,8 @@ class FavoritesViewModel(
 
             logd("Fav", "remove city")
             locationRepo.removeCity(item.city.toModel())
+
+            action?.invoke(item.city)
         }
     }
 

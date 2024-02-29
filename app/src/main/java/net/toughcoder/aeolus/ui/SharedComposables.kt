@@ -4,11 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -22,13 +20,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -167,6 +171,22 @@ fun ValueLabel(
         color = MaterialTheme.colorScheme.primary,
         style = MaterialTheme.typography.titleLarge,
         textAlign = TextAlign.End
+    )
+}
+
+@Composable
+fun AeolusSnackbarHost(
+    hostState: SnackbarHostState,
+    modifier: Modifier = Modifier
+) {
+    SnackbarHost(
+        hostState = hostState,
+        modifier = modifier
+            .systemBarsPadding()
+            // Limit the Snackbar width for large screens
+            .wrapContentWidth(align = Alignment.Start)
+            .widthIn(max = 550.dp),
+        snackbar = { Snackbar(it) }
     )
 }
 
