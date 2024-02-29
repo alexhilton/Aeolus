@@ -7,6 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.util.concurrent.TimeUnit
 
 interface QWeatherService {
     @GET("v7/weather/now")
@@ -75,11 +76,17 @@ interface QWeatherService {
 
     companion object {
         const val BASE_URL = "https://devapi.qweather.com/"
+        const val CONN_TIMEOUT = 60L
+        const val TIMEOUT = 30L
 
         inline fun <reified T> create(baseUrl: String): T {
             val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC}
 
             val client = OkHttpClient.Builder()
+                .connectTimeout(CONN_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .callTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .addInterceptor(logger)
                 .build()
 
