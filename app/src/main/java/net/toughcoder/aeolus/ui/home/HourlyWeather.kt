@@ -1,5 +1,6 @@
 package net.toughcoder.aeolus.ui.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -65,13 +70,19 @@ fun HourlyListItem(
         )
         GeneralText(hourlyItem.text)
 
-        TempBar(
-            textHigh = hourlyItem.temp,
-            max = max,
-            min = min,
-            high = hourlyItem.tempValue,
-            low = min
-        )
+        var visible by remember { mutableStateOf(true) }
+        AnimatedVisibility(
+            visible = visible,
+            label = "${hourlyItem.time} alpha"
+        ) {
+            TempBar(
+                textHigh = hourlyItem.temp,
+                max = max,
+                min = min,
+                high = hourlyItem.tempValue,
+                low = min
+            )
+        }
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(2.dp),
