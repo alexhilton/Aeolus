@@ -1,5 +1,8 @@
 package net.toughcoder.aeolus.ui.favorites
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,9 +41,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -164,6 +169,7 @@ fun FavoritesScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FavoriteList(
     modifier: Modifier = Modifier,
@@ -178,8 +184,9 @@ fun FavoriteList(
     ) {
         items(
             favorites,
-            key = { it.city.id }) {
-            FavoriteItem(modifier, it, onFavoriteRemove, onFavoriteClick)
+            key = { it.city.id }
+        ) {
+            FavoriteItem(modifier.animateItemPlacement(), it, onFavoriteRemove, onFavoriteClick)
         }
     }
 }
@@ -235,20 +242,24 @@ fun FavoriteItem(
                 }
             }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (item.selected) {
-                    Checkbox(
-                        checked = true, onCheckedChange = {}
-                    )
-                }
+            if (item.selected || !item.current()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (item.selected) {
+                        AnimatedVisibility(true) {
+                            Checkbox(
+                                checked = true, onCheckedChange = {}
+                            )
+                        }
+                    }
 
-                if (!item.current()) {
-                    IconButton(
-                        onClick = { onRemove(item) }
-                    ) {
-                        Icon(Icons.Default.Close, contentDescription = "Delete item")
+                    if (!item.current()) {
+                        IconButton(
+                            onClick = { onRemove(item) }
+                        ) {
+                            Icon(Icons.Default.Close, contentDescription = "Delete item")
+                        }
                     }
                 }
             }
