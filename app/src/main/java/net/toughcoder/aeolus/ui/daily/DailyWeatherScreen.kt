@@ -2,6 +2,7 @@ package net.toughcoder.aeolus.ui.daily
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -146,6 +147,7 @@ fun DailyDetailItem(
 
             AnimatedVisibility(
                 visible = visible,
+                enter = scaleIn(),
                 label = "${weather.date} alpha"
             ) {
                 TempBar(

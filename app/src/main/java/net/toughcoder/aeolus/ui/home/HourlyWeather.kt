@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -85,6 +86,7 @@ fun HourlyListItem(
 
         AnimatedVisibility(
             visible = visible,
+            enter = scaleIn(),
             label = "${hourlyItem.time} alpha"
         ) {
             TempBar(
