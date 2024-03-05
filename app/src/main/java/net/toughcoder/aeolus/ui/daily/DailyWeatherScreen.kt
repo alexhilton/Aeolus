@@ -122,6 +122,8 @@ fun DailyDetailItem(
     max: Float,
     min: Float
 ) {
+    var visible by remember { mutableStateOf(true) }
+
     Surface(
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.primaryContainer
@@ -141,8 +143,6 @@ fun DailyDetailItem(
                 contentDescription = ""
             )
             GeneralText(weather.textDay)
-
-            var visible by remember { mutableStateOf(true) }
 
             AnimatedVisibility(
                 visible = visible,

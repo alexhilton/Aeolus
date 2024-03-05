@@ -1,6 +1,9 @@
 package net.toughcoder.aeolus.ui.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +32,12 @@ import net.toughcoder.aeolus.ui.WeatherSectionContainer
 
 @Composable
 fun HourlyWeatherSection(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.animateContentSize(
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    ),
     hourlyUiStates: List<HourlyUiState>
 ) {
     if (hourlyUiStates.isNotEmpty()) {
@@ -37,7 +45,10 @@ fun HourlyWeatherSection(
 
         val max = hourlyUiStates.maxOfOrNull { it.tempValue }!!
         val min = hourlyUiStates.minOfOrNull { it.tempValue }!!
-        WeatherSectionContainer(modifier, R.string.hourly_forecast_title) {
+        WeatherSectionContainer(
+            modifier,
+            R.string.hourly_forecast_title
+        ) {
             LazyRow(
                 modifier = Modifier.padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -57,6 +68,8 @@ fun HourlyListItem(
     min: Float,
     hourlyItem: HourlyUiState
 ) {
+    var visible by remember { mutableStateOf(true) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -70,7 +83,6 @@ fun HourlyListItem(
         )
         GeneralText(hourlyItem.text)
 
-        var visible by remember { mutableStateOf(true) }
         AnimatedVisibility(
             visible = visible,
             label = "${hourlyItem.time} alpha"
