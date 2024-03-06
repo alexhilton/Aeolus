@@ -1,7 +1,12 @@
 package net.toughcoder.aeolus.ui.favorites
 
+import android.annotation.SuppressLint
+import android.view.animation.AlphaAnimation
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -37,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -78,6 +84,8 @@ fun FavoritesScreen(
     }
 
     val coroutineScope = rememberCoroutineScope()
+
+    var alphaAnimation = remember { Animatable(0f) }
 
     Scaffold(
         modifier = modifier,
@@ -126,6 +134,7 @@ fun FavoritesScreen(
                 )
             } else {
                 FavoriteList(
+                    alphaAnimation = alphaAnimation,
                     favorites = uiState.favorites,
                     onFavoriteRemove = { item -> itemToRemove.value = item }
                 ) { city ->
@@ -145,6 +154,12 @@ fun FavoritesScreen(
                     val deleteNotify = stringResource(R.string.favorite_delete_notify, item.city.name)
                     TextButton(
                         onClick = {
+                            if (item.selected) {
+                                coroutineScope.launch {
+                                    alphaAnimation.snapTo(0f)
+                                }
+                            }
+
                             viewModel.removeFavorite(item) {
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar(deleteNotify)
@@ -173,6 +188,7 @@ fun FavoritesScreen(
 @Composable
 fun FavoriteList(
     modifier: Modifier = Modifier,
+    alphaAnimation: Animatable<Float, AnimationVector1D>,
     favorites: List<FavoriteUiState>,
     onFavoriteRemove: (FavoriteUiState) -> Unit,
     onFavoriteClick: (CityState) -> Unit
@@ -186,7 +202,13 @@ fun FavoriteList(
             favorites,
             key = { it.city.id }
         ) {
-            FavoriteItem(modifier.animateItemPlacement(), it, onFavoriteRemove, onFavoriteClick)
+            FavoriteItem(
+                modifier = modifier.animateItemPlacement(),
+                alphaAnimation = alphaAnimation,
+                item = it,
+                onRemove = onFavoriteRemove,
+                onClick = onFavoriteClick
+            )
         }
     }
 }
@@ -194,6 +216,7 @@ fun FavoriteList(
 @Composable
 fun FavoriteItem(
     modifier: Modifier = Modifier,
+    alphaAnimation: Animatable<Float, AnimationVector1D>,
     item: FavoriteUiState,
     onRemove: (FavoriteUiState) -> Unit,
     onClick: (CityState) -> Unit
@@ -247,11 +270,17 @@ fun FavoriteItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (item.selected) {
-                        AnimatedVisibility(true) {
-                            Checkbox(
-                                checked = true, onCheckedChange = {}
+                        LaunchedEffect(item.city.id) {
+                            alphaAnimation.animateTo(
+                                targetValue = 1f,
+                                animationSpec = tween(300)
                             )
                         }
+                        Checkbox(
+                            modifier = Modifier.graphicsLayer { alpha = alphaAnimation.value },
+                            checked = true,
+                            onCheckedChange = {}
+                        )
                     }
 
                     if (!item.current()) {
@@ -335,11 +364,13 @@ fun WeatherSnapshot(
     }
 }
 
+@SuppressLint("UnrememberedAnimatable")
 @Preview
 @Composable
 fun FavoriteItemPreview() {
     FavoriteItem(
         Modifier.fillMaxWidth(),
+        Animatable(1f),
         FavoriteUiState(
             CityState("Beijing", "", "China"),
             DailyUiState(
