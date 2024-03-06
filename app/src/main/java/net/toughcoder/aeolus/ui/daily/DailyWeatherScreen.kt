@@ -1,8 +1,8 @@
 package net.toughcoder.aeolus.ui.daily
 
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.scaleIn
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -23,13 +23,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -123,8 +123,6 @@ fun DailyDetailItem(
     max: Float,
     min: Float
 ) {
-    var visible by remember { mutableStateOf(true) }
-
     Surface(
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.primaryContainer
@@ -145,20 +143,23 @@ fun DailyDetailItem(
             )
             GeneralText(weather.textDay)
 
-            AnimatedVisibility(
-                visible = visible,
-                enter = scaleIn(),
-                label = "${weather.date} alpha"
-            ) {
-                TempBar(
-                    max = max,
-                    min = min,
-                    high = weather.highValue,
-                    low = weather.lowValue,
-                    textHigh = weather.tempHigh,
-                    textLow = weather.tempLow
+            val scale = remember { Animatable(0.2f) }
+            LaunchedEffect(weather) {
+                scale.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(500)
                 )
             }
+
+            TempBar(
+                modifier = Modifier.graphicsLayer { scaleY = scale.value },
+                max = max,
+                min = min,
+                high = weather.highValue,
+                low = weather.lowValue,
+                textHigh = weather.tempHigh,
+                textLow = weather.tempLow
+            )
 
             Image(
                 modifier = Modifier

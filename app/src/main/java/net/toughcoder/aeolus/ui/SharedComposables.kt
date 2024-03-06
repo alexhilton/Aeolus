@@ -242,8 +242,7 @@ fun TempBar(
         colors.add(Color.Blue)
     }
     Column(
-        modifier = Modifier
-            .height(columnHeight),
+        modifier = modifier.height(columnHeight),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(margin))
