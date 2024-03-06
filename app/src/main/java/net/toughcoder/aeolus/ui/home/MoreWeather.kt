@@ -32,7 +32,11 @@ fun DailyWeatherSection(
     if (dailyWeathers.isNotEmpty() && dailyWeathers.size >= 3) {
         Spacer(Modifier.height(16.dp))
 
-        WeatherSectionContainer(modifier, R.string.daily_forecast_title) {
+        WeatherSectionContainer(
+            modifier = modifier,
+            title = R.string.daily_forecast_title,
+            key = dailyWeathers
+        ) {
             DailyWeatherList(modifier, dailyWeathers)
 
             Button(

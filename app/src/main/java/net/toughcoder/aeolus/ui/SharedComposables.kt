@@ -6,6 +6,8 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +40,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -45,6 +49,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -65,16 +70,28 @@ import net.toughcoder.aeolus.R
 fun WeatherSectionContainer(
     modifier: Modifier = Modifier,
     @StringRes title: Int = 0,
+    key: Any? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val alphaAnimation = remember { Animatable(0f) }
+
+    LaunchedEffect(key) {
+        alphaAnimation.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(500)
+        )
+    }
+
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.secondaryContainer,
         shadowElevation = 6.dp
     ) {
         Column(
-            modifier = Modifier.padding(4.dp),
+            modifier = Modifier
+                .padding(4.dp)
+                .graphicsLayer { alpha = alphaAnimation.value },
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (title != 0) {

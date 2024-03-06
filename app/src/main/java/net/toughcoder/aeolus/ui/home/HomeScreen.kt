@@ -131,7 +131,7 @@ fun HomeScreen(
                 ) {
                     WeatherScreen(
                         modifier = Modifier
-                            .padding(8.dp),
+                            .padding(4.dp),
                         uiState = uiState as HomeUiState.WeatherUiState,
                         gotoDaily = { uiState.city?.let { city -> navToDaily(city.id) } }
                     )

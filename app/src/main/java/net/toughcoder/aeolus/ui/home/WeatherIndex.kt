@@ -33,7 +33,11 @@ fun WeatherIndexSection(
     if (indices.isNotEmpty()) {
         Spacer(Modifier.height(16.dp))
 
-        WeatherSectionContainer(modifier, R.string.weather_index_title) {
+        WeatherSectionContainer(
+            modifier = modifier,
+            title = R.string.weather_index_title,
+            key = indices
+        ) {
             WeatherIndexRow(left = indices[0], right = indices[1])
 
             Divider(thickness = 1.dp, color = Color.Gray)

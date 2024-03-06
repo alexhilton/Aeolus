@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.ui.DailyUiState
@@ -35,7 +34,8 @@ fun NowWeatherSection(
     uiState: HomeUiState.WeatherUiState
 ) {
     WeatherSectionContainer(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
+        key = uiState
     ) {
         SimpleInfo(uiState.text, uiState.icon, uiState.temp)
 
@@ -75,7 +75,9 @@ fun SimpleInfo(
     temp: String
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(

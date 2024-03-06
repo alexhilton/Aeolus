@@ -1,9 +1,6 @@
 package net.toughcoder.aeolus.ui.home
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -33,12 +30,7 @@ import net.toughcoder.aeolus.ui.WeatherSectionContainer
 
 @Composable
 fun HourlyWeatherSection(
-    modifier: Modifier = Modifier.animateContentSize(
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        )
-    ),
+    modifier: Modifier = Modifier,
     hourlyUiStates: List<HourlyUiState>
 ) {
     if (hourlyUiStates.isNotEmpty()) {
@@ -47,8 +39,9 @@ fun HourlyWeatherSection(
         val max = hourlyUiStates.maxOfOrNull { it.tempValue }!!
         val min = hourlyUiStates.minOfOrNull { it.tempValue }!!
         WeatherSectionContainer(
-            modifier,
-            R.string.hourly_forecast_title
+            modifier = modifier,
+            title = R.string.hourly_forecast_title,
+            key = hourlyUiStates
         ) {
             LazyRow(
                 modifier = Modifier.padding(8.dp),
