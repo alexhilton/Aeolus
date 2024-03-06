@@ -271,7 +271,7 @@ fun CurrentLocationPermission(
         )
     )
     val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(key1 = lifecycleOwner, effect = {
+    DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_START -> {
@@ -283,7 +283,7 @@ fun CurrentLocationPermission(
         lifecycleOwner.lifecycle.addObserver(observer)
 
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
-    })
+    }
 
     val context = LocalContext.current
 
