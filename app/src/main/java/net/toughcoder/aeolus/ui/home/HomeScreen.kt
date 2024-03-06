@@ -149,9 +149,8 @@ fun HomeScreen(
         }
 
         if (!uiState.isEmpty() && !uiState.isLoading && uiState.errorMessage != NO_ERROR) {
-            val msgId = remember(uiState) { uiState.errorMessage }
-            val message = stringResource(msgId)
-            LaunchedEffect(key1 = msgId, key2 = snackbarHostState) {
+            val message = stringResource(uiState.errorMessage)
+            LaunchedEffect(key1 = uiState.errorMessage, key2 = snackbarHostState) {
                 snackbarHostState.showSnackbar(message)
             }
         }
