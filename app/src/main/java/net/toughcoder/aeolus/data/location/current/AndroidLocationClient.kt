@@ -6,6 +6,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.location.LocationRequest
 import android.os.Build
+import android.os.CancellationSignal
 import android.os.SystemClock
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.Dispatchers
@@ -121,11 +122,17 @@ class AndroidLocationClient(
         request: LocationRequest,
         executor: Executor
     ): Flow<Location> = callbackFlow {
-        manager.getCurrentLocation(provider, request, null, executor) { loc ->
+        val cancelSignal = CancellationSignal()
+
+        manager.getCurrentLocation(provider, request, cancelSignal, executor) { loc ->
             loc?.let { trySend(it) }
         }
 
-        awaitClose {}
+        awaitClose {
+            if (!cancelSignal.isCanceled) {
+                cancelSignal.cancel()
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -135,10 +142,15 @@ class AndroidLocationClient(
         manager: LocationManager,
         executor: Executor
     ): Flow<Location> = callbackFlow {
-        manager.getCurrentLocation(provider, null, executor) { loc ->
+        val cancelSignal = CancellationSignal()
+        manager.getCurrentLocation(provider, cancelSignal, executor) { loc ->
             loc?.let { trySend(it) }
         }
 
-        awaitClose {}
+        awaitClose {
+            if (!cancelSignal.isCanceled) {
+                cancelSignal.cancel()
+            }
+        }
     }
 }
