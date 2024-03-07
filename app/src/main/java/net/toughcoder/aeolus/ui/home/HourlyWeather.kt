@@ -46,7 +46,7 @@ fun HourlyWeatherSection(
         ) {
             // To avoid replay animations when scrolling the lazy row, we must
             // hoist state up to here.
-            val translate = remember { Animatable(HEIGHT * 0.3f) }
+            val translate = remember { Animatable(HEIGHT * 0.8f) }
 
             LazyRow(
                 modifier = Modifier.padding(8.dp),
