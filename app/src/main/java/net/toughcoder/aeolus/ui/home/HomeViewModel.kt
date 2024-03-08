@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import net.toughcoder.aeolus.R
 import net.toughcoder.aeolus.data.location.LocationRepository
+import net.toughcoder.aeolus.data.network.Connectivity
 import net.toughcoder.aeolus.model.WeatherLocation
 import net.toughcoder.aeolus.model.WeatherNow
 import net.toughcoder.aeolus.data.weather.WeatherRepository
@@ -37,17 +38,19 @@ import net.toughcoder.aeolus.ui.toWindDegree
 
 class HomeViewModel(
     private val locationRepo: LocationRepository,
-    private val weatherRepo: WeatherRepository
+    private val weatherRepo: WeatherRepository,
+    private val connectivity: Connectivity
 ) : ViewModel() {
     companion object {
         const val LOG_TAG = "WeatherViewModel"
         fun provideFactory(
             locationRepo: LocationRepository,
-            weatherNowRepo: WeatherRepository
+            weatherNowRepo: WeatherRepository,
+            connectivity: Connectivity
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(locationRepo, weatherNowRepo) as T
+                return HomeViewModel(locationRepo, weatherNowRepo, connectivity) as T
             }
         }
     }
@@ -88,7 +91,13 @@ class HomeViewModel(
         // Step #1: Mark as loading
         viewModelState.update { it.copy(loading = true) }
 
-        // Step #2: Quit earlier if not need to update
+        // Step #2: Check network connectivity
+        if (!connectivity.isOnline()) {
+            viewModelState.update { it.copy(loading = false, error = R.string.error_offline) }
+            return;
+        }
+
+        // Step #3: Quit earlier if not need to update
         val now = SystemClock.uptimeMillis()
         logd(LOG_TAG, "doRefresh now $now, last ${viewModelState.value.updateTime}")
         val cityChanged = locationState.value != viewModelState.value.city
@@ -100,7 +109,7 @@ class HomeViewModel(
             return
         }
 
-        // Step #3: Get latest location, then load new weather data based on the location
+        // Step #4: Get latest location, then load new weather data based on the location
         locationRepo.getDefaultCity()
             .collect { loc ->
                 logd(LOG_TAG, "doRefresh new loc $loc")
@@ -175,6 +184,8 @@ class HomeViewModel(
                 }
         }
     }
+
+
 }
 
 data class ViewModelState(

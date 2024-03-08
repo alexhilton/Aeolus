@@ -35,6 +35,7 @@
     <string name="error_location">无法获得当前位置信息，请稍候再试！</string>
     <string name="error_city">无法获得当前城市信息，请稍后再试！</string>
     <string name="error_network">服务器开个小差，暂无法获得天气信息，请稍候再试！</string>
+    <string name="error_offline">设备没有网络连接，请检查网络状态然后再试。</string>
 
     <string name="daily_screen_title">%1$s7天预报</string>
     <string name="daily_screen_placeholder">Daily weather shows here</string>

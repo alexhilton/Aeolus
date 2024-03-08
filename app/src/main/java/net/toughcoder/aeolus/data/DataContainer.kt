@@ -13,6 +13,9 @@ import net.toughcoder.aeolus.data.location.current.AndroidLocationClient
 import net.toughcoder.aeolus.data.location.current.LocationProvider
 import net.toughcoder.aeolus.data.location.LocationRepository
 import net.toughcoder.aeolus.data.location.QWeatherLocationSource
+import net.toughcoder.aeolus.data.network.AndroidConnectivity
+import net.toughcoder.aeolus.data.network.Connectivity
+import net.toughcoder.aeolus.data.network.NoConnection
 import net.toughcoder.aeolus.data.weather.QWeatherDataSource
 import net.toughcoder.aeolus.data.weather.WeatherRepository
 
@@ -22,6 +25,7 @@ interface DataContainer {
     val database: AeolusDatabase
     val datastore: AeolusStore
     val locationClient: LocationProvider
+    val connectivity: Connectivity
 }
 
 class DataContainerImpl(private val context: Context) : DataContainer {
@@ -59,5 +63,10 @@ class DataContainerImpl(private val context: Context) : DataContainer {
         AndroidLocationClient(context)
 //        NoLocationClient(context)
 //        NoPermLocationClient(context)
+    }
+
+    override val connectivity: Connectivity by lazy {
+        AndroidConnectivity(context)
+//        NoConnection()
     }
 }

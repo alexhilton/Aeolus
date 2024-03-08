@@ -35,6 +35,7 @@
     <string name="error_location">Failed to obtain current location, please try again later!\nOr you can search a city.</string>
     <string name="error_city">Failed to get city info, please try again later!</string>
     <string name="error_network">Something is wrong, please try again later!</string>
+    <string name="error_offline">Device has no Internet connection, please check connection then try again.</string>
 
     <string name="daily_screen_title">%1$s 7 days forecast</string>
     <string name="daily_screen_placeholder">Daily weather shows here</string>
