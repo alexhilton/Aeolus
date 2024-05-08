@@ -60,20 +60,20 @@ dependencies {
     implementation(project(":qweather"))
 
     // Jetpack
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     val lifecycleVersion = "2.7.0"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
-    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.activity:activity-compose:1.9.0")
     val navVersion = "2.7.7"
     implementation("androidx.navigation:navigation-runtime-ktx:$navVersion")
     implementation("androidx.navigation:navigation-compose:$navVersion")
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // Google Play Services
-    implementation("com.google.android.gms:play-services-location:21.1.0")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 
     // Compose
     implementation(platform("androidx.compose:compose-bom:2024.02.00"))
