@@ -14,5 +14,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Aeolus"
-include(":app")
+include(":composeApp")
 include(":qweather")
