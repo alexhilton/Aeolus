@@ -28,6 +28,10 @@ kotlin {
             implementation(libs.androidx.navigation)
             implementation(libs.androidx.datastore)
 
+            // Room database
+            implementation(libs.androidx.room)
+            implementation(libs.androidx.roomRuntime)
+
             // Google Play Services
             implementation(libs.google.location)
 
@@ -112,11 +116,7 @@ dependencies {
     // Modules in our project
     implementation(project(":qweather"))
 
-    // Room database
-    implementation(libs.androidx.room)
-    implementation(libs.androidx.roomRuntime)
-    annotationProcessor(libs.androidx.roomCompiler)
-    ksp(libs.androidx.roomCompiler)
+    add("kspAndroid", libs.androidx.roomCompiler)
 
     // Testing
     testImplementation(libs.junit)
