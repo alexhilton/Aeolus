@@ -37,12 +37,10 @@ kotlin {
 
             // Compose
             implementation(compose.preview)
-            implementation(project.dependencies.platform("androidx.compose:compose-bom:2024.02.00"))
-            implementation("androidx.compose.ui:ui")
-            implementation("androidx.compose.ui:ui-graphics")
-            implementation("androidx.compose.ui:ui-tooling-preview")
-            implementation("androidx.compose.material3:material3")
-            implementation("androidx.compose.material:material")
+            implementation(compose.ui)
+            implementation(compose.components.uiToolingPreview)
+            implementation(compose.material3)
+            implementation(compose.material)
 
             // Network
             implementation(libs.google.gson)
@@ -122,12 +120,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test)
     androidTestImplementation(libs.androidx.espresso)
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation(compose.desktop.uiTestJUnit4)
 
     // Flavor
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation(compose.uiTooling)
+    @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+    debugImplementation(compose.uiTest)
 }
 
 fun getQWeatherAPIKey(): String? {
