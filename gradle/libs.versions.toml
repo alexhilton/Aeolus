@@ -1,0 +1,55 @@
+[versions]
+agp = "8.1.4"
+kotlin = "2.0.21"
+ksp = "2.0.21-1.0.28"
+cmp = "1.7.0"
+androidLifecyle = "2.8.7"
+lifecycle = "2.8.3"
+permission = "0.32.0"
+logging = "4.12.0"
+retrofit = "2.9.0"
+gson = "2.10.1"
+location = "21.3.0"
+datastore = "1.1.1"
+navigation = "2.8.4"
+ktx = "1.15.0"
+appcompat = "1.7.0"
+activity = "1.9.3"
+room = "2.6.1"
+junit = "4.13.2"
+androidJunit = "1.2.1"
+espresso = "3.6.1"
+
+
+[libraries]
+androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+androidx-navigationRuntime = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigation" }
+androidx-lifecycleRuntime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidLifecyle" }
+androidx-lifecycleViewmodelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidLifecyle" }
+androidx-lifecycle = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-lifecycleViewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
+accompanist-permission = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "permission" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+google-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "location" }
+androidx-roomRuntime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-roomCompiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test = { group = "androidx.test.ext", name = "junit", version.ref = "androidJunit" }
+androidx-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "cmp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

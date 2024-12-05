@@ -1,11 +1,11 @@
 import java.util.*
 
 plugins {
-    id("com.android.application")
-    id("com.google.devtools.ksp")
-    id("org.jetbrains.kotlin.multiplatform")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.compose")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.compose.multiplatform)
 }
 
 kotlin {
@@ -19,20 +19,17 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             // Jetpack
-            implementation("androidx.core:core-ktx:1.15.0")
-            implementation("androidx.appcompat:appcompat:1.7.0")
-            implementation("androidx.activity:activity-compose:1.9.3")
-            val lifecycleVersion = "2.8.7"
-            implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-            implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
-            implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
-            val navVersion = "2.8.4"
-            implementation("androidx.navigation:navigation-runtime-ktx:$navVersion")
-            implementation("androidx.navigation:navigation-compose:$navVersion")
-            implementation("androidx.datastore:datastore-preferences:1.1.1")
+            implementation(libs.androidx.ktx)
+            implementation(libs.androidx.appcompat)
+            implementation(libs.androidx.activity)
+            implementation(libs.androidx.lifecycleViewmodelCompose)
+            implementation(libs.androidx.lifecycleRuntime)
+            implementation(libs.androidx.navigationRuntime)
+            implementation(libs.androidx.navigation)
+            implementation(libs.androidx.datastore)
 
             // Google Play Services
-            implementation("com.google.android.gms:play-services-location:21.3.0")
+            implementation(libs.google.location)
 
             // Compose
             implementation(compose.preview)
@@ -44,13 +41,13 @@ kotlin {
             implementation("androidx.compose.material:material")
 
             // Network
-            implementation("com.google.code.gson:gson:2.10.1")
-            implementation("com.squareup.retrofit2:retrofit:2.9.0")
-            implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-            implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+            implementation(libs.google.gson)
+            implementation(libs.retrofit)
+            implementation(libs.retrofit.gson)
+            implementation(libs.okhttp.logging)
 
             // Accompanist
-            implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+            implementation(libs.accompanist.permission)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -59,9 +56,8 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            val lifecycleVersion = "2.8.3"
-            implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion")
-            implementation("org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
+            implementation(libs.androidx.lifecycle)
+            implementation(libs.androidx.lifecycleViewmodel)
         }
     }
 }
@@ -117,16 +113,15 @@ dependencies {
     implementation(project(":qweather"))
 
     // Room database
-    val roomVersion = "2.6.1"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation(libs.androidx.room)
+    implementation(libs.androidx.roomRuntime)
+    annotationProcessor(libs.androidx.roomCompiler)
+    ksp(libs.androidx.roomCompiler)
 
     // Testing
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test)
+    androidTestImplementation(libs.androidx.espresso)
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
