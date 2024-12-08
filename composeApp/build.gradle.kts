@@ -119,7 +119,6 @@ dependencies {
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test)
-    androidTestImplementation(libs.androidx.espresso)
     androidTestImplementation(compose.desktop.uiTestJUnit4)
 
     // Flavor
